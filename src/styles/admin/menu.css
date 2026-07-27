@@ -20,7 +20,7 @@
 
 .menu-management__workspace {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex: 1 1 0;
   align-items: stretch;
   gap: 16px;
@@ -1129,4 +1129,3 @@ button.is-link {
     gap: 12px;
   }
 }
-
