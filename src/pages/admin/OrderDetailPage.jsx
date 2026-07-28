@@ -2,7 +2,7 @@
  * SCR-010 / 주문 상세·상태 변경 — 라우트 미연결
  *
  * mock: getAdminOrderById(orderId).data
- *   order: orderId, orderNo, orderType, totalPrice, orderStatus, paymentStatus,
+ *   order: orderId, orderNo, orderType, totalAmount, orderStatus, paymentStatus,
  *          paymentMethod, createdAt, itemCount, menuSummary, requestNote, items[]
  *   item:  menuId, menuName, quantity, unitPrice,
  *          optionItems[{ optionItemId, name, quantity }],

@@ -79101,7 +79101,7 @@
         "orderNo": "ASAK-20260720-001",
         "amount": 8900,
         "paymentStatus": "APPROVED",
-        "paidAt": "2026-07-20T12:00:00"
+        "approvedAt": "2026-07-20T12:00:00"
       }
     },
     "approveHigh": {
@@ -79115,7 +79115,7 @@
         "orderNo": "ASAK-20260720-099",
         "amount": 128800,
         "paymentStatus": "APPROVED",
-        "paidAt": "2026-07-20T12:05:00"
+        "approvedAt": "2026-07-20T12:05:00"
       }
     },
     "declined": {
@@ -79241,122 +79241,122 @@
   "orderCompleteSamples": [
     {
       "orderNo": "ASAK-20260720-001",
-      "totalPrice": 1500,
-      "waitingCount": 0,
+      "totalAmount": 1500,
+      "waitingOrderCount": 0,
       "orderType": "EAT_IN"
     },
     {
       "orderNo": "ASAK-20260720-002",
-      "totalPrice": 5200,
-      "waitingCount": 1,
+      "totalAmount": 5200,
+      "waitingOrderCount": 1,
       "orderType": "TAKE_OUT"
     },
     {
       "orderNo": "ASAK-20260720-003",
-      "totalPrice": 8900,
-      "waitingCount": 2,
+      "totalAmount": 8900,
+      "waitingOrderCount": 2,
       "orderType": "EAT_IN"
     },
     {
       "orderNo": "ASAK-20260720-004",
-      "totalPrice": 12600,
-      "waitingCount": 3,
+      "totalAmount": 12600,
+      "waitingOrderCount": 3,
       "orderType": "TAKE_OUT"
     },
     {
       "orderNo": "ASAK-20260720-005",
-      "totalPrice": 16300,
-      "waitingCount": 4,
+      "totalAmount": 16300,
+      "waitingOrderCount": 4,
       "orderType": "EAT_IN"
     },
     {
       "orderNo": "ASAK-20260720-006",
-      "totalPrice": 20000,
-      "waitingCount": 5,
+      "totalAmount": 20000,
+      "waitingOrderCount": 5,
       "orderType": "TAKE_OUT"
     },
     {
       "orderNo": "ASAK-20260720-007",
-      "totalPrice": 23700,
-      "waitingCount": 6,
+      "totalAmount": 23700,
+      "waitingOrderCount": 6,
       "orderType": "EAT_IN"
     },
     {
       "orderNo": "ASAK-20260720-008",
-      "totalPrice": 27400,
-      "waitingCount": 7,
+      "totalAmount": 27400,
+      "waitingOrderCount": 7,
       "orderType": "TAKE_OUT"
     },
     {
       "orderNo": "ASAK-20260720-009",
-      "totalPrice": 31100,
-      "waitingCount": 0,
+      "totalAmount": 31100,
+      "waitingOrderCount": 0,
       "orderType": "EAT_IN"
     },
     {
       "orderNo": "ASAK-20260720-010",
-      "totalPrice": 34800,
-      "waitingCount": 1,
+      "totalAmount": 34800,
+      "waitingOrderCount": 1,
       "orderType": "TAKE_OUT"
     },
     {
       "orderNo": "ASAK-20260720-011",
-      "totalPrice": 38500,
-      "waitingCount": 2,
+      "totalAmount": 38500,
+      "waitingOrderCount": 2,
       "orderType": "EAT_IN"
     },
     {
       "orderNo": "ASAK-20260720-012",
-      "totalPrice": 42200,
-      "waitingCount": 3,
+      "totalAmount": 42200,
+      "waitingOrderCount": 3,
       "orderType": "TAKE_OUT"
     },
     {
       "orderNo": "ASAK-20260720-013",
-      "totalPrice": 45900,
-      "waitingCount": 4,
+      "totalAmount": 45900,
+      "waitingOrderCount": 4,
       "orderType": "EAT_IN"
     },
     {
       "orderNo": "ASAK-20260720-014",
-      "totalPrice": 49600,
-      "waitingCount": 5,
+      "totalAmount": 49600,
+      "waitingOrderCount": 5,
       "orderType": "TAKE_OUT"
     },
     {
       "orderNo": "ASAK-20260720-015",
-      "totalPrice": 53300,
-      "waitingCount": 6,
+      "totalAmount": 53300,
+      "waitingOrderCount": 6,
       "orderType": "EAT_IN"
     },
     {
       "orderNo": "ASAK-20260720-016",
-      "totalPrice": 57000,
-      "waitingCount": 7,
+      "totalAmount": 57000,
+      "waitingOrderCount": 7,
       "orderType": "TAKE_OUT"
     },
     {
       "orderNo": "ASAK-20260720-017",
-      "totalPrice": 60700,
-      "waitingCount": 0,
+      "totalAmount": 60700,
+      "waitingOrderCount": 0,
       "orderType": "EAT_IN"
     },
     {
       "orderNo": "ASAK-20260720-018",
-      "totalPrice": 64400,
-      "waitingCount": 1,
+      "totalAmount": 64400,
+      "waitingOrderCount": 1,
       "orderType": "TAKE_OUT"
     },
     {
       "orderNo": "ASAK-20260720-019",
-      "totalPrice": 68100,
-      "waitingCount": 2,
+      "totalAmount": 68100,
+      "waitingOrderCount": 2,
       "orderType": "EAT_IN"
     },
     {
       "orderNo": "ASAK-20260720-020",
-      "totalPrice": 71800,
-      "waitingCount": 3,
+      "totalAmount": 71800,
+      "waitingOrderCount": 3,
       "orderType": "TAKE_OUT"
     }
   ],

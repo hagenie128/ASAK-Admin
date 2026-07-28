@@ -28,7 +28,7 @@ function readLiveFixture() {
 }
 
 function isActiveLiveOrder(order) {
-  return order.orderStatus !== "COMPLETED" && order.orderStatus !== "CANCELLED";
+  return order.orderStatus !== "COMPLETED" && order.orderStatus !== "CANCELED";
 }
 
 export default function LiveOrderPreview() {
@@ -254,7 +254,7 @@ function OrderCard({ order, onAction, actionPending = false }) {
       <footer className="figma-order-card__footer">
         <div className="figma-order-card__total">
           <span>총액</span>
-          <strong>{formatCurrency(order.totalPrice ?? 0)}</strong>
+          <strong>{formatCurrency(order.totalAmount ?? 0)}</strong>
         </div>
         <div className="figma-order-card__actions">
           <button

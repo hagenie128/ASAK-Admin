@@ -28,19 +28,19 @@ export default function OrderDetailPanel({
 }) {
   const hasOrder = Boolean(selectedOrder?.orderId);
   const isCancelledView =
-    selectedOrder?.orderStatus === ORDER_STATUS.CANCELLED ||
+    selectedOrder?.orderStatus === ORDER_STATUS.CANCELED ||
     selectedOrder?.orderStatus === ORDER_STATUS.REFUNDED ||
     selectedOrder?.paymentStatus === PAYMENT_STATUS.REFUNDED ||
-    selectedOrder?.paymentStatus === PAYMENT_STATUS.CANCELLED;
+    selectedOrder?.paymentStatus === PAYMENT_STATUS.CANCELED;
 
   const canRefund =
     hasOrder &&
     !isCancelledView &&
-    selectedOrder?.paymentStatus === PAYMENT_STATUS.PAID;
+    selectedOrder?.paymentStatus === PAYMENT_STATUS.APPROVED;
 
   const canPrintReceipt =
     hasOrder &&
-    (selectedOrder?.paymentStatus === PAYMENT_STATUS.PAID || isCancelledView);
+    (selectedOrder?.paymentStatus === PAYMENT_STATUS.APPROVED || isCancelledView);
 
   if (!hasOrder) {
     return (
@@ -111,7 +111,7 @@ export default function OrderDetailPanel({
 
         <div className="order-detail-panel__total">
           <span>{isCancelledView ? "총 취소 금액" : "총 결제 금액"}</span>
-          <b>{formatCurrency(selectedOrder.totalPrice)}</b>
+          <b>{formatCurrency(selectedOrder.totalAmount)}</b>
         </div>
 
         <footer

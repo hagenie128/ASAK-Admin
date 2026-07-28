@@ -64,7 +64,7 @@ export function completeOrder(orderId) {
 export function cancelOrder(orderId) {
   liveOrders.data.content = liveOrders.data.content.map((order) => {
     if (order.orderId === Number(orderId)) {
-      order.orderStatus = "CANCELLED";
+      order.orderStatus = "CANCELED";
     }
     return order;
   });
@@ -210,7 +210,7 @@ export function updateAdminOrderStatus(orderId, nextStatus) {
   };
 }
 
-/** 환불 stub — paymentStatus PAID → FAILED, orderStatus → CANCELLED */
+/** 환불 stub — paymentStatus APPROVED → FAILED, orderStatus → CANCELED */
 export function refundAdminOrder(orderId) {
   const order = adminMock.orders.data.content.find((row) => row.orderId === Number(orderId));
   if (!order) {
@@ -222,7 +222,7 @@ export function refundAdminOrder(orderId) {
       data: null,
     };
   }
-  if (order.paymentStatus !== "PAID") {
+  if (order.paymentStatus !== "APPROVED") {
     return {
       success: false,
       status: 400,
@@ -232,7 +232,7 @@ export function refundAdminOrder(orderId) {
     };
   }
   order.paymentStatus = "FAILED";
-  order.orderStatus = "CANCELLED";
+  order.orderStatus = "CANCELED";
   return {
     success: true,
     status: 200,
@@ -254,7 +254,7 @@ export function printAdminOrderReceipt(orderId) {
       data: null,
     };
   }
-  if (order.paymentStatus !== "PAID") {
+  if (order.paymentStatus !== "APPROVED") {
     return {
       success: false,
       status: 400,
@@ -305,7 +305,7 @@ function toDashboardRecentOrder(order) {
     orderNo: order.orderNo,
     orderType: order.orderType,
     menuSummary: order.menuSummary,
-    totalPrice: order.totalPrice,
+    totalAmount: order.totalAmount,
     orderStatus: order.orderStatus,
     createdAtLabel,
   };

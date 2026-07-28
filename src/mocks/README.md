@@ -2,7 +2,7 @@
 
 백엔드 준비 전에는 이 폴더에 API 계약과 동일한 필드명의 JSON fixture를 둡니다.
 
-- 주문 목록/상세: `orderId`, `orderNo`, `orderStatus`, `paymentStatus`, `totalPrice`
+- 주문 목록/상세: `orderId`, `orderNo`, `orderStatus`, `paymentStatus`, `totalAmount`
 - 품절: `targetType`, `targetId`, `name`, `isSoldOut`, `reasonType`
 - 매출: 기간, 일별 매출, 메뉴별 판매량
 
