@@ -1,17 +1,29 @@
 /* Figma Admin/DetailPanel (150:5418) — 주문 상세 우측 패널 */
 import emptyBoxOpen from "../../assets/figma/empty-box-open.svg";
-import { formatDateTime } from "../../utils/date.js";
+import { ORDER_STATUS, PAYMENT_METHOD_LABEL, PAYMENT_STATUS } from "../../constants/orderLabels.js";
 import { formatCurrency } from "../../utils/currency.js";
-import {
-  PAYMENT_METHOD_LABEL,
-  ORDER_STATUS,
-  PAYMENT_STATUS,
-} from "../../constants/orderLabels.js";
+import { formatDateTime } from "../../utils/date.js";
 
-function formatOptionLine(item) {
-  const options = (item.optionItems ?? []).map((o) => o.name).join(", ") || "-";
-  const excluded = (item.excludedIngredients ?? []).map((e) => e.name).join(", ") || "-";
-  return `옵션: ${options} | 제외: ${excluded}`;
+function getPositiveQuantity(value) {
+  const quantity = Number(value);
+  return Number.isFinite(quantity) && quantity > 0 ? quantity : 1;
+}
+
+function getOptionLineAmount(item, option) {
+  const itemQuantity = getPositiveQuantity(item.quantity);
+  const optionQuantity = getPositiveQuantity(option.quantity);
+  return Number(option.price) * itemQuantity * optionQuantity;
+}
+
+function getItemTotalAmount(item) {
+  const itemQuantity = getPositiveQuantity(item.quantity);
+  const baseAmount = Number(item.unitPrice) * itemQuantity;
+  const optionAmount = (item.optionItems ?? []).reduce(
+    (sum, option) => sum + getOptionLineAmount(item, option),
+    0,
+  );
+
+  return baseAmount + optionAmount;
 }
 
 function formatItemPrice(unitPrice, asNegative) {
@@ -20,12 +32,7 @@ function formatItemPrice(unitPrice, asNegative) {
   return formatCurrency(signed);
 }
 
-export default function OrderDetailPanel({
-  selectedOrder,
-  onClose,
-  onRefund,
-  onPrintReceipt,
-}) {
+export default function OrderDetailPanel({ selectedOrder, onClose, onRefund, onPrintReceipt }) {
   const hasOrder = Boolean(selectedOrder?.orderId);
   const isCancelledView =
     selectedOrder?.orderStatus === ORDER_STATUS.CANCELED ||
@@ -34,13 +41,10 @@ export default function OrderDetailPanel({
     selectedOrder?.paymentStatus === PAYMENT_STATUS.CANCELED;
 
   const canRefund =
-    hasOrder &&
-    !isCancelledView &&
-    selectedOrder?.paymentStatus === PAYMENT_STATUS.APPROVED;
+    hasOrder && !isCancelledView && selectedOrder?.paymentStatus === PAYMENT_STATUS.APPROVED;
 
   const canPrintReceipt =
-    hasOrder &&
-    (selectedOrder?.paymentStatus === PAYMENT_STATUS.APPROVED || isCancelledView);
+    hasOrder && (selectedOrder?.paymentStatus === PAYMENT_STATUS.APPROVED || isCancelledView);
 
   if (!hasOrder) {
     return (
@@ -84,10 +88,7 @@ export default function OrderDetailPanel({
 
         <div className="order-detail-panel__items">
           {(selectedOrder.items ?? []).map((item) => (
-            <div
-              key={`${item.menuId}-${item.menuName}`}
-              className="order-detail-panel__item"
-            >
+            <div key={`${item.menuId}-${item.menuName}`} className="order-detail-panel__item">
               <div className="order-detail-panel__item-row">
                 <strong>{item.menuName}</strong>
                 <span className="order-detail-panel__qty">{item.quantity}개</span>
@@ -95,7 +96,48 @@ export default function OrderDetailPanel({
                   {formatItemPrice(item.unitPrice, isCancelledView)}
                 </b>
               </div>
-              <p className="order-detail-panel__meta">{formatOptionLine(item)}</p>
+              {item.optionItems?.length > 0 || item.excludedIngredients?.length > 0 ? (
+                <div className="order-detail-panel__meta">
+                  <section className="order-detail-panel__detail-group">
+                    <h3>옵션</h3>
+                    {item.optionItems?.length > 0 ? (
+                      <ul>
+                        {item.optionItems.map((option) => (
+                          <li key={option.optionItemId}>
+                            <span>
+                              {option.name}
+                              {getPositiveQuantity(option.quantity) > 1
+                                ? ` × ${getPositiveQuantity(option.quantity)}`
+                                : ""}
+                            </span>
+                            <b>{formatItemPrice(getOptionLineAmount(item, option), isCancelledView)}</b>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>없음</p>
+                    )}
+                  </section>
+
+                  <section className="order-detail-panel__detail-group">
+                    <h3>제외</h3>
+                    {item.excludedIngredients?.length > 0 ? (
+                      <ul>
+                        {item.excludedIngredients.map((ingredient) => (
+                          <li key={ingredient.ingredientId}>{ingredient.name}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>없음</p>
+                    )}
+                  </section>
+
+                  <div className="order-detail-panel__item-total">
+                    <span>메뉴 합계</span>
+                    <b>{formatItemPrice(getItemTotalAmount(item), isCancelledView)}</b>
+                  </div>
+                </div>
+              ) : null}
             </div>
           ))}
         </div>
