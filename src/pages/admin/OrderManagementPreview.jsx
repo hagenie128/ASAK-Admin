@@ -14,7 +14,7 @@ import {
 } from "../../constants/orderLabels.js";
 import { ADMIN_PAGINATION } from "../../constants/pagination.js";
 import { useOrdersQuery } from "../../hooks/useOrdersQuery.js";
-import { orders } from "../../api/orders.js";
+import { ordersApi } from "../../api/ordersApi.js";
 import { toast } from "../../utils/toast.js";
 
 const ORDERS_PAGINATION = ADMIN_PAGINATION.orders;
@@ -66,15 +66,15 @@ export default function OrderManagementPreview() {
     return `${from.replaceAll("-", ".")} ~ ${to.replaceAll("-", ".")}`;
   }, [appliedFilters, draftFilters]);
 
-  async function handleOrderDetail(orderId) {
-    const result = await orders.getOrder(orderId);
+  const handleOrderDetail = async (orderId) => {
+    const result = await ordersApi.getOrder(orderId);
     console.log("handleOrderDetail result:", result);
-    if (!result.success) {
+    if (result?.success === false) {
       toast.error(result.message);
       return;
     }
     setSelectedOrder(result);
-  }
+  };
 
   function handlePageChange(nextPage) {
     onPageChange(nextPage);

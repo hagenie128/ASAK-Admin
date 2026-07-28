@@ -1,7 +1,7 @@
 // 주문 목록 조회 Hook (SCR-010 / WBS2-036)
 import { useEffect, useState } from "react";
 import { ADMIN_PAGINATION } from "../constants/pagination.js";
-import { orders } from "../api/orders.js";
+import { ordersApi } from "../api/ordersApi.js";
 
 /**
  * @param {object} [options]
@@ -33,7 +33,7 @@ export function useOrdersQuery({ pageSize = ADMIN_PAGINATION.orders.pageSize, fi
       setError(null);
 
       try {
-        const result = await orders.listOrders({
+        const result = await ordersApi.listOrders({
           page,
           size: pageSize,
           orderStatus,

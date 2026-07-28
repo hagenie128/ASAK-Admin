@@ -1,10 +1,10 @@
 // 주문 요청 모듈 자리.
-import { apiClient } from "./client.js";
+import { apiClient } from "./apiClient.js";
 
 /*
   주문 관련 API 함수
 */
-export const orders = {
+export const ordersApi = {
   // 주문 목록
   listOrders: (params) => apiClient.get("/admin/orders", { params }),
   // 주문 상세

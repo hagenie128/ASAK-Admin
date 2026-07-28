@@ -1,9 +1,9 @@
-import { apiClient } from "./client.js";
+import { apiClient } from "./apiClient.js";
 
 /*
   메뉴 관련 API 함수
 */
-export const adminApi = {
+export const menusApi = {
   // 전체 메뉴 목록
   listMenus: () => apiClient.get("/admin/menus"),
   // 메뉴 상세
