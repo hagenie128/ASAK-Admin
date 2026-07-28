@@ -122,11 +122,7 @@ export default function OrderDetailPanel({ selectedOrder, onClose, onRefund, onP
                   <section className="order-detail-panel__detail-group">
                     <h3>제외</h3>
                     {item.excludedIngredients?.length > 0 ? (
-                      <ul>
-                        {item.excludedIngredients.map((ingredient) => (
-                          <li key={ingredient.ingredientId}>{ingredient.name}</li>
-                        ))}
-                      </ul>
+                      <p>{item.excludedIngredients.map((ingredient) => ingredient.name).join(", ")}</p>
                     ) : (
                       <p>없음</p>
                     )}
