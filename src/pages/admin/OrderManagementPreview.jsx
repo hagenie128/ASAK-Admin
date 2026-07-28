@@ -1,22 +1,21 @@
 import { useMemo, useState } from "react";
-import { useOrdersQuery } from "../../hooks/useOrdersQuery.js";
-import AdminTopHeader from "../../components/admin/AdminTopHeader.jsx";
-import AdminPagination from "../../components/admin/AdminPagination.jsx";
-import AdminFilterDropdown from "../../components/admin/AdminFilterDropdown.jsx";
-import AdminDatePicker from "../../components/admin/AdminDatePicker.jsx";
-import AdminSearchInput from "../../components/admin/AdminSearchInput.jsx";
 import AdminConfirmDialog from "../../components/admin/AdminConfirmDialog.jsx";
-import OrderTable from "../../components/admin/OrderTable.jsx";
+import AdminDatePicker from "../../components/admin/AdminDatePicker.jsx";
+import AdminFilterDropdown from "../../components/admin/AdminFilterDropdown.jsx";
+import AdminPagination from "../../components/admin/AdminPagination.jsx";
+import AdminSearchInput from "../../components/admin/AdminSearchInput.jsx";
+import AdminTopHeader from "../../components/admin/AdminTopHeader.jsx";
 import OrderDetailPanel from "../../components/admin/OrderDetailPanel.jsx";
-import { getAdminOrderById } from "../../mocks/adminMockRepository.js";
-import { toast } from "../../utils/toast.js";
-import { refundAdminOrder, printAdminOrderReceipt } from "../../api/adminOrderApi.js";
+import OrderTable from "../../components/admin/OrderTable.jsx";
 import {
   ORDER_STATUS_LABEL,
   ORDER_TYPE_LABEL,
   PAYMENT_STATUS_LABEL,
 } from "../../constants/orderLabels.js";
 import { ADMIN_PAGINATION } from "../../constants/pagination.js";
+import { useOrdersQuery } from "../../hooks/useOrdersQuery.js";
+import { getAdminOrderById } from "../../mocks/adminMockRepository.js";
+import { toast } from "../../utils/toast.js";
 
 const ORDERS_PAGINATION = ADMIN_PAGINATION.orders;
 
@@ -94,43 +93,44 @@ export default function OrderManagementPreview() {
       dateTo: range.to,
     }));
   }
+  // TODO: 환불 API 구현 후 연결
+  // function handleRefund(orderId) {
+  //   setConfirmDialog({
+  //     title: "환불하시겠습니까?",
+  //     description: "환불 처리 후 결제 상태가 변경됩니다.",
+  //     confirmLabel: "환불",
+  //     tone: "danger",
+  //     onConfirm: () => {
+  //       const result = refundAdminOrder(orderId);
+  //       if (!result.success) {
+  //         toast.error(result.message);
+  //         return;
+  //       }
+  //       toast.success("환불 처리가 완료되었습니다.");
+  //       setSelectedOrder(result.data);
+  //       refetch();
+  //     },
+  //   });
+  // }
 
-  function handleRefund(orderId) {
-    setConfirmDialog({
-      title: "환불하시겠습니까?",
-      description: "환불 처리 후 결제 상태가 변경됩니다.",
-      confirmLabel: "환불",
-      tone: "danger",
-      onConfirm: () => {
-        const result = refundAdminOrder(orderId);
-        if (!result.success) {
-          toast.error(result.message);
-          return;
-        }
-        toast.success("환불 처리가 완료되었습니다.");
-        setSelectedOrder(result.data);
-        refetch();
-      },
-    });
-  }
-
-  function handlePrintReceipt(orderId) {
-    setConfirmDialog({
-      title: "영수증을 출력하시겠습니까?",
-      description: "선택한 주문의 영수증을 출력합니다.",
-      confirmLabel: "출력",
-      tone: "warning",
-      onConfirm: () => {
-        const result = printAdminOrderReceipt(orderId);
-        if (!result.success) {
-          toast.error(result.message);
-          return;
-        }
-        toast.success("영수증 출력이 완료되었습니다.");
-        setSelectedOrder(result.data);
-      },
-    });
-  }
+  // TODO: 영수증 출력 API 구현 후 연결
+  // function handlePrintReceipt(orderId) {
+  //   setConfirmDialog({
+  //     title: "영수증을 출력하시겠습니까?",
+  //     description: "선택한 주문의 영수증을 출력합니다.",
+  //     confirmLabel: "출력",
+  //     tone: "warning",
+  //     onConfirm: () => {
+  //       const result = printAdminOrderReceipt(orderId);
+  //       if (!result.success) {
+  //         toast.error(result.message);
+  //         return;
+  //       }
+  //       toast.success("영수증 출력이 완료되었습니다.");
+  //       setSelectedOrder(result.data);
+  //     },
+  //   });
+  // }
 
   function handleConfirm() {
     const action = confirmDialog?.onConfirm;
@@ -210,8 +210,8 @@ export default function OrderManagementPreview() {
         <OrderDetailPanel
           selectedOrder={selectedOrder}
           onClose={() => setSelectedOrder(null)}
-          onRefund={handleRefund}
-          onPrintReceipt={handlePrintReceipt}
+          // onRefund={handleRefund}
+          // onPrintReceipt={handlePrintReceipt}
         />
       </div>
       <AdminConfirmDialog
