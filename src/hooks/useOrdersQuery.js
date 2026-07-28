@@ -1,20 +1,18 @@
 // 주문 목록 조회 Hook (SCR-010 / WBS2-036)
 import { useEffect, useState } from "react";
 import { ADMIN_PAGINATION } from "../constants/pagination.js";
-import { getAdminOrders } from "../mocks/adminMockRepository.js";
-import { usePagination } from "./usePagination.js";
+import { orders } from "../api/orders.js";
 
 /**
  * @param {object} [options]
  * @param {number} [options.pageSize] — 기본: ADMIN_PAGINATION.orders.pageSize
  * @param {object} [options.filters]
  */
-export function useOrdersQuery({
-  pageSize = ADMIN_PAGINATION.orders.pageSize,
-  filters = {},
-} = {}) {
+export function useOrdersQuery({ pageSize = ADMIN_PAGINATION.orders.pageSize, filters = {} } = {}) {
   const [status, setStatus] = useState("loading");
-  const [allOrders, setAllOrders] = useState([]);
+  const [orderRows, setOrderRows] = useState([]);
+  const [page, setPage] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
   const [error, setError] = useState(null);
   const [tick, setTick] = useState(0);
 
@@ -28,37 +26,56 @@ export function useOrdersQuery({
   } = filters;
 
   useEffect(() => {
-    setStatus("loading");
-    setError(null);
-    try {
-      const envelope = getAdminOrders({
-        orderStatus,
-        paymentStatus,
-        orderType,
-        dateFrom,
-        dateTo,
-        keyword,
-      });
-      const rows = envelope.data?.content ?? [];
-      setAllOrders(rows);
-      setStatus(rows.length === 0 ? "empty" : "success");
-    } catch (err) {
-      setError(err);
-      setStatus("error");
-      setAllOrders([]);
-    }
-  }, [orderStatus, paymentStatus, orderType, dateFrom, dateTo, keyword, tick]);
+    let cancelled = false;
 
-  const pagination = usePagination(allOrders, { pageSize });
+    const fetchOrders = async () => {
+      setStatus("loading");
+      setError(null);
+
+      try {
+        const result = await orders.listOrders({
+          page,
+          size: pageSize,
+          orderStatus,
+          paymentStatus,
+          orderType,
+          dateFrom,
+          dateTo,
+          keyword,
+        });
+
+        if (cancelled) return;
+
+        const orderList = Array.isArray(result?.content) ? result.content : [];
+
+        setOrderRows(orderList);
+        setTotalElements(Number(result?.totalElements) || 0);
+        setStatus(orderList.length === 0 ? "empty" : "success");
+      } catch (err) {
+        if (cancelled) return;
+
+        setError(err);
+        setOrderRows([]);
+        setTotalElements(0);
+        setStatus("error");
+      }
+    };
+
+    fetchOrders();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [page, pageSize, orderStatus, paymentStatus, orderType, dateFrom, dateTo, keyword, tick]);
 
   return {
     status,
     error,
-    orders: pagination.pageItems,
-    totalElements: pagination.totalElements,
-    page: pagination.page,
-    pageSize: pagination.pageSize,
-    onPageChange: pagination.goToPage,
+    orders: orderRows,
+    totalElements,
+    page,
+    pageSize,
+    onPageChange: (nextPage) => setPage(Math.max(0, nextPage)),
     refetch: () => setTick((n) => n + 1),
   };
 }
