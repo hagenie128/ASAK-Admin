@@ -5,12 +5,7 @@ import { ORDER_TYPE_LABEL } from "../../constants/orderLabels.js";
 import AdminAsyncState from "./AdminAsyncState.jsx";
 import OrderStatusBadge from "./OrderStatusBadge.jsx";
 
-export default function OrderTable({
-  status,
-  orders,
-  onOrderDetail,
-  selectedOrderId = null,
-}) {
+export default function OrderTable({ status, orders, onOrderDetail, selectedOrderId = null }) {
   if (status === "loading" || status === "idle") {
     return (
       <AdminAsyncState
@@ -70,7 +65,7 @@ export default function OrderTable({
             <td>{ORDER_TYPE_LABEL[order.orderType] ?? order.orderType}</td>
             <td>{order.menuSummary}</td>
             <td>{order.itemCount}</td>
-            <td>{formatCurrency(order.totalPrice)}</td>
+            <td>{formatCurrency(order.totalAmount)}</td>
             <td>
               <OrderStatusBadge orderStatus={order.orderStatus} />
             </td>

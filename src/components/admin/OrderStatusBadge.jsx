@@ -7,17 +7,17 @@ const ORDER_TONE = {
   RECEIVED: "received",
   PREPARING: "preparing",
   COMPLETED: "complete",
-  CANCELLED: "cancelled",
+  CANCELED: "cancelled",
   REFUNDED: "cancelled",
 };
 
 const PAYMENT_TONE = {
-  PAID: "received",
+  APPROVED: "received",
   READY: "preparing",
   FAILED: "cancelled",
   UNPAID: "cancelled",
   PARTIAL_PAID: "preparing",
-  CANCELLED: "cancelled",
+  CANCELED: "cancelled",
   REFUNDED: "cancelled",
 };
 

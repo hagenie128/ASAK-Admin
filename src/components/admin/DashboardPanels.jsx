@@ -6,7 +6,7 @@ const STATUS_CLASS = {
   RECEIVED: "waiting",
   PREPARING: "preparing",
   COMPLETED: "complete",
-  CANCELLED: "cancelled",
+  CANCELED: "cancelled",
 };
 
 export function DashboardKpis({ kpis = [] }) {
@@ -40,7 +40,7 @@ export function DashboardRecentOrders({ orders = [] }) {
             <b>{order.orderNo}</b>
             <span>{ORDER_TYPE_LABEL[order.orderType] ?? order.orderType}</span>
             <span>{order.menuSummary}</span>
-            <span>{formatCurrency(order.totalPrice)}</span>
+            <span>{formatCurrency(order.totalAmount)}</span>
             <em
               className={`dashboard-status dashboard-status--${STATUS_CLASS[order.orderStatus] ?? "waiting"}`}
             >
