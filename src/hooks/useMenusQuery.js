@@ -32,6 +32,16 @@ export function useMenusQuery({ initialMenuId = null } = {}) {
     });
   }, [menus, selectedCategory, keyword]);
 
+  const optionGroupCatalog = useMemo(() => {
+    const groupsById = new Map();
+    menus.forEach((menu) => {
+      (menu.detail?.optionGroups ?? []).forEach((group) => {
+        if (!groupsById.has(group.groupId)) groupsById.set(group.groupId, group);
+      });
+    });
+    return [...groupsById.values()];
+  }, [menus]);
+
   useEffect(() => {
     if (filteredMenus.length === 0) {
       setSelectedMenuId(null);
@@ -46,9 +56,36 @@ export function useMenusQuery({ initialMenuId = null } = {}) {
   const selectedMenu =
     filteredMenus.find((row) => row.menuId === selectedMenuId) ?? filteredMenus[0] ?? null;
 
+  function updateMenu(menuId, payload) {
+    setMenus((prev) =>
+      prev.map((menu) => {
+        if (menu.menuId !== menuId) return menu;
+
+        return {
+          ...menu,
+          name: payload.name,
+          categoryName: payload.categoryName,
+          price: payload.price,
+          isActive: payload.isActive,
+          detail: {
+            ...menu.detail,
+            description: payload.description,
+            imageUrl: payload.imageUrl,
+            ingredients: payload.ingredients,
+            optionGroups: payload.optionGroups,
+            nutrition: payload.nutrition,
+            allergens: payload.allergens,
+            tags: payload.tags,
+          },
+        };
+      }),
+    );
+  }
+
   return {
     status,
     categories,
+    optionGroupCatalog,
     filteredMenus,
     selectedMenu,
     selectedCategory,
@@ -56,5 +93,6 @@ export function useMenusQuery({ initialMenuId = null } = {}) {
     setSelectedCategory,
     setKeyword,
     selectMenu: setSelectedMenuId,
+    updateMenu,
   };
 }

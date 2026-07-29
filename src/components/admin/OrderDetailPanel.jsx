@@ -145,14 +145,15 @@ export default function OrderDetailPanel({ selectedOrder, onClose, onRefund, onP
           <p>{selectedOrder.requestNote || "요청사항 없음"}</p>
         </section>
 
-        <div className="order-detail-panel__divider" />
+      </div>
 
+      <footer className="order-detail-panel__footer">
         <div className="order-detail-panel__total">
           <span>{isCancelledView ? "총 취소 금액" : "총 결제 금액"}</span>
           <b>{formatCurrency(selectedOrder.totalAmount)}</b>
         </div>
 
-        <footer
+        <div
           className={`order-detail-panel__actions${
             isCancelledView ? " order-detail-panel__actions--refunded" : ""
           }`}
@@ -186,8 +187,8 @@ export default function OrderDetailPanel({ selectedOrder, onClose, onRefund, onP
               영수증 출력
             </button>
           ) : null}
-        </footer>
-      </div>
+        </div>
+      </footer>
     </aside>
   );
 }

@@ -32,6 +32,7 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
   const {
     status,
     categories,
+    optionGroupCatalog,
     filteredMenus,
     selectedMenu,
     selectedCategory,
@@ -39,6 +40,7 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
     setSelectedCategory,
     setKeyword,
     selectMenu,
+    updateMenu,
   } = useMenusQuery({ initialMenuId: urlMenuId });
 
   const menusPage = usePagination(filteredMenus, { pageSize: MENUS_PAGINATION.pageSize });
@@ -72,10 +74,14 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
   }
 
   function handleSaveEdit(payload) {
+    if (panelMode === "edit" && selectedMenu) {
+      updateMenu(selectedMenu.menuId, payload);
+    }
+
     toast.success(
       panelMode === "create"
         ? `메뉴 등록 stub: ${payload.name || "(이름 없음)"}`
-        : `메뉴 수정 stub: ${payload.name || selectedMenu?.name}`,
+        : `메뉴 수정 반영: ${payload.name || selectedMenu?.name}`,
     );
     setPanelMode("view");
   }
@@ -145,6 +151,7 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
             mode={panelMode}
             menu={panelMode === "edit" ? selectedMenu : null}
             categoryOptions={categories.filter((name) => name !== "전체")}
+            optionGroupCatalog={optionGroupCatalog}
             onCancel={handleCancelEdit}
             onSave={handleSaveEdit}
             onDelete={handleDeleteRequest}

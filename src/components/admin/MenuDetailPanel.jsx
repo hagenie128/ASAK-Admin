@@ -145,7 +145,12 @@ export default function MenuDetailPanel({ menu, onEdit, onDelete }) {
           <h3>옵션 그룹</h3>
           <div className="menu-detail-options__grid">
             {optionGroups.map((group) => (
-              <article key={group.groupId}>
+              <article
+                key={group.groupId}
+                className={`menu-detail-options__item${
+                  group.isRequired ? "" : " menu-detail-options__item--optional"
+                }`}
+              >
                 <div>
                   <strong>{group.name}</strong>
                   <AdminStatusBadge role={group.isRequired ? "required" : "optional"} />

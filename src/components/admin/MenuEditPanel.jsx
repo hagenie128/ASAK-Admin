@@ -5,10 +5,16 @@
 import { useEffect, useMemo, useState } from "react";
 import ricottaImage from "../../assets/figma/soldout-ricotta.png";
 import { formatCurrency } from "../../utils/currency.js";
+import AdminConfirmDialog from "./AdminConfirmDialog.jsx";
 import AdminStatusBadge from "./AdminStatusBadge.jsx";
 import IngredientSelectModal from "./IngredientSelectModal.jsx";
 
 const DESC_MAX = 300;
+const TAG_OPTIONS = [
+  { code: "BEST", name: "BEST", colorHex: "#E87500" },
+  { code: "NEW", name: "NEW", colorHex: "#2563EB" },
+  { code: "VEGAN", name: "VEGAN", colorHex: "#077E40" },
+];
 
 const EMPTY_FORM = {
   name: "",
@@ -35,10 +41,39 @@ function tagClassName(code = "") {
   return "menu-tag";
 }
 
+function normalizeOptionGroups(groups = []) {
+  return groups.map((group) => {
+    const items = group.items ?? [];
+
+    if (!group.isRequired) {
+      return {
+        ...group,
+        recommendedLabel: null,
+        items: items.map((item) => ({ ...item, isRecommended: false })),
+      };
+    }
+
+    const recommendedItem =
+      items.find((item) => item.isRecommended && !item.isSoldOut) ??
+      items.find((item) => !item.isSoldOut) ??
+      items[0];
+
+    return {
+      ...group,
+      recommendedLabel: recommendedItem?.name ?? null,
+      items: items.map((item) => ({
+        ...item,
+        isRecommended: item.optionItemId === recommendedItem?.optionItemId,
+      })),
+    };
+  });
+}
+
 export default function MenuEditPanel({
   mode = "edit",
   menu = null,
   categoryOptions = [],
+  optionGroupCatalog = [],
   onCancel,
   onSave,
   onDelete,
@@ -52,6 +87,9 @@ export default function MenuEditPanel({
   const [tags, setTags] = useState([]);
   const [baseline, setBaseline] = useState("");
   const [ingredientModalOpen, setIngredientModalOpen] = useState(false);
+  const [tagPickerOpen, setTagPickerOpen] = useState(false);
+  const [optionGroupPickerOpen, setOptionGroupPickerOpen] = useState(false);
+  const [pendingOptionGroup, setPendingOptionGroup] = useState(null);
 
   useEffect(() => {
     if (isCreate || !menu) {
@@ -62,6 +100,9 @@ export default function MenuEditPanel({
       setNutrition({});
       setAllergens([]);
       setTags([]);
+      setTagPickerOpen(false);
+      setOptionGroupPickerOpen(false);
+      setPendingOptionGroup(null);
       setBaseline(JSON.stringify(next));
       return;
     }
@@ -75,15 +116,20 @@ export default function MenuEditPanel({
     };
     setForm(next);
     setIngredients(menu.detail?.ingredients ?? []);
-    setOptionGroups(menu.detail?.optionGroups ?? []);
+    const nextOptionGroups = normalizeOptionGroups(menu.detail?.optionGroups ?? []);
+    setOptionGroups(nextOptionGroups);
     setNutrition(menu.detail?.nutrition ?? {});
     setAllergens(menu.detail?.allergens ?? []);
     setTags(menu.detail?.tags ?? []);
+    setTagPickerOpen(false);
+    setOptionGroupPickerOpen(false);
+    setPendingOptionGroup(null);
     setBaseline(
       JSON.stringify({
         ...next,
         ingredients: menu.detail?.ingredients ?? [],
-        optionGroups: menu.detail?.optionGroups ?? [],
+        optionGroups: nextOptionGroups,
+        tags: menu.detail?.tags ?? [],
       }),
     );
   }, [isCreate, menu]);
@@ -93,6 +139,7 @@ export default function MenuEditPanel({
       ...form,
       ingredients,
       optionGroups,
+      tags,
     });
     return current === baseline ? 0 : 1;
   }, [form, ingredients, optionGroups, baseline]);
@@ -123,6 +170,26 @@ export default function MenuEditPanel({
     setIngredients((prev) => prev.filter((row) => row.ingredientId !== ingredientId));
   }
 
+  function selectRecommendedOption(groupId, optionItemId) {
+    setOptionGroups((prev) =>
+      prev.map((group) => {
+        if (!group.isRequired || group.groupId !== groupId) return group;
+
+        const items = (group.items ?? []).map((item) => ({
+          ...item,
+          isRecommended: item.optionItemId === optionItemId,
+        }));
+        const recommendedItem = items.find((item) => item.isRecommended);
+
+        return {
+          ...group,
+          items,
+          recommendedLabel: recommendedItem?.name ?? null,
+        };
+      }),
+    );
+  }
+
   function handleAddIngredients(selected) {
     setIngredients((prev) => {
       const usedIds = new Set(prev.map((row) => row.ingredientId));
@@ -145,6 +212,40 @@ export default function MenuEditPanel({
       return [...prev, ...next];
     });
     setIngredientModalOpen(false);
+  }
+
+  const availableTags = TAG_OPTIONS.filter(
+    (option) => !tags.some((tag) => tag.code === option.code),
+  );
+  const availableOptionGroups = optionGroupCatalog.filter(
+    (group) => !optionGroups.some((connected) => connected.groupId === group.groupId),
+  );
+
+  function addTag(option) {
+    setTags((prev) => [...prev, option]);
+    setTagPickerOpen(false);
+  }
+
+  function removeTag(code) {
+    setTags((prev) => prev.filter((tag) => tag.code !== code));
+  }
+
+  function addOptionGroup(group) {
+    const [nextGroup] = normalizeOptionGroups([group]);
+    setOptionGroups((prev) => [...prev, nextGroup]);
+    setOptionGroupPickerOpen(false);
+  }
+
+  function requestOptionGroupRemoval(group) {
+    setPendingOptionGroup(group);
+  }
+
+  function confirmOptionGroupRemoval() {
+    if (!pendingOptionGroup) return;
+    setOptionGroups((prev) =>
+      prev.filter((group) => group.groupId !== pendingOptionGroup.groupId),
+    );
+    setPendingOptionGroup(null);
   }
 
   return (
@@ -301,22 +402,93 @@ export default function MenuEditPanel({
         <section className="menu-edit-card">
           <header className="menu-edit-card__section-head">
             <h3>옵션 그룹</h3>
+            <button
+              type="button"
+              className="is-link"
+              disabled={availableOptionGroups.length === 0}
+              onClick={() => setOptionGroupPickerOpen((prev) => !prev)}
+            >
+              + 옵션 그룹 추가
+            </button>
           </header>
+          {optionGroupPickerOpen ? (
+            <div className="menu-edit-option-picker" role="listbox" aria-label="추가할 옵션 그룹 선택">
+              {availableOptionGroups.map((group) => (
+                <button
+                  key={group.groupId}
+                  type="button"
+                  role="option"
+                  aria-selected="false"
+                  onClick={() => addOptionGroup(group)}
+                >
+                  <strong>{group.name}</strong>
+                  <span>{group.isRequired ? "필수" : "선택"}</span>
+                </button>
+              ))}
+            </div>
+          ) : null}
           <div className="menu-edit-options">
             {optionGroups.length === 0 ? (
               <p className="menu-edit-empty">연결된 옵션 그룹이 없습니다.</p>
             ) : (
               optionGroups.map((group) => (
-                <article key={group.groupId}>
+                <article
+                  key={group.groupId}
+                  className={`menu-edit-options__item${
+                    group.isRequired ? "" : " menu-edit-options__item--optional"
+                  }`}
+                >
                   <div>
                     <strong>{group.name}</strong>
-                    <AdminStatusBadge role={group.isRequired ? "required" : "optional"} />
+                    <span className="menu-edit-options__item-actions">
+                      <AdminStatusBadge role={group.isRequired ? "required" : "optional"} />
+                      <button
+                        type="button"
+                        aria-label={`${group.name} 옵션 그룹 삭제`}
+                        onClick={() => requestOptionGroupRemoval(group)}
+                      >
+                        ×
+                      </button>
+                    </span>
                   </div>
-                  <p>
-                    {group.recommendedLabel
-                      ? `추천 : ${group.recommendedLabel}`
-                      : "추천 없음"}
-                  </p>
+                  {group.isRequired ? (
+                    <fieldset className="menu-edit-options__recommend">
+                      <legend>추천 옵션</legend>
+                      {(group.items ?? []).length > 0 ? (
+                        <select
+                          value={
+                            String(
+                              group.items.find((item) => item.isRecommended)?.optionItemId ?? "",
+                            )
+                          }
+                          onChange={(event) =>
+                            selectRecommendedOption(group.groupId, Number(event.target.value))
+                          }
+                        >
+                          {group.items.map((item) => (
+                            <option
+                              key={item.optionItemId}
+                              value={item.optionItemId}
+                              disabled={item.isSoldOut}
+                            >
+                              {item.name}
+                              {item.isSoldOut
+                                ? " (품절)"
+                                : item.extraPrice
+                                  ? ` (+${formatCurrency(item.extraPrice)})`
+                                  : ""}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <p>추천할 수 있는 옵션이 없습니다.</p>
+                      )}
+                    </fieldset>
+                  ) : (
+                    <p className="menu-edit-options__optional">
+                      선택 그룹에는 추천을 설정하지 않습니다.
+                    </p>
+                  )}
                 </article>
               ))
             )}
@@ -371,13 +543,44 @@ export default function MenuEditPanel({
             <h3>태그 설정</h3>
             <div className="menu-edit-chips">
               {tags.map((tag) => (
-                <span key={tag.code || tag.name} className={tagClassName(tag.code)}>
+                <span
+                  key={tag.code || tag.name}
+                  className={`${tagClassName(tag.code)} menu-edit-tag`}
+                >
                   {tag.name || tag.code}
+                  <button
+                    type="button"
+                    aria-label={`${tag.name || tag.code} 태그 제거`}
+                    onClick={() => removeTag(tag.code)}
+                  >
+                    ×
+                  </button>
                 </span>
               ))}
-              <button type="button" className="is-link" disabled>
+              <button
+                type="button"
+                className="is-link"
+                disabled={availableTags.length === 0}
+                onClick={() => setTagPickerOpen((prev) => !prev)}
+              >
                 + 태그 추가
               </button>
+              {tagPickerOpen ? (
+                <div className="menu-edit-tag-picker" role="listbox" aria-label="추가할 태그 선택">
+                  {availableTags.map((option) => (
+                    <button
+                      key={option.code}
+                      type="button"
+                      role="option"
+                      aria-selected="false"
+                      className={tagClassName(option.code)}
+                      onClick={() => addTag(option)}
+                    >
+                      {option.name}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
             </div>
           </section>
         </div>
@@ -406,6 +609,19 @@ export default function MenuEditPanel({
         existingIngredients={ingredients}
         onClose={() => setIngredientModalOpen(false)}
         onConfirm={handleAddIngredients}
+      />
+      <AdminConfirmDialog
+        open={Boolean(pendingOptionGroup)}
+        title="옵션 그룹을 삭제할까요?"
+        description={
+          pendingOptionGroup
+            ? `"${pendingOptionGroup.name}" 옵션 그룹을 이 메뉴에서 제거합니다.`
+            : "선택한 옵션 그룹을 이 메뉴에서 제거합니다."
+        }
+        confirmLabel="삭제"
+        tone="danger"
+        onConfirm={confirmOptionGroupRemoval}
+        onCancel={() => setPendingOptionGroup(null)}
       />
     </aside>
   );
