@@ -2,6 +2,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { getAdminMenus } from "../mocks/adminMockRepository.js";
 
+function getOptionGroupCatalog(menus) {
+  const groupsById = new Map();
+  menus.forEach((menu) => {
+    (menu.detail?.optionGroups ?? []).forEach((group) => {
+      if (!groupsById.has(group.groupId)) groupsById.set(group.groupId, group);
+    });
+  });
+  return [...groupsById.values()];
+}
+
 export function useMenusQuery({ initialMenuId = null } = {}) {
   const [menus, setMenus] = useState([]);
   const [status, setStatus] = useState("loading");
@@ -32,15 +42,8 @@ export function useMenusQuery({ initialMenuId = null } = {}) {
     });
   }, [menus, selectedCategory, keyword]);
 
-  const optionGroupCatalog = useMemo(() => {
-    const groupsById = new Map();
-    menus.forEach((menu) => {
-      (menu.detail?.optionGroups ?? []).forEach((group) => {
-        if (!groupsById.has(group.groupId)) groupsById.set(group.groupId, group);
-      });
-    });
-    return [...groupsById.values()];
-  }, [menus]);
+  // 옵션 그룹은 mock 목록에서 파생한 값이라 별도 Hook 상태가 필요 없다.
+  const optionGroupCatalog = getOptionGroupCatalog(menus);
 
   useEffect(() => {
     if (filteredMenus.length === 0) {
