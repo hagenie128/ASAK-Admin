@@ -1,22 +1,24 @@
-/* SCR-009 / Live Order — getLiveOrders() */
-import { useCallback, useEffect, useMemo, useState } from "react";
-import plusIcon from "../../assets/figma/icon-order-plus.svg";
-import excludeIcon from "../../assets/figma/icon-order-exclude.svg";
-import chipBagIcon from "../../assets/figma/icon-order-side.svg";
+/*
+ * SCR-009 / Live Order
+ * API: GET /api/admin/orders/live
+ * 응답: data.content[]의 orderId, orderNo, orderTypeLabel, orderStatus,
+ * totalAmount, createdAt, elapsedSec, menus[]를 주문 카드에 표시한다.
+ */
+import { useCallback, useEffect, useState } from "react";
+import { ordersApi } from "../../api/ordersApi.js";
 import drinkIcon from "../../assets/figma/icon-order-drink.svg";
-import { getLiveOrders, completeOrder, cancelOrder } from "../../mocks/adminMockRepository.js";
-import { ADMIN_PAGINATION } from "../../constants/pagination.js";
-import { usePagination } from "../../hooks/usePagination.js";
-import AdminAsyncState from "./AdminAsyncState.jsx";
-import AdminConfirmDialog from "./AdminConfirmDialog.jsx";
-import AdminSidebar from "./AdminSidebar.jsx";
+import excludeIcon from "../../assets/figma/icon-order-exclude.svg";
+import plusIcon from "../../assets/figma/icon-order-plus.svg";
+import chipBagIcon from "../../assets/figma/icon-order-side.svg";
 import { formatCurrency } from "../../utils/currency.js";
 import { formatDate, formatTime } from "../../utils/date.js";
 import { toast } from "../../utils/toast.js";
-
-const LIVE_PAGINATION = ADMIN_PAGINATION.liveOrders;
+import AdminAsyncState from "./AdminAsyncState.jsx";
+import AdminConfirmDialog from "./AdminConfirmDialog.jsx";
+import AdminSidebar from "./AdminSidebar.jsx";
 
 function readLiveFixture() {
+  // TODO 3(정리): 실제 API 확인이 끝나면 QA fixture와 console.log를 제거하거나 개발 환경으로 분리한다.
   try {
     const value = sessionStorage.getItem("asak_live_fixture");
     if (value === "empty") return { empty: true };
@@ -27,45 +29,41 @@ function readLiveFixture() {
   return {};
 }
 
-function isActiveLiveOrder(order) {
-  return order.orderStatus !== "COMPLETED" && order.orderStatus !== "CANCELED";
-}
-
 export default function LiveOrderPreview() {
   const [status, setStatus] = useState("loading");
   const [orders, setOrders] = useState([]);
   const [actionPending, setActionPending] = useState(false);
   const [cancelOrderId, setCancelOrderId] = useState(null);
 
-  const refresh = useCallback((options = {}) => {
+  const refresh = useCallback(async (options = {}) => {
     const showLoading = options.showLoading !== false;
     if (showLoading) setStatus("loading");
 
-    const envelope = getLiveOrders(readLiveFixture());
-    if (!envelope.success) {
+    try {
+      const liveBoard = await ordersApi.listLiveOrders();
+      const content = liveBoard?.content ?? [];
+
+      setOrders(content);
+      setStatus(content.length === 0 ? "empty" : "ready");
+    } catch {
       setOrders([]);
       setStatus("error");
-      return;
     }
-    const content = envelope.data?.content ?? [];
-    setOrders(content);
-    const visible = content.filter(isActiveLiveOrder);
-    setStatus(visible.length === 0 ? "empty" : "ready");
   }, []);
 
   useEffect(() => {
     refresh();
   }, [refresh]);
 
-  const activeOrders = useMemo(() => orders.filter(isActiveLiveOrder), [orders]);
-  const livePage = usePagination(activeOrders, { pageSize: LIVE_PAGINATION.pageSize });
-
   const runOrderAction = async (orderId, action) => {
     if (actionPending) return;
 
     setActionPending(true);
     try {
-      const result = action === "complete" ? completeOrder(orderId) : cancelOrder(orderId);
+      // TODO 2(완료·취소): ordersApi.js에 아래 두 요청 메서드를 추가하고 백엔드 URL/HTTP 메서드를 확정한다.
+      // - completeOrder(orderId): 조리 완료 처리
+      // - cancelOrder(orderId): 주문 취소 처리
+      const result = action === "complete" ? await ordersApi.completeOrder(orderId) : await ordersApi.cancelOrder(orderId);
       if (result?.success === false) {
         toast.error(result.message || "처리에 실패했습니다.");
         return;
@@ -112,12 +110,15 @@ export default function LiveOrderPreview() {
         </div>
       </header>
       <main className="live-order-preview__content">
+        {/* TODO 1(가로 스크롤): livePage를 제거한다.
+            보드에 useRef를 연결하고, 왼쪽/오른쪽 버튼에서 scrollBy({ left: ±카드너비 })를 호출한다.
+            카드 목록은 orders.map(...)으로 전부 렌더링한다. orders[0]은 가장 오래된 주문이다. */}
         <button
           type="button"
           className="live-order-preview__arrow"
-          disabled={status !== "ready" || livePage.page <= 0}
+          disabled={status !== "ready" || orders.length <= 0}
           aria-label="이전 주문"
-          onClick={() => livePage.goToPage(livePage.page - 1)}
+          onClick={() => scrollBy({ left: 0 })}
         >
           ‹
         </button>
@@ -144,7 +145,7 @@ export default function LiveOrderPreview() {
           </div>
         ) : (
           <div className="live-order-preview__board">
-            {livePage.pageItems.map((order) => (
+            {orders.map((order) => (
               <OrderCard
                 key={order.orderId}
                 order={order}
@@ -157,9 +158,9 @@ export default function LiveOrderPreview() {
         <button
           type="button"
           className="live-order-preview__arrow"
-          disabled={status !== "ready" || livePage.page >= livePage.totalPages - 1}
+          disabled={status !== "ready" || orders.page >= orders.totalPages - 1}
           aria-label="다음 주문"
-          onClick={() => livePage.goToPage(livePage.page + 1)}
+          onClick={() => scrollBy(`left:+${document.querySelector(".live-order-preview__board").scrollWidth}`)}
         >
           ›
         </button>
@@ -202,10 +203,12 @@ function MenuCard({ menu }) {
           <strong>{menu?.menuName || "menu name"}</strong>
           <span>{menu?.quantity ?? 0}</span>
         </div>
-        <p className="figma-order-menu__base">
-          <span>베이스:</span>
-          <b>{menu?.base || "추천"}</b>
-        </p>
+        {menu?.base ? (
+          <p className="figma-order-menu__base">
+            <span>베이스:</span>
+            <b>{menu.base}</b>
+          </p>
+        ) : null}
         <p className="figma-order-menu__dressing">
           <span>드레싱:</span>
           <b>{menu?.dressing || "발사믹"}</b>
@@ -214,8 +217,8 @@ function MenuCard({ menu }) {
       {options.length > 0 ? (
         <div className="figma-order-menu__options">
           <ul>
-            {options.map((option) => (
-              <li key={`${option.tone}-${option.label}`} className={optionClass(option.tone)}>
+            {options.map((option, index) => (
+              <li key={`${option.tone}-${option.label}-${index}`} className={optionClass(option.tone)}>
                 <i aria-hidden="true">
                   <img alt="" src={optionIcon(option.tone)} />
                 </i>

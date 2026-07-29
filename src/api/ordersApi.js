@@ -9,6 +9,6 @@ export const ordersApi = {
   listOrders: (params) => apiClient.get("/admin/orders", { params }),
   // 주문 상세
   getOrder: (orderId) => apiClient.get(`/admin/orders/${orderId}`),
-  // 활성 주문 목록
-  listActiveOrders: () => apiClient.get("/admin/orders/active"),
+  // Live 주문 보드: 메뉴·옵션·경과시간을 포함한 진행 중 주문 전체
+  listLiveOrders: () => apiClient.get("/admin/orders/live"),
 };
