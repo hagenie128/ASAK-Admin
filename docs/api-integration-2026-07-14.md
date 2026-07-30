@@ -27,7 +27,7 @@
 | --- | --- | --- |
 | `GET /api/admin/orders/active` | SCR-009 실시간 주문 현황 | orderId, orderNo, orderStatus, totalAmount, createdAt, items |
 | `GET /api/admin/orders` | SCR-010 주문 목록 | orderNo, orderStatus, paymentStatus, totalAmount |
-| `PATCH /api/admin/orders/{id}/status` | 주문 상세 | orderStatus |
+| `PATCH /api/admin/orders/{orderId}/{status}` | 주문 상세 | path: orderId, status (`PREPARING` 또는 `COMPLETED`) |
 | `GET/PATCH /api/admin/sold-out-items` | 품절 관리 | targetType, targetId, isSoldOut |
 | 메뉴·결제수단·매출 API | 운영 설정 | 별도 계약 확정 후 연결 |
 
