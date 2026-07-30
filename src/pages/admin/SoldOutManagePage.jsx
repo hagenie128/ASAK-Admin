@@ -66,154 +66,6 @@ function ItemCard({ item, checked, onToggle, soldOut = false }) {
   );
 }
 
-export default function SoldOutManagePage() {
-  const draft = useSoldOutDraft();
-  const [selectedTab, setSelectedTab] = useState(TABS[0].targetType);
-  const [keyword, setKeyword] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("전체");
-  const [saveConfirmOpen, setSaveConfirmOpen] = useState(false);
-
-  const typedAvailable = useMemo(
-    () => draft.available.filter((row) => row.targetType === selectedTab),
-    [draft.available, selectedTab],
-  );
-
-  const typedSoldOut = useMemo(
-    () => draft.soldOut.filter((row) => row.targetType === selectedTab),
-    [draft.soldOut, selectedTab],
-  );
-
-  const categories = useMemo(() => {
-    const names = new Set(typedAvailable.map((row) => row.category).filter(Boolean));
-    return ["전체", ...names];
-  }, [typedAvailable]);
-
-  const filteredAvailable = useMemo(() => {
-    const q = keyword.trim().toLowerCase();
-    return typedAvailable.filter((row) => {
-      if (selectedCategory !== "전체" && row.category !== selectedCategory) return false;
-      if (q && !String(row.name ?? "").toLowerCase().includes(q)) return false;
-      return true;
-    });
-  }, [typedAvailable, selectedCategory, keyword]);
-
-  const availablePage = usePagination(filteredAvailable, {
-    pageSize: SOLD_OUT_PAGINATION.pageSize,
-  });
-  const soldOutPage = usePagination(typedSoldOut, {
-    pageSize: SOLD_OUT_PAGINATION.pageSize,
-  });
-
-  function handleTabChange(targetType) {
-    setSelectedTab(targetType);
-    setSelectedCategory("전체");
-    setKeyword("");
-    availablePage.resetPage();
-    soldOutPage.resetPage();
-  }
-
-  function handleCategoryChange(name) {
-    setSelectedCategory(name);
-    availablePage.resetPage();
-  }
-
-  function handleKeywordChange(value) {
-    setKeyword(value);
-    availablePage.resetPage();
-  }
-
-  async function handleSaveConfirm() {
-    setSaveConfirmOpen(false);
-    const result = await draft.save();
-    if (result.success) {
-      toast.success(result.message || "저장되었습니다.");
-    } else {
-      toast.error(result.message || "저장에 실패했습니다.");
-    }
-  }
-
-  if (draft.status === "loading") {
-    return (
-      <section className="sold-out-management">
-        <AdminTopHeader
-          crumb="Admin / 품절 관리"
-          title="품절 관리"
-          description="메뉴, 재료, 옵션의 판매 상태를 관리하세요."
-        />
-        <AdminAsyncState status="loading" layout="page" loadingVariant="card" />
-      </section>
-    );
-  }
-
-  return (
-    <section className="sold-out-management" data-figma-node="241:14211">
-      <AdminTopHeader
-        crumb="Admin / 품절 관리"
-        title="품절 관리"
-        description="메뉴, 재료, 옵션의 판매 상태를 관리하세요."
-      />
-      <div className="sold-out-management__workspace">
-        <AvailablePanel
-          items={availablePage.pageItems}
-          totalCount={availablePage.totalElements}
-          selectedTab={selectedTab}
-          onTabChange={handleTabChange}
-          keyword={keyword}
-          onKeywordChange={handleKeywordChange}
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onCategoryChange={handleCategoryChange}
-          selectedKeys={draft.selectedAvailable}
-          onToggle={draft.toggleAvailableSelect}
-          pagination={availablePage}
-        />
-        <div className="sold-out-transfer" aria-label="항목 이동">
-          <button
-            type="button"
-            className="is-primary"
-            disabled={!draft.canMoveToSoldOut}
-            aria-label="품절 목록으로 이동"
-            onClick={draft.moveToSoldOut}
-          >
-            →
-          </button>
-          <button
-            type="button"
-            disabled={!draft.canMoveToAvailable}
-            aria-label="전체 항목으로 이동"
-            onClick={draft.moveToAvailable}
-          >
-            ←
-          </button>
-        </div>
-        <SoldOutPanel
-          items={soldOutPage.pageItems}
-          totalCount={soldOutPage.totalElements}
-          dirtyCount={draft.dirtyCount}
-          canSave={draft.canSave}
-          isSaving={draft.isSaving}
-          selectedKeys={draft.selectedSoldOut}
-          onToggle={draft.toggleSoldOutSelect}
-          onSelectPage={draft.selectSoldOutPage}
-          onClearSelection={draft.clearSoldOutSelection}
-          onSave={() => setSaveConfirmOpen(true)}
-          pagination={soldOutPage}
-        />
-      </div>
-      <AdminConfirmDialog
-        open={saveConfirmOpen}
-        title="변경사항을 저장할까요?"
-        description={`품절 상태 변경 ${draft.dirtyCount}건을 저장합니다.`}
-        confirmLabel="저장"
-        tone="warning"
-        isBusy={draft.isSaving}
-        onConfirm={handleSaveConfirm}
-        onCancel={() => setSaveConfirmOpen(false)}
-      />
-    </section>
-  );
-}
-
 function AvailablePanel({
   items,
   totalCount,
@@ -369,6 +221,154 @@ function SoldOutPanel({
           {isSaving ? "저장 중…" : "변경사항 저장"}
         </button>
       </div>
+    </section>
+  );
+}
+
+export default function SoldOutManagePage() {
+  const draft = useSoldOutDraft();
+  const [selectedTab, setSelectedTab] = useState(TABS[0].targetType);
+  const [keyword, setKeyword] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("전체");
+  const [saveConfirmOpen, setSaveConfirmOpen] = useState(false);
+
+  const typedAvailable = useMemo(
+    () => draft.available.filter((row) => row.targetType === selectedTab),
+    [draft.available, selectedTab],
+  );
+
+  const typedSoldOut = useMemo(
+    () => draft.soldOut.filter((row) => row.targetType === selectedTab),
+    [draft.soldOut, selectedTab],
+  );
+
+  const categories = useMemo(() => {
+    const names = new Set(typedAvailable.map((row) => row.category).filter(Boolean));
+    return ["전체", ...names];
+  }, [typedAvailable]);
+
+  const filteredAvailable = useMemo(() => {
+    const q = keyword.trim().toLowerCase();
+    return typedAvailable.filter((row) => {
+      if (selectedCategory !== "전체" && row.category !== selectedCategory) return false;
+      if (q && !String(row.name ?? "").toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [typedAvailable, selectedCategory, keyword]);
+
+  const availablePage = usePagination(filteredAvailable, {
+    pageSize: SOLD_OUT_PAGINATION.pageSize,
+  });
+  const soldOutPage = usePagination(typedSoldOut, {
+    pageSize: SOLD_OUT_PAGINATION.pageSize,
+  });
+
+  function handleTabChange(targetType) {
+    setSelectedTab(targetType);
+    setSelectedCategory("전체");
+    setKeyword("");
+    availablePage.resetPage();
+    soldOutPage.resetPage();
+  }
+
+  function handleCategoryChange(name) {
+    setSelectedCategory(name);
+    availablePage.resetPage();
+  }
+
+  function handleKeywordChange(value) {
+    setKeyword(value);
+    availablePage.resetPage();
+  }
+
+  async function handleSaveConfirm() {
+    setSaveConfirmOpen(false);
+    const result = await draft.save();
+    if (result.success) {
+      toast.success(result.message || "저장되었습니다.");
+    } else {
+      toast.error(result.message || "저장에 실패했습니다.");
+    }
+  }
+
+  if (draft.status === "loading") {
+    return (
+      <section className="sold-out-management">
+        <AdminTopHeader
+          crumb="Admin / 품절 관리"
+          title="품절 관리"
+          description="메뉴, 재료, 옵션의 판매 상태를 관리하세요."
+        />
+        <AdminAsyncState status="loading" layout="page" loadingVariant="card" />
+      </section>
+    );
+  }
+
+  return (
+    <section className="sold-out-management" data-figma-node="241:14211">
+      <AdminTopHeader
+        crumb="Admin / 품절 관리"
+        title="품절 관리"
+        description="메뉴, 재료, 옵션의 판매 상태를 관리하세요."
+      />
+      <div className="sold-out-management__workspace">
+        <AvailablePanel
+          items={availablePage.pageItems}
+          totalCount={availablePage.totalElements}
+          selectedTab={selectedTab}
+          onTabChange={handleTabChange}
+          keyword={keyword}
+          onKeywordChange={handleKeywordChange}
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onCategoryChange={handleCategoryChange}
+          selectedKeys={draft.selectedAvailable}
+          onToggle={draft.toggleAvailableSelect}
+          pagination={availablePage}
+        />
+        <div className="sold-out-transfer" aria-label="항목 이동">
+          <button
+            type="button"
+            className="is-primary"
+            disabled={!draft.canMoveToSoldOut}
+            aria-label="품절 목록으로 이동"
+            onClick={draft.moveToSoldOut}
+          >
+            →
+          </button>
+          <button
+            type="button"
+            disabled={!draft.canMoveToAvailable}
+            aria-label="전체 항목으로 이동"
+            onClick={draft.moveToAvailable}
+          >
+            ←
+          </button>
+        </div>
+        <SoldOutPanel
+          items={soldOutPage.pageItems}
+          totalCount={soldOutPage.totalElements}
+          dirtyCount={draft.dirtyCount}
+          canSave={draft.canSave}
+          isSaving={draft.isSaving}
+          selectedKeys={draft.selectedSoldOut}
+          onToggle={draft.toggleSoldOutSelect}
+          onSelectPage={draft.selectSoldOutPage}
+          onClearSelection={draft.clearSoldOutSelection}
+          onSave={() => setSaveConfirmOpen(true)}
+          pagination={soldOutPage}
+        />
+      </div>
+      <AdminConfirmDialog
+        open={saveConfirmOpen}
+        title="변경사항을 저장할까요?"
+        description={`품절 상태 변경 ${draft.dirtyCount}건을 저장합니다.`}
+        confirmLabel="저장"
+        tone="warning"
+        isBusy={draft.isSaving}
+        onConfirm={handleSaveConfirm}
+        onCancel={() => setSaveConfirmOpen(false)}
+      />
     </section>
   );
 }

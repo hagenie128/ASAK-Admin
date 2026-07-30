@@ -14,6 +14,6 @@
 
 문서와 구현이 충돌하면 API 계약과 운영 정책을 먼저 확인하고, 결정 사항을 해당 문서에 갱신합니다.
 
-화면 상태는 [06-C Admin](https://www.figma.com/design/JSrjOy668zhfkiLplCkreh/ASAK-%E2%80%94-Design-System---Product-UI-0715?node-id=134-10606), QA 범위는 [07-C Matrix](https://www.figma.com/design/JSrjOy668zhfkiLplCkreh/ASAK-%E2%80%94-Design-System---Product-UI-0715?node-id=190-2), API 응답 형태는 [중앙 API 가이드](../../ASAK/docs/implementation_guide/04-api-db-implementation.md)를 기준으로 확인합니다.
+화면 상태는 [06-C Admin](https://www.figma.com/design/yHhvn5RKjBd91U8BJUQz7F/ASAK-%E2%80%94-Design-System---Product-UI-0718?node-id=134-10606), QA 범위는 [07-C Matrix](https://www.figma.com/design/yHhvn5RKjBd91U8BJUQz7F/ASAK-%E2%80%94-Design-System---Product-UI-0718?node-id=190-2), API 응답 형태는 [중앙 API 가이드](../../ASAK/docs/implementation_guide/04-api-db-implementation.md)를 기준으로 확인합니다.
 
 > **참고:** 루트 `TODO.md` / `IMPLEMENTATION_PLAN.md` 및 매출 체크리스트·TODO 트리 등 **구현 실행용 문서**는 정리·삭제했다. 온보딩·아키텍처·Mock 사전과 위 표를 본다.

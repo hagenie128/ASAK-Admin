@@ -37,8 +37,23 @@
   --admin-warning: #fbbf24; /* Status/Warning · Shared/Toast */
   --admin-warning-bg: #fffbeb; /* Status/WarningBG · Yellow/50 */
   --admin-warning-text: #92400e; /* Status/WarningText */
+  --admin-warning-soft: #fff8e6;
+  --admin-warning-soft-text: #a06400;
+  --admin-warning-subtle: #fffaf0;
+  --admin-warning-subtle-text: #b2801a;
   --admin-success: #5da45d; /* Status/Success */
   --admin-success-soft: #ebf5eb; /* Status/SuccessBG */
+  --admin-success-strong: #16a34a;
+  --admin-success-subtle: #f7fee7;
+  --admin-status-pending: #f28c0d; /* Status/Pending · Orange/500 */
+  --admin-status-done: #6699ff; /* Status/Done · Blue/300 */
+  --admin-status-info: #3b82f6; /* Status/Info · Blue/500 */
+  --admin-danger-border-soft: #fecaca;
+  --admin-danger-subtle: #fef2f2;
+  --admin-danger-border-light: #ffd0d1;
+  --admin-danger-surface: #fff5f5;
+  --admin-border-w: 1px; /* Border/Width/Default · Number/Border/Thin */
+  --admin-border-w-strong: 1.5px; /* Border/Width/Strong · Number/Border/Medium */
   --admin-text-inverse: #292d30; /* Text/Inverse · Toast 본문 */
   --admin-shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.08); /* Shadow/Subtle · Toast */
   --admin-shadow-floating: 0 2px 6px rgba(0, 0, 0, 0.06), 0 10px 28px rgba(0, 0, 0, 0.12); /* Shadow/Floating · Confirm */
@@ -46,6 +61,66 @@
   /* Category (StatusBadge · Ingredient chips) */
   --admin-category-dressing: #6d3fc4; /* Category/Dressing */
   --admin-category-dressing-bg: #eee8fc; /* Category/DressingBG */
+
+  /* Figma Primitive 대응 (0718 `ASAK / Primitive`) */
+  --admin-neutral-800: #404040; /* Color/Neutral/800 */
+  --admin-neutral-850: #333333; /* Color/Neutral/850 */
+  --admin-neutral-700: #666666; /* Color/Neutral/700 */
+  --admin-neutral-650: #4d4d4d;
+  --admin-neutral-600: #525252; /* Color/Neutral/600 */
+  --admin-neutral-500: #808080; /* Color/Neutral/500 */
+  --admin-neutral-450: #888888;
+  --admin-neutral-200: #bfbfbf; /* Color/Neutral/200 */
+  --admin-neutral-100: #f2f2f2;
+  --admin-neutral-150: #f0f0f0;
+  --admin-cool-gray-700: #374151; /* Color/CoolGray/700 */
+  --admin-cool-gray-400: #9ca3af; /* Color/CoolGray/400 */
+  --admin-cool-gray-300: #d1d5db;
+  --admin-cool-gray-50: #f3f4f6; /* Color/CoolGray/50 */
+  --admin-orange-500: #f97316; /* Color/Orange/500 */
+  --admin-orange-400: #ff8d28; /* Color/Orange/400 = Semantic/Category/Side */
+  --admin-red-800: #e50004; /* Color/Red/800 */
+  --admin-accent-blue: #0088ff; /* Color/Accent/Blue */
+  --admin-tag-best-bg: #ffe6e7;
+  --admin-tag-best-text: #ff0004;
+  --admin-tag-new-bg: #ffff80;
+  --admin-tag-vegan-text: #077e40;
+  --admin-brand-border-soft: #d9e9a6;
+
+  /* Surface / data visualization */
+  --admin-surface-muted: #fafafa;
+  --admin-surface-disabled: #f2f5f5;
+  --admin-chart-bar: #bfd99e;
+  --admin-chart-bar-current: #6ba629;
+  --admin-chart-bar-alt: #4caf50;
+
+  /* near-black 통합 — Figma Primitive에 없는 코드 전용 값이라 Figma식 이름을 쓰지 않는다.
+     Primitive의 near-black은 Neutral/850 #333333, Neutral/900 #212121, Black #000000 뿐. */
+  --admin-ink-900: #171717; /* 구 #0d0d0d + #171717 */
+  --admin-ink-800: #242424; /* 구 #212121 + #262626 + #292d30(raw) · 33~38 중점 */
+
+  /* Live order action states */
+  --admin-action-received: #e5ff52;
+  --admin-action-received-shadow: #e1ff39;
+
+  /* Elevation */
+  --admin-shadow-topbar: 0 4px 5px rgba(204, 204, 204, 0.4);
+  --admin-shadow-order-card:
+    1px -1px 2px rgba(18, 26, 0, 0.05),
+    -1px -1px 2px rgba(18, 26, 0, 0.05),
+    0 20px 24px -4px rgba(18, 26, 0, 0.1),
+    0 8px 8px -4px rgba(18, 26, 0, 0.04);
+  --admin-shadow-menu-card: 0 1px 1px rgba(0, 0, 0, 0.05);
+  --admin-shadow-action-primary:
+    inset 0 -2px 4px rgba(152, 202, 34, 0.75),
+    inset 0 2px 8px rgba(255, 255, 255, 0.6),
+    inset 0 -4px 12px rgba(152, 202, 34, 0.65),
+    inset 2px 4px 12px rgba(255, 255, 255, 0.65);
+  --admin-shadow-action-received:
+    inset 0 -2px 4px var(--admin-action-received-shadow),
+    inset 0 2px 8px rgba(255, 255, 255, 0.6),
+    inset 0 -4px 12px var(--admin-action-received-shadow),
+    inset 2px 4px 12px rgba(255, 255, 255, 0.65);
 
   /* Radius / Spacing (Semantic) */
   --admin-radius-sm: 4px;
@@ -58,6 +133,20 @@
 
   /* Type */
   --admin-font: "Pretendard Variable", Pretendard, sans-serif;
+  --admin-font-size-caption: 12px;
+  --admin-line-height-caption: 16px;
+  --admin-font-size-body: 16px;
+  --admin-line-height-body: 20px;
+  --admin-font-size-label: 18px;
+  --admin-line-height-label: 24px;
+  --admin-font-size-title: 24px;
+  --admin-line-height-title: 40px;
+  --admin-font-size-heading: 32px;
+  --admin-line-height-heading: 40px;
+  --admin-font-size-display: 28px;
+  --admin-line-height-display: 36px;
+  --admin-font-size-time: 20px;
+  --admin-line-height-time: 28px;
   --admin-sidebar-width: 240px;
   --admin-sidebar-compact-width: 88px;
 

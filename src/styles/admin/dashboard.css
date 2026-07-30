@@ -11,7 +11,7 @@
   align-items: flex-start;
   /* 행 간격만 통일 — 카드는 콘텐츠 높이(늘어나지 않음) */
   gap: 20px;
-  color: #404040;
+  color: var(--admin-neutral-800);
   overflow-x: hidden;
   overflow-y: auto;
   scrollbar-width: thin;
@@ -32,7 +32,7 @@
   font-size: 22px;
   line-height: 28px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--admin-bg-inverse);
 }
 
 .admin-dashboard__heading p {
@@ -40,7 +40,7 @@
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
-  color: #808080;
+  color: var(--admin-neutral-500);
 }
 
 .admin-dashboard__date {
@@ -56,8 +56,8 @@
   display: inline-flex;
   align-items: center;
   border-radius: 15px;
-  background: #333333;
-  color: #ffffff;
+  background: var(--admin-neutral-850);
+  color: var(--admin-panel);
   font-size: 14px;
   line-height: 20px;
   font-weight: 500;
@@ -67,7 +67,7 @@
   padding-top: 6px;
   font-size: 13px;
   line-height: 18px;
-  color: #666666;
+  color: var(--admin-neutral-700);
 }
 
 /* KPI Cards (227:5664) — 1008×120, gap 16 */
@@ -165,16 +165,16 @@
   height: 36px;
   padding: 8px 16px;
   border-radius: 4px;
-  background: #f7f7f7;
-  color: #737373;
+  background: var(--admin-bg);
+  color: var(--admin-text-tertiary);
   font-weight: 500;
 }
 
 .dashboard-orders__row {
   height: 40px;
   padding: 10px 16px;
-  border-bottom: 1px solid #f2f2f2;
-  color: #404040;
+  border-bottom: var(--admin-border-w) solid var(--admin-neutral-100);
+  color: var(--admin-neutral-800);
   font-weight: 500;
 }
 
@@ -223,11 +223,11 @@
 
 .dashboard-status--waiting,
 .dashboard-status--preparing {
-  color: #f28c0d;
+  color: var(--admin-status-pending);
 }
 
 .dashboard-status--complete {
-  color: #6699ff;
+  color: var(--admin-status-done);
 }
 
 /* Dashboard Status Summary Panel — 콘텐츠 높이 */
@@ -257,12 +257,12 @@
 
 .dashboard-status-summary__row p span {
   font-weight: 500;
-  color: #4d4d4d;
+  color: var(--admin-neutral-650);
 }
 
 .dashboard-status-summary__row p b {
   font-weight: 700;
-  color: #404040;
+  color: var(--admin-neutral-800);
 }
 
 .dashboard-status-summary__row i {
@@ -270,7 +270,7 @@
   width: 100%;
   height: 8px;
   border-radius: 4px;
-  background: #f0f0f0;
+  background: var(--admin-neutral-150);
   overflow: hidden;
 }
 
@@ -281,11 +281,11 @@
 }
 
 .dashboard-status-fill--waiting {
-  background: #6699ff;
+  background: var(--admin-status-done);
 }
 
 .dashboard-status-fill--preparing {
-  background: #f28c0d;
+  background: var(--admin-status-pending);
 }
 
 .dashboard-status-fill--complete {
@@ -300,7 +300,7 @@
   align-items: center;
   justify-content: space-between;
   border-radius: 8px;
-  background: #f7f7f7;
+  background: var(--admin-bg);
 }
 
 .dashboard-order-type div {
@@ -315,14 +315,14 @@
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
-  color: #737373;
+  color: var(--admin-text-tertiary);
 }
 
 .dashboard-order-type b {
   font-size: 16px;
   line-height: 24px;
   font-weight: 700;
-  color: #262626;
+  color: var(--admin-ink-800);
 }
 
 /* BottomSection — 폭만 유지, 높이는 콘텐츠에 맞춤 */
@@ -350,14 +350,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #f2f2f2;
+  border-bottom: var(--admin-border-w) solid var(--admin-neutral-100);
 }
 
 .dashboard-inventory__row span {
   font-size: 14px;
   line-height: 20px;
   font-weight: 500;
-  color: #404040;
+  color: var(--admin-neutral-800);
 }
 
 .dashboard-badge {
@@ -369,12 +369,12 @@
 }
 
 .dashboard-badge--danger {
-  background: #fff0eb;
-  color: #ef4444;
+  background: var(--admin-danger-soft);
+  color: var(--admin-danger);
 }
 
 .dashboard-badge--normal {
-  background: #ebf5eb;
+  background: var(--admin-success-soft);
   color: var(--admin-brand-primary);
 }
 
@@ -385,8 +385,8 @@
   display: flex;
   align-items: center;
   border-radius: 6px;
-  background: #fffaf0;
-  color: #b2801a;
+  background: var(--admin-warning-subtle);
+  color: var(--admin-warning-subtle-text);
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
@@ -408,7 +408,7 @@
   gap: 24px;
   align-items: flex-end;
   border-radius: 8px;
-  background: #fafafa;
+  background: var(--admin-surface-muted);
 }
 
 .dashboard-trend__chart div {
@@ -424,18 +424,18 @@
   width: 40px;
   flex-shrink: 0;
   border-radius: 4px;
-  background: #bfd99e;
+  background: var(--admin-chart-bar);
 }
 
 .dashboard-trend__chart i.is-current {
-  background: #6ba629;
+  background: var(--admin-chart-bar-current);
 }
 
 .dashboard-trend__chart span {
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
-  color: #737373;
+  color: var(--admin-text-tertiary);
 }
 
 .dashboard-trend__stats {
@@ -457,18 +457,18 @@
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
-  color: #888888;
+  color: var(--admin-neutral-450);
 }
 
 .dashboard-trend__stats b {
   font-size: 16px;
   line-height: 24px;
   font-weight: 700;
-  color: #262626;
+  color: var(--admin-ink-800);
 }
 
 .dashboard-trend__stats .is-down {
-  color: #ef4444;
+  color: var(--admin-danger);
 }
 
 /* Figma는 1920 고정폭만 정의한다. 아래는 좁은 화면에서 겹치지 않게 하는 구현상 보정이다. */

@@ -4,7 +4,7 @@
  * 응답: data.content[]의 orderId, orderNo, orderTypeLabel, orderStatus,
  * totalAmount, createdAt, elapsedSec, menus[]를 주문 카드에 표시한다.
  */
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ordersApi } from "../../api/ordersApi.js";
 import drinkIcon from "../../assets/figma/icon-order-drink.svg";
 import excludeIcon from "../../assets/figma/icon-order-exclude.svg";
@@ -28,12 +28,221 @@ function readLiveFixture() {
   }
   return {};
 }
+function optionIcon(tone) {
+  if (tone === "exclude") return excludeIcon;
+  if (tone === "plus") return plusIcon;
+  if (tone === "drink") return drinkIcon;
+  return chipBagIcon;
+}
+
+function optionClass(tone) {
+  if (tone === "exclude") return "figma-order-option figma-order-option--exclude";
+  if (tone === "plus") return "figma-order-option figma-order-option--plus";
+  if (tone === "drink") return "figma-order-option figma-order-option--drink";
+  return "figma-order-option figma-order-option--side";
+}
+
+const OPTION_TONE_ORDER = ["exclude", "plus", "side", "drink"];
+const MENU_CARD_WIDTH = 340;
+const MENU_CARD_GAP = 8;
+const ORDER_CARD_HORIZONTAL_PADDING = 40;
+
+const WIDE_LAYOUT_CLASS = "figma-order-card--wide";
+// 상단바(72px)와 주문 영역 상·하단 여백(48px)
+const CARD_VIEWPORT_MARGIN = 120;
+// 임계값 근처에서 가로 확장이 켜졌다 꺼졌다 반복하지 않도록 둔 여유
+const WIDE_LAYOUT_HYSTERESIS = 24;
+
+// 카드에 min-height가 걸려 있어 scrollHeight는 내용과 무관하게 항상 그 값 이상이 된다.
+// 자식 높이와 gap·padding을 직접 더해 메뉴를 1열로 쌓았을 때의 높이를 구한다.
+function measureStackedHeight(card) {
+  const style = window.getComputedStyle(card);
+  const gap = Number.parseFloat(style.rowGap) || 0;
+  const padding =
+    (Number.parseFloat(style.paddingTop) || 0) + (Number.parseFloat(style.paddingBottom) || 0);
+  const children = Array.from(card.children);
+  const content = children.reduce((sum, child) => sum + child.getBoundingClientRect().height, 0);
+  return padding + content + gap * Math.max(0, children.length - 1);
+}
+
+function sortOptionsByTone(options) {
+  return options
+    .map((option, index) => ({ option, index }))
+    .sort((left, right) => {
+      const leftOrder = OPTION_TONE_ORDER.indexOf(left.option.tone);
+      const rightOrder = OPTION_TONE_ORDER.indexOf(right.option.tone);
+      const leftPriority = leftOrder === -1 ? OPTION_TONE_ORDER.length : leftOrder;
+      const rightPriority = rightOrder === -1 ? OPTION_TONE_ORDER.length : rightOrder;
+
+      return leftPriority - rightPriority || left.index - right.index;
+    })
+    .map(({ option }) => option);
+}
+
+function formatElapsedTime(createdAt, now) {
+  const elapsedSec = Math.max(0, Math.floor((now - new Date(createdAt).getTime()) / 1000));
+
+  const day = Math.floor(elapsedSec / (60 * 60 * 24));
+
+  const time = new Date((elapsedSec % (60 * 60 * 24)) * 1000).toISOString().slice(11, 19);
+
+  return day > 0 ? `${day}일 ${time}` : time;
+}
+
+function MenuCard({ menu }) {
+  const options = sortOptionsByTone(menu?.options ?? []);
+
+  return (
+    <section className="figma-order-menu">
+      <div className="figma-order-menu__header">
+        <div className="figma-order-menu__title">
+          <strong>{menu?.menuName || "menu name"}</strong>
+          <span>{menu?.quantity ?? 0}</span>
+        </div>
+        {menu?.base ? (
+          <p className="figma-order-menu__base">
+            <span>베이스:</span>
+            <b>{menu.base}</b>
+          </p>
+        ) : null}
+        <p className="figma-order-menu__dressing">
+          <span>드레싱:</span>
+          <b>{menu?.dressing || "발사믹"}</b>
+        </p>
+      </div>
+      {options.length > 0 ? (
+        <div className="figma-order-menu__options">
+          <ul>
+            {options.map((option, index) => (
+              <li
+                key={`${option.tone}-${option.label}-${index}`}
+                className={optionClass(option.tone)}
+              >
+                <i aria-hidden="true">
+                  <img alt="" src={optionIcon(option.tone)} />
+                </i>
+                <span>{option.label}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
+function OrderCard({ order, now, onAction, actionPending = false }) {
+  const menus = order.menus ?? [];
+  const cardRef = useRef(null);
+  const [requiresWideLayout, setRequiresWideLayout] = useState(false);
+  const orderCardWidth =
+    MENU_CARD_WIDTH * menus.length +
+    MENU_CARD_GAP * (menus.length - 1) +
+    ORDER_CARD_HORIZONTAL_PADDING;
+  const liveOrderNo = String(order.orderNo ?? "").slice(-4);
+  const actionByStatus = {
+    RECEIVED: { label: "준비 시작", nextStatus: "PREPARING" },
+    PREPARING: { label: "완료 처리", nextStatus: "COMPLETED" },
+  };
+
+  useLayoutEffect(() => {
+    const card = cardRef.current;
+    if (!card) return undefined;
+
+    // 메뉴를 1열로 쌓았을 때 화면 높이를 넘는 경우에만 가로로 확장한다.
+    // 확장 중에는 옵션이 2열이라 카드가 짧아지므로, 판정은 항상 --wide를 뗀 상태에서 잰다.
+    // 그래야 확장 여부가 현재 모드에 의존하지 않아 켜짐/꺼짐이 반복되지 않는다.
+    const syncWideLayout = () => {
+      const hadWide = card.classList.contains(WIDE_LAYOUT_CLASS);
+      if (hadWide) card.classList.remove(WIDE_LAYOUT_CLASS);
+      const stackedHeight = measureStackedHeight(card);
+      if (hadWide) card.classList.add(WIDE_LAYOUT_CLASS);
+
+      const availableCardHeight = window.innerHeight - CARD_VIEWPORT_MARGIN;
+      setRequiresWideLayout((current) =>
+        current
+          ? stackedHeight > availableCardHeight - WIDE_LAYOUT_HYSTERESIS
+          : stackedHeight > availableCardHeight,
+      );
+    };
+
+    syncWideLayout();
+    window.addEventListener("resize", syncWideLayout);
+    return () => window.removeEventListener("resize", syncWideLayout);
+  }, [menus]);
+
+  return (
+    <article
+      ref={cardRef}
+      className={`figma-order-card${requiresWideLayout ? " figma-order-card--wide" : ""}`}
+      style={
+        requiresWideLayout
+          ? {
+              "--order-card-width": `${orderCardWidth}px`,
+              "--order-menu-count": menus.length,
+            }
+          : undefined
+      }
+      aria-label={`${order.orderNo} 주문 미리보기`}
+    >
+      <header className="figma-order-card__header">
+        <strong>{liveOrderNo}</strong>
+        <time>경과 {formatElapsedTime(order.createdAt, now)}</time>
+      </header>
+      <span
+        className={`figma-order-card__type${order.orderTypeLabel === "포장" ? " figma-order-card__type--takeout" : ""}`}
+      >
+        {order.orderTypeLabel}
+      </span>
+      <div className="figma-order-card__menus">
+        {menus.map((menu, index) => (
+          <MenuCard key={`${order.orderId}-${index}`} menu={menu} />
+        ))}
+      </div>
+      <footer className="figma-order-card__footer">
+        <div className="figma-order-card__total">
+          <span>총액</span>
+          <strong>{formatCurrency(order.totalAmount ?? 0)}</strong>
+        </div>
+        <div className="figma-order-card__actions">
+          <button
+            type="button"
+            disabled={actionPending}
+            onClick={() => onAction(order.orderId, "CANCELED")}
+          >
+            취소
+          </button>
+          <button
+            className={order.orderStatus === "RECEIVED" ? "RECEIVED" : ""}
+            type="button"
+            disabled={actionPending}
+            onClick={() => onAction(order.orderId, actionByStatus[order.orderStatus].nextStatus)}
+          >
+            {actionByStatus[order.orderStatus].label}
+          </button>
+        </div>
+      </footer>
+    </article>
+  );
+}
 
 export default function LiveOrderPreview() {
   const [status, setStatus] = useState("loading");
   const [orders, setOrders] = useState([]);
   const [actionPending, setActionPending] = useState(false);
   const [cancelOrderId, setCancelOrderId] = useState(null);
+  const [now, setNow] = useState(() => Date.now());
+  const boardRef = useRef(null);
+
+  function moveToEdge(position) {
+    const board = boardRef.current;
+    if (!board) return;
+
+    board.scrollTo({
+      left: position === "start" ? 0 : board.scrollWidth,
+      behavior: "smooth",
+    });
+  }
 
   const refresh = useCallback(async (options = {}) => {
     const showLoading = options.showLoading !== false;
@@ -55,23 +264,33 @@ export default function LiveOrderPreview() {
     refresh();
   }, [refresh]);
 
+  useEffect(() => {
+    const timerId = window.setInterval(() => {
+      setNow(Date.now());
+    }, 1000);
+
+    return () => window.clearInterval(timerId);
+  }, []);
+
   const runOrderAction = async (orderId, action) => {
     if (actionPending) return;
-
+    const SUCCESS_MESSAGE = {
+      PREPARING: "준비중으로 상태가 변경되었습니다.",
+      COMPLETED: "호출이 완료되었습니다.",
+      CANCELED: "삭제가 완료되었습니다.",
+    };
     setActionPending(true);
     try {
-      // TODO 2(완료·취소): ordersApi.js에 아래 두 요청 메서드를 추가하고 백엔드 URL/HTTP 메서드를 확정한다.
-      // - completeOrder(orderId): 조리 완료 처리
-      // - cancelOrder(orderId): 주문 취소 처리
-      const result = action === "complete" ? await ordersApi.completeOrder(orderId) : await ordersApi.cancelOrder(orderId);
-      if (result?.success === false) {
-        toast.error(result.message || "처리에 실패했습니다.");
-        return;
+      if (action == "CANCELED") {
+        await ordersApi.cancelOrder(orderId);
+      } else {
+        await ordersApi.changeOrderStatus(orderId, action);
       }
-      toast.success(
-        action === "complete" ? "호출이 완료되었습니다." : "주문이 취소되었습니다.",
-      );
+      toast.success(SUCCESS_MESSAGE[action]);
       refresh({ showLoading: false });
+    } catch (err) {
+      toast.error(err.message || "처리에 실패했습니다.");
+      return;
     } finally {
       setActionPending(false);
     }
@@ -79,7 +298,7 @@ export default function LiveOrderPreview() {
 
   const handleOrder = (orderId, action) => {
     if (actionPending) return;
-    if (action === "cancel") {
+    if (action === "CANCELED") {
       setCancelOrderId(orderId);
       return;
     }
@@ -90,7 +309,7 @@ export default function LiveOrderPreview() {
     const orderId = cancelOrderId;
     setCancelOrderId(null);
     if (orderId == null) return;
-    runOrderAction(orderId, "cancel");
+    runOrderAction(orderId, "CANCELED");
   }
 
   return (
@@ -103,9 +322,9 @@ export default function LiveOrderPreview() {
             <p>조리 완료 처리 및 TTS 알림을 관리합니다.</p>
           </div>
           <time>
-            {formatDate(new Date())}
-            {"  |  "}
-            {formatTime(new Date())}
+            {formatDate(new Date(now))}
+            {" | "}
+            {formatTime(new Date(now))}
           </time>
         </div>
       </header>
@@ -117,8 +336,8 @@ export default function LiveOrderPreview() {
           type="button"
           className="live-order-preview__arrow"
           disabled={status !== "ready" || orders.length <= 0}
-          aria-label="이전 주문"
-          onClick={() => scrollBy({ left: 0 })}
+          aria-label="가장 오래된 주문"
+          onClick={() => moveToEdge("start")}
         >
           ‹
         </button>
@@ -144,11 +363,12 @@ export default function LiveOrderPreview() {
             />
           </div>
         ) : (
-          <div className="live-order-preview__board">
+          <div className="live-order-preview__board" ref={boardRef}>
             {orders.map((order) => (
               <OrderCard
                 key={order.orderId}
                 order={order}
+                now={now}
                 onAction={handleOrder}
                 actionPending={actionPending}
               />
@@ -159,8 +379,8 @@ export default function LiveOrderPreview() {
           type="button"
           className="live-order-preview__arrow"
           disabled={status !== "ready" || orders.page >= orders.totalPages - 1}
-          aria-label="다음 주문"
-          onClick={() => scrollBy(`left:+${document.querySelector(".live-order-preview__board").scrollWidth}`)}
+          aria-label="가장 최근 주문"
+          onClick={() => moveToEdge("end")}
         >
           ›
         </button>
@@ -176,106 +396,5 @@ export default function LiveOrderPreview() {
         onCancel={() => setCancelOrderId(null)}
       />
     </section>
-  );
-}
-
-function optionIcon(tone) {
-  if (tone === "exclude") return excludeIcon;
-  if (tone === "plus") return plusIcon;
-  if (tone === "drink") return drinkIcon;
-  return chipBagIcon;
-}
-
-function optionClass(tone) {
-  if (tone === "exclude") return "figma-order-option figma-order-option--exclude";
-  if (tone === "plus") return "figma-order-option figma-order-option--plus";
-  if (tone === "drink") return "figma-order-option figma-order-option--drink";
-  return "figma-order-option figma-order-option--side";
-}
-
-function MenuCard({ menu }) {
-  const options = menu?.options ?? [];
-
-  return (
-    <section className="figma-order-menu">
-      <div className="figma-order-menu__header">
-        <div className="figma-order-menu__title">
-          <strong>{menu?.menuName || "menu name"}</strong>
-          <span>{menu?.quantity ?? 0}</span>
-        </div>
-        {menu?.base ? (
-          <p className="figma-order-menu__base">
-            <span>베이스:</span>
-            <b>{menu.base}</b>
-          </p>
-        ) : null}
-        <p className="figma-order-menu__dressing">
-          <span>드레싱:</span>
-          <b>{menu?.dressing || "발사믹"}</b>
-        </p>
-      </div>
-      {options.length > 0 ? (
-        <div className="figma-order-menu__options">
-          <ul>
-            {options.map((option, index) => (
-              <li key={`${option.tone}-${option.label}-${index}`} className={optionClass(option.tone)}>
-                <i aria-hidden="true">
-                  <img alt="" src={optionIcon(option.tone)} />
-                </i>
-                <span>{option.label}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-    </section>
-  );
-}
-
-function OrderCard({ order, onAction, actionPending = false }) {
-  const menus = order.menus ?? [];
-
-  return (
-    <article
-      className={`figma-order-card${order.wide ? " figma-order-card--wide" : ""}`}
-      aria-label={`${order.orderNo} 주문 미리보기`}
-    >
-      <header className="figma-order-card__header">
-        <strong>{order.orderNo}</strong>
-        <time>{order.elapsedSec != null ? `${order.elapsedSec}초` : "00:00:00"}</time>
-      </header>
-      <span
-        className={`figma-order-card__type${order.orderTypeLabel === "포장" ? " figma-order-card__type--takeout" : ""}`}
-      >
-        {order.orderTypeLabel}
-      </span>
-      <div className="figma-order-card__menus">
-        {menus.map((menu, index) => (
-          <MenuCard key={`${order.orderId}-${index}`} menu={menu} />
-        ))}
-      </div>
-      <footer className="figma-order-card__footer">
-        <div className="figma-order-card__total">
-          <span>총액</span>
-          <strong>{formatCurrency(order.totalAmount ?? 0)}</strong>
-        </div>
-        <div className="figma-order-card__actions">
-          <button
-            type="button"
-            disabled={actionPending}
-            onClick={() => onAction(order.orderId, "cancel")}
-          >
-            취소
-          </button>
-          <button
-            type="button"
-            disabled={actionPending}
-            onClick={() => onAction(order.orderId, "complete")}
-          >
-            {actionPending ? "처리 중…" : "완료 처리"}
-          </button>
-        </div>
-      </footer>
-    </article>
   );
 }

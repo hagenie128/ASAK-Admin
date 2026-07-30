@@ -69,6 +69,31 @@ function normalizeOptionGroups(groups = []) {
   });
 }
 
+function IngredientGroup({ title, tone, rows, onRemove }) {
+  if (!rows.length) return null;
+  return (
+    <div className={`menu-edit-ingredients menu-edit-ingredients--${tone}`}>
+      <p>{title}</p>
+      <div className="menu-edit-ingredient-list">
+        {rows.map((ingredient) => (
+          <div key={ingredient.ingredientId} className="menu-edit-ingredient-chip">
+            <strong>{ingredient.name}</strong>
+            <span>{formatIngredientMeta(ingredient)}</span>
+            {ingredient.isSoldOut ? <em>품절</em> : null}
+            <button
+              type="button"
+              aria-label={`${ingredient.name} 제거`}
+              onClick={() => onRemove(ingredient.ingredientId)}
+            >
+              ×
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function MenuEditPanel({
   mode = "edit",
   menu = null,
@@ -624,30 +649,5 @@ export default function MenuEditPanel({
         onCancel={() => setPendingOptionGroup(null)}
       />
     </aside>
-  );
-}
-
-function IngredientGroup({ title, tone, rows, onRemove }) {
-  if (!rows.length) return null;
-  return (
-    <div className={`menu-edit-ingredients menu-edit-ingredients--${tone}`}>
-      <p>{title}</p>
-      <div className="menu-edit-ingredient-list">
-        {rows.map((ingredient) => (
-          <div key={ingredient.ingredientId} className="menu-edit-ingredient-chip">
-            <strong>{ingredient.name}</strong>
-            <span>{formatIngredientMeta(ingredient)}</span>
-            {ingredient.isSoldOut ? <em>품절</em> : null}
-            <button
-              type="button"
-              aria-label={`${ingredient.name} 제거`}
-              onClick={() => onRemove(ingredient.ingredientId)}
-            >
-              ×
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }

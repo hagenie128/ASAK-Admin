@@ -51,9 +51,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid #e5e7eb;
+  border: var(--admin-border-w) solid var(--admin-border);
   border-radius: 12px;
-  background: #fff;
+  background: var(--admin-panel);
   box-sizing: border-box;
 }
 
@@ -94,7 +94,7 @@
   width: 16px;
   height: 16px;
   flex: 0 0 16px;
-  border: 1.5px solid #9ca3af;
+  border: var(--admin-border-w-strong) solid var(--admin-cool-gray-400);
   border-radius: 50%;
 }
 
@@ -104,7 +104,7 @@
   width: 6px;
   height: 1.5px;
   margin: 12px 0 0 9px;
-  background: #9ca3af;
+  background: var(--admin-cool-gray-400);
   transform: rotate(45deg);
 }
 
@@ -140,7 +140,7 @@
   border: 0;
   border-radius: 18px;
   background: var(--admin-brand-primary);
-  color: #0d0d0d;
+  color: var(--admin-ink-900);
   font-family: inherit;
   font-size: 14px;
   font-weight: 700;
@@ -229,7 +229,7 @@
   font-size: 14px;
   line-height: 20px;
   font-weight: 700;
-  color: #6c9700;
+  color: var(--admin-brand-secondary);
   white-space: nowrap;
 }
 
@@ -242,9 +242,9 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  border: 1px solid #e5e7eb;
+  border: var(--admin-border-w) solid var(--admin-border);
   border-radius: 12px;
-  background: #fff;
+  background: var(--admin-panel);
   overflow: hidden;
 }
 
@@ -303,9 +303,9 @@
 .menu-detail__actions .is-delete {
   height: 32px;
   padding: 0 12px;
-  border: 1px solid #fecaca;
+  border: var(--admin-border-w) solid var(--admin-danger-border-soft);
   background: var(--admin-panel);
-  color: #ef4444;
+  color: var(--admin-danger);
 }
 
 .menu-detail__actions .is-edit {
@@ -339,7 +339,7 @@
 .menu-detail-card header span {
   font-size: 14px;
   line-height: 20px;
-  color: #9ca3af;
+  color: var(--admin-cool-gray-400);
 }
 
 /* Basic-Info-Card (134:12188) */
@@ -399,14 +399,14 @@
 }
 
 .menu-detail-basic__price b {
-  color: #6c9700;
+  color: var(--admin-brand-secondary);
   font-size: 18px;
   line-height: 24px;
 }
 
 .menu-detail-basic__desc {
   padding-top: 16px;
-  border-top: 1px solid #f2f2f2;
+  border-top: var(--admin-border-w) solid var(--admin-neutral-100);
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -448,15 +448,15 @@
 }
 
 .menu-detail-legend--core {
-  color: #ef4444;
+  color: var(--admin-danger);
 }
 
 .menu-detail-legend--base {
-  color: #16a34a;
+  color: var(--admin-success-strong);
 }
 
 .menu-detail-legend--plain {
-  color: #9ca3af;
+  color: var(--admin-cool-gray-400);
 }
 
 .menu-ingredient-row {
@@ -483,19 +483,19 @@
 }
 
 .menu-ingredient-row--core {
-  background: #fef2f2;
+  background: var(--admin-danger-subtle);
 }
 
 .menu-ingredient-row--core b {
-  color: #ef4444;
+  color: var(--admin-danger);
 }
 
 .menu-ingredient-row--base {
-  background: #f7fee7;
+  background: var(--admin-success-subtle);
 }
 
 .menu-ingredient-row--base b {
-  color: #16a34a;
+  color: var(--admin-success-strong);
 }
 
 .menu-ingredient-chips {
@@ -637,18 +637,18 @@
 }
 
 .menu-tag--best {
-  background: #ffe6e7;
-  color: #ff0004;
+  background: var(--admin-tag-best-bg);
+  color: var(--admin-tag-best-text);
 }
 
 .menu-tag--new {
-  background: #ffff80;
-  color: #0d0d0d;
+  background: var(--admin-tag-new-bg);
+  color: var(--admin-ink-900);
 }
 
 .menu-tag--vegan {
-  background: #ebf5eb;
-  color: #077e40;
+  background: var(--admin-success-soft);
+  color: var(--admin-tag-vegan-text);
 }
 
 /* SCR-016 Detail Add/Edit — menu-edit-operational (Figma 134:12400) */
@@ -660,9 +660,9 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  border: 1px solid #e5e7eb;
+  border: var(--admin-border-w) solid var(--admin-border);
   border-radius: 12px;
-  background: #fff;
+  background: var(--admin-panel);
   overflow: hidden;
 }
 
@@ -683,9 +683,9 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  border: 1px solid #e5e7eb;
+  border: var(--admin-border-w) solid var(--admin-border);
   border-radius: 12px;
-  background: #fff;
+  background: var(--admin-panel);
 }
 
 .menu-edit-card__top {
@@ -747,7 +747,7 @@
 .menu-edit-image__actions button.is-danger {
   width: 32px;
   padding: 0;
-  color: #ff0004;
+  color: var(--admin-tag-best-text);
 }
 
 .menu-edit-card__fields {
@@ -792,9 +792,9 @@
 .menu-edit-bottombar button {
   height: 36px;
   padding: 0 14px;
-  border: 1px solid #e5e7eb;
+  border: var(--admin-border-w) solid var(--admin-border);
   border-radius: 10px;
-  background: #fff;
+  background: var(--admin-panel);
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -802,16 +802,16 @@
 }
 
 .menu-edit-card__actions .is-delete {
-  color: #ff0004;
-  border-color: #ffd0d1;
-  background: #fff5f5;
+  color: var(--admin-tag-best-text);
+  border-color: var(--admin-danger-border-light);
+  background: var(--admin-danger-surface);
 }
 
 .menu-edit-card__actions .is-save,
 .menu-edit-bottombar .is-primary {
   border: 0;
   background: var(--admin-brand-primary);
-  color: #0d0d0d;
+  color: var(--admin-ink-900);
 }
 
 .menu-edit-field {
@@ -825,9 +825,9 @@
 .menu-edit-field select,
 .menu-edit-field textarea {
   width: 100%;
-  border: 1px solid #e5e7eb;
+  border: var(--admin-border-w) solid var(--admin-border);
   border-radius: 10px;
-  background: #fff;
+  background: var(--admin-panel);
   font-family: inherit;
   font-size: 14px;
   color: var(--admin-text-primary);
@@ -872,9 +872,9 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid #e5e7eb;
+  border: var(--admin-border-w) solid var(--admin-border);
   border-radius: 18px;
-  background: #fff;
+  background: var(--admin-panel);
   cursor: pointer;
 }
 
@@ -882,7 +882,7 @@
   width: 28px;
   height: 16px;
   border-radius: 8px;
-  background: #d1d5db;
+  background: var(--admin-cool-gray-300);
   position: relative;
 }
 
@@ -894,7 +894,7 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--admin-panel);
   transition: left 0.15s ease;
 }
 
@@ -914,7 +914,7 @@
 button.is-link {
   border: 0;
   background: none;
-  color: #6c9700;
+  color: var(--admin-brand-secondary);
   font-family: inherit;
   font-size: 13px;
   font-weight: 600;
@@ -934,11 +934,11 @@ button.is-link {
 }
 
 .menu-edit-ingredients--core > p {
-  color: #ff0004;
+  color: var(--admin-tag-best-text);
 }
 
 .menu-edit-ingredients--base > p {
-  color: #6c9700;
+  color: var(--admin-brand-secondary);
 }
 
 .menu-edit-ingredient-list {
@@ -972,7 +972,7 @@ button.is-link {
   height: 20px;
   border: 0;
   border-radius: 50%;
-  background: #e5e7eb;
+  background: var(--admin-border);
   cursor: pointer;
 }
 
@@ -1014,7 +1014,7 @@ button.is-link {
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: #e5e7eb;
+  background: var(--admin-border);
   color: var(--admin-text-secondary);
   font: inherit;
   font-size: 14px;
@@ -1030,7 +1030,7 @@ button.is-link {
   gap: 8px;
   border: 1px solid var(--admin-border);
   border-radius: 10px;
-  background: #fff;
+  background: var(--admin-panel);
 }
 
 .menu-edit-option-picker button {
@@ -1040,7 +1040,7 @@ button.is-link {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  border: 1px solid #e5e7eb;
+  border: var(--admin-border-w) solid var(--admin-border);
   border-radius: 8px;
   background: var(--admin-page-bg);
   color: var(--admin-text-primary);
@@ -1091,9 +1091,9 @@ button.is-link {
   height: 36px;
   margin-top: 8px;
   padding: 0 34px 0 10px;
-  border: 1px solid #d9e9a6;
+  border: var(--admin-border-w) solid var(--admin-brand-border-soft);
   border-radius: 8px;
-  background: #fff;
+  background: var(--admin-panel);
   color: var(--admin-text-primary);
   font: inherit;
   font-size: 13px;
@@ -1185,7 +1185,7 @@ button.is-link {
   gap: 6px;
   border: 1px solid var(--admin-border);
   border-radius: 8px;
-  background: #fff;
+  background: var(--admin-panel);
   box-sizing: border-box;
 }
 
@@ -1207,8 +1207,8 @@ button.is-link {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  border-top: 1px solid #e5e7eb;
-  background: #fafafa;
+  border-top: var(--admin-border-w) solid var(--admin-border);
+  background: var(--admin-surface-muted);
 }
 
 .menu-edit-bottombar span {

@@ -227,7 +227,7 @@
 }
 .admin-confirm--warning .admin-confirm__actions .is-primary {
   background: var(--admin-brand-primary);
-  color: #0d0d0d;
+  color: var(--admin-ink-900);
 }
 .admin-confirm.is-busy .admin-confirm__actions button {
   opacity: 0.4;
