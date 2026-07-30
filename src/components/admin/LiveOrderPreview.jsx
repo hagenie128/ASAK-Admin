@@ -272,7 +272,9 @@ export default function LiveOrderPreview() {
     return () => window.clearInterval(timerId);
   }, []);
 
-  const runOrderAction = async (orderId, action) => {
+  const runOrderAction = async (orderId, status) => {
+    console.log(status);
+    console.log(orderId);
     if (actionPending) return;
     const SUCCESS_MESSAGE = {
       PREPARING: "준비중으로 상태가 변경되었습니다.",
@@ -281,12 +283,12 @@ export default function LiveOrderPreview() {
     };
     setActionPending(true);
     try {
-      if (action == "CANCELED") {
+      if (status == "CANCELED") {
         await ordersApi.cancelOrder(orderId);
       } else {
-        await ordersApi.changeOrderStatus(orderId, action);
+        await ordersApi.changeOrderStatus(orderId, status);
       }
-      toast.success(SUCCESS_MESSAGE[action]);
+      toast.success(SUCCESS_MESSAGE[status]);
       refresh({ showLoading: false });
     } catch (err) {
       toast.error(err.message || "처리에 실패했습니다.");
@@ -296,13 +298,13 @@ export default function LiveOrderPreview() {
     }
   };
 
-  const handleOrder = (orderId, action) => {
+  const handleOrder = (orderId, status) => {
     if (actionPending) return;
-    if (action === "CANCELED") {
+    if (status === "CANCELED") {
       setCancelOrderId(orderId);
       return;
     }
-    runOrderAction(orderId, action);
+    runOrderAction(orderId, status);
   };
 
   function handleCancelConfirm() {
