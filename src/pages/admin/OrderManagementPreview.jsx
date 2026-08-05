@@ -38,7 +38,7 @@ const ORDER_TYPE_OPTIONS = [
   ...Object.entries(ORDER_TYPE_LABEL).map(([value, label]) => ({ value, label })),
 ];
 
-/* SCR-010 / Order Management — getAdminOrders() → useOrdersQuery */
+/* SCR-010 / Order Management — ordersApi → useOrdersQuery */
 export default function OrderManagementPreview() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [draftFilters, setDraftFilters] = useState({
@@ -94,7 +94,7 @@ export default function OrderManagementPreview() {
       dateTo: range.to,
     }));
   }
-  // TODO: 환불 API 구현 후 연결
+  // TODO-075: 환불 API 연결 — ordersApi.refundOrder + ConfirmDialog
   // function handleRefund(orderId) {
   //   setConfirmDialog({
   //     title: "환불하시겠습니까?",
@@ -114,7 +114,7 @@ export default function OrderManagementPreview() {
   //   });
   // }
 
-  // TODO: 영수증 출력 API 구현 후 연결
+  // TODO-076: 영수증 출력 API 연결 — ordersApi.printReceipt + ConfirmDialog
   // function handlePrintReceipt(orderId) {
   //   setConfirmDialog({
   //     title: "영수증을 출력하시겠습니까?",

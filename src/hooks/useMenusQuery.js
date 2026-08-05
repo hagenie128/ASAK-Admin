@@ -1,4 +1,5 @@
 // 메뉴 목록 조회 Hook (SCR-016)
+// TODO-046: getAdminMenus mock → menusApi.listMenus / getMenu 실연동
 import { useEffect, useMemo, useState } from "react";
 import { getAdminMenus } from "../mocks/adminMockRepository.js";
 

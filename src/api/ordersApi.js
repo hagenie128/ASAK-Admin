@@ -1,18 +1,12 @@
-// 주문 요청 모듈 자리.
+// 주문 API (SCR-009/010) — 실연동됨
 import { apiClient } from "./apiClient.js";
 
-/*
-  주문 관련 API 함수
-*/
 export const ordersApi = {
-  // 주문 목록
   listOrders: (params) => apiClient.get("/admin/orders", { params }),
-  // 주문 상세
   getOrder: (orderId) => apiClient.get(`/admin/orders/${orderId}`),
-  // Live 주문 보드: 메뉴·옵션·경과시간을 포함한 진행 중 주문 전체
   listLiveOrders: () => apiClient.get("/admin/orders/live"),
-  // 주문 상태 변경
   changeOrderStatus: (orderId, status) => apiClient.patch(`/admin/orders/${orderId}/${status}`),
-  // 주문 취소
   cancelOrder: (orderId) => apiClient.patch(`/admin/orders/${orderId}/cancel`),
+  // TODO-073: refundOrder: (orderId) => apiClient.patch(`/admin/orders/${orderId}/refund`),
+  // TODO-074: printReceipt: (orderId) => apiClient.post(`/admin/orders/${orderId}/receipt`),
 };

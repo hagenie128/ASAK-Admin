@@ -3,6 +3,7 @@
 // 저장 실패(asak_mock_fail_save=1) 시 baselineRows 스냅샷으로 롤백.
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+// TODO-031: getPaymentMethods/savePaymentMethods → paymentMethodsApi.list / patch
 import { getPaymentMethods, savePaymentMethods } from "../mocks/adminMockRepository.js";
 
 function cloneRows(rows) {

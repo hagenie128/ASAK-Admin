@@ -21,6 +21,7 @@ export default function LoginPage({ onLoggedIn } = {}) {
     if (submitting) return;
     setSubmitting(true);
     try {
+      // TODO-067: adminApi.login → token 저장(loginAdmin 교체) · 실패 시 401 표시
       loginAdmin({ remember });
       onLoggedIn?.();
     } finally {

@@ -10,6 +10,7 @@ export function isAdminLoggedIn() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return false;
     const parsed = JSON.parse(raw);
+    // TODO-065: token 존재·만료 여부로 판정
     return Boolean(parsed?.loggedIn);
   } catch {
     return false;
@@ -17,6 +18,7 @@ export function isAdminLoggedIn() {
 }
 
 export function loginAdmin({ remember = true } = {}) {
+  // TODO-065: adminApi.login 응답 token 저장 (remember에 따라 storage 선택)
   const payload = {
     loggedIn: true,
     loggedInAt: new Date().toISOString(),

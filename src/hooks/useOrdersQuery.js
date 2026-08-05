@@ -10,6 +10,7 @@ import { ordersApi } from "../api/ordersApi.js";
  */
 export function useOrdersQuery({ pageSize = ADMIN_PAGINATION.orders.pageSize, filters = {} } = {}) {
   const [status, setStatus] = useState("loading");
+  // TODO-012: Empty(0건) vs Error UI 구분·필터 쿼리 정합 확인
   const [orderRows, setOrderRows] = useState([]);
   const [page, setPage] = useState(0);
   const [totalElements, setTotalElements] = useState(0);

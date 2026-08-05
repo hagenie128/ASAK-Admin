@@ -1,1 +1,1 @@
-// SCR-010 주문 관리 API 자리. 현재는 mock repository stub만 wrapping.
+// 레거시 stub — 정본은 ordersApi.js. 미사용 확인 후 이 파일 삭제.

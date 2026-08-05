@@ -78,6 +78,7 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
       updateMenu(selectedMenu.menuId, payload);
     }
 
+    // TODO-047: create → menusApi.createMenu / edit → menusApi.updateMenu 후 refetch
     toast.success(
       panelMode === "create"
         ? `메뉴 등록 stub: ${payload.name || "(이름 없음)"}`
@@ -93,6 +94,7 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
 
   function handleDeleteConfirm() {
     setDeleteConfirmOpen(false);
+    // TODO-048: menusApi.deleteMenu(selectedMenu.menuId) 후 목록 갱신
     toast.success(`mock에서는 삭제 stub만: ${selectedMenu?.name ?? ""}`);
     setPanelMode("view");
   }

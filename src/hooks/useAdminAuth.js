@@ -7,6 +7,7 @@
  *
  * 데이터 흐름: LoginPage → (예정) auth API → adminSessionStore ← useAdminAuth ← 보호 Route
  * 이번 mock 범위: mock 세션 읽기만. BACKEND 연동 후: 실 401 처리·실인증.
+ * TODO-068: JWT 세션 + 보호 라우트 401 리다이렉트
  */
 
 import { useAdminSessionStore } from "../store/adminSessionStore.js";

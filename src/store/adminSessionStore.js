@@ -7,6 +7,7 @@
  *
  * 주의: 비밀번호·원문 토큰을 persistent storage에 두지 말 것 (기존 안내 유지)
  * 이번 mock 범위: mock 세션 최소 동작만. BACKEND 연동 후: 실인증·토큰 갱신.
+ * TODO-065 연동: adminSession.js 와 세션 스키마 단일화
  */
 
 import { create } from "zustand";
