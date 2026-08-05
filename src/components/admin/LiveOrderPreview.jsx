@@ -16,18 +16,8 @@ import { toast } from "../../utils/toast.js";
 import AdminAsyncState from "./AdminAsyncState.jsx";
 import AdminConfirmDialog from "./AdminConfirmDialog.jsx";
 import AdminSidebar from "./AdminSidebar.jsx";
+import { createOrderCompletedMessage, speak } from "../../utils/ttsMessages.js";
 
-function readLiveFixture() {
-  // TODO-014: 실 API QA 끝나면 fixture·console.log 제거 또는 개발 환경으로 분리
-  try {
-    const value = sessionStorage.getItem("asak_live_fixture");
-    if (value === "empty") return { empty: true };
-    if (value === "error") return { error: true };
-  } catch {
-    /* ignore */
-  }
-  return {};
-}
 function optionIcon(tone) {
   if (tone === "exclude") return excludeIcon;
   if (tone === "plus") return plusIcon;
@@ -273,9 +263,6 @@ export default function LiveOrderPreview() {
   }, []);
 
   const runOrderAction = async (orderId, status) => {
-    // TODO-014 연동: console.log 제거
-    console.log(status);
-    console.log(orderId);
     if (actionPending) return;
     const SUCCESS_MESSAGE = {
       PREPARING: "준비중으로 상태가 변경되었습니다.",
@@ -291,11 +278,30 @@ export default function LiveOrderPreview() {
       }
       toast.success(SUCCESS_MESSAGE[status]);
       // TODO-013: COMPLETED 등 성공 후 TTS 호출. TTS 실패 시 toast만, 주문 상태는 유지
+      if (status === "COMPLETED") {
+        try {
+          const order = orders.find((o) => o.orderId === orderId);
+          if (status === "COMPLETED" && order?.orderNo) {
+            await speak(createOrderCompletedMessage(order.orderNo));
+          }
+        } catch (err) {
+          toast.error(err.message || "음성 안내에 실패했습니다."); // 주문은 이미 성공
+        }
+      }
       refresh({ showLoading: false });
     } catch (err) {
-      // TODO-011: 409 전이 충돌·envelope code별 메시지 분기, 목록 재조회
-      toast.error(err.message || "처리에 실패했습니다.");
-      return;
+      if (err.status === 409) {
+        if (err.code === "ORDER_STATUS_CONFLICT") {
+          toast.error(err.message || "전이 충돌이 발생했습니다.");
+        } else if (err.code === "INVALID_ORDER_STATUS_TRANSITION") {
+          toast.error(err.message || "유효하지 않은 상태 전이입니다.");
+        } else {
+          toast.error(err.message || "처리에 실패했습니다.");
+        }
+      } else {
+        toast.error(err.message || "처리에 실패했습니다.");
+      }
+      refresh({ showLoading: false });
     } finally {
       setActionPending(false);
     }
@@ -359,7 +365,7 @@ export default function LiveOrderPreview() {
                 status === "empty"
                   ? "새 주문이 들어오면 여기에 표시됩니다."
                   : status === "error"
-                    ? "sessionStorage asak_live_fixture=error 등 QA fixture를 확인하세요."
+                    ? "잠시 후 다시 시도하거나, 네트워크 연결을 확인해 주세요."
                     : undefined
               }
               onRetry={status === "error" ? refresh : undefined}

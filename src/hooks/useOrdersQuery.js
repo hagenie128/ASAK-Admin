@@ -11,10 +11,11 @@ import { ordersApi } from "../api/ordersApi.js";
 export function useOrdersQuery({ pageSize = ADMIN_PAGINATION.orders.pageSize, filters = {} } = {}) {
   const [status, setStatus] = useState("loading");
   // TODO-012: Empty(0건) vs Error UI 구분·필터 쿼리 정합 확인
+  const [empty, setEmpty] = useState(false);
+  const [error, setError] = useState(null);
   const [orderRows, setOrderRows] = useState([]);
   const [page, setPage] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
-  const [error, setError] = useState(null);
   const [tick, setTick] = useState(0);
 
   const {
@@ -31,6 +32,7 @@ export function useOrdersQuery({ pageSize = ADMIN_PAGINATION.orders.pageSize, fi
 
     const fetchOrders = async () => {
       setStatus("loading");
+      setEmpty(false);
       setError(null);
 
       try {
@@ -50,15 +52,17 @@ export function useOrdersQuery({ pageSize = ADMIN_PAGINATION.orders.pageSize, fi
         const orderList = Array.isArray(result?.content) ? result.content : [];
 
         setOrderRows(orderList);
+        setEmpty(orderList.length === 0);
         setTotalElements(Number(result?.totalElements) || 0);
         setStatus(orderList.length === 0 ? "empty" : "success");
+        setError(null);
       } catch (err) {
         if (cancelled) return;
 
-        setError(err);
         setOrderRows([]);
-        setTotalElements(0);
+        setEmpty(true);
         setStatus("error");
+        setError(err);
       }
     };
 
@@ -71,6 +75,7 @@ export function useOrdersQuery({ pageSize = ADMIN_PAGINATION.orders.pageSize, fi
 
   return {
     status,
+    empty,
     error,
     orders: orderRows,
     totalElements,
@@ -78,5 +83,7 @@ export function useOrdersQuery({ pageSize = ADMIN_PAGINATION.orders.pageSize, fi
     pageSize,
     onPageChange: (nextPage) => setPage(Math.max(0, nextPage)),
     refetch: () => setTick((n) => n + 1),
+    setEmpty,
+    setError,
   };
 }
