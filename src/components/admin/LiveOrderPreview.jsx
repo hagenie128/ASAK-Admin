@@ -18,7 +18,7 @@ import AdminConfirmDialog from "./AdminConfirmDialog.jsx";
 import AdminSidebar from "./AdminSidebar.jsx";
 
 function readLiveFixture() {
-  // TODO 3(정리): 실제 API 확인이 끝나면 QA fixture와 console.log를 제거하거나 개발 환경으로 분리한다.
+  // TODO-014: 실 API QA 끝나면 fixture·console.log 제거 또는 개발 환경으로 분리
   try {
     const value = sessionStorage.getItem("asak_live_fixture");
     if (value === "empty") return { empty: true };
@@ -273,6 +273,7 @@ export default function LiveOrderPreview() {
   }, []);
 
   const runOrderAction = async (orderId, status) => {
+    // TODO-014 연동: console.log 제거
     console.log(status);
     console.log(orderId);
     if (actionPending) return;
@@ -289,8 +290,10 @@ export default function LiveOrderPreview() {
         await ordersApi.changeOrderStatus(orderId, status);
       }
       toast.success(SUCCESS_MESSAGE[status]);
+      // TODO-013: COMPLETED 등 성공 후 TTS 호출. TTS 실패 시 toast만, 주문 상태는 유지
       refresh({ showLoading: false });
     } catch (err) {
+      // TODO-011: 409 전이 충돌·envelope code별 메시지 분기, 목록 재조회
       toast.error(err.message || "처리에 실패했습니다.");
       return;
     } finally {
@@ -331,9 +334,7 @@ export default function LiveOrderPreview() {
         </div>
       </header>
       <main className="live-order-preview__content">
-        {/* TODO 1(가로 스크롤): livePage를 제거한다.
-            보드에 useRef를 연결하고, 왼쪽/오른쪽 버튼에서 scrollBy({ left: ±카드너비 })를 호출한다.
-            카드 목록은 orders.map(...)으로 전부 렌더링한다. orders[0]은 가장 오래된 주문이다. */}
+        {/* TODO-023: livePage 제거 → useRef 보드 + scrollBy 가로 스크롤, orders.map 전부 렌더 */}
         <button
           type="button"
           className="live-order-preview__arrow"

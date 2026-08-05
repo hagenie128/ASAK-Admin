@@ -13,6 +13,10 @@ export const apiClient = axios.create({
   },
 });
 
+// TODO-066: request interceptor — Authorization: Bearer <token>
+// TODO-066: response 401 → 로그인 리다이렉트
+// TODO-070: response 403 등 공통 ErrorCode 매핑
+
 // 서버 공통 응답 envelope 해제
 export function unwrapResponse(response) {
   const body = response.data;

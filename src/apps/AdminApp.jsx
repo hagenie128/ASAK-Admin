@@ -87,6 +87,7 @@ export default function AdminApp() {
   if (pathname === "/") return <OrderListPage />;
   if (pathname === "/orders/live") return <Navigate to="/" replace />;
 
+  // TODO-069: 문서 Canonical(/soldOut, /paymentMethods)과 kebab(/sold-out, /payment-methods) 경로 정렬
   const staticPages = {
     "/dashboard": <DashboardPage />,
     "/orders": <OrderManagementPreview />,

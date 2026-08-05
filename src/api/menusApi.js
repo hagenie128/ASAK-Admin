@@ -1,13 +1,10 @@
 import { apiClient } from "./apiClient.js";
 
-/*
-  메뉴 관련 API 함수
-*/
 export const menusApi = {
-  // 전체 메뉴 목록
   listMenus: () => apiClient.get("/admin/menus"),
-  // 메뉴 상세
   getMenu: (menuId) => apiClient.get(`/admin/menus/${menuId}`),
-  // 활성 메뉴 목록
   listActiveMenus: () => apiClient.get("/admin/menus/active"),
+  // TODO-043: createMenu: (body) => apiClient.post("/admin/menus", body),
+  // TODO-044: updateMenu: (menuId, body) => apiClient.patch(`/admin/menus/${menuId}`, body),
+  // TODO-045: deleteMenu: (menuId) => apiClient.delete(`/admin/menus/${menuId}`),
 };
