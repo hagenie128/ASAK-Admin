@@ -6,10 +6,11 @@ import AdminSearchInput from "./AdminSearchInput.jsx";
 
 export default function MenuListPanel({
   categories,
-  selectedCategory,
-  onCategoryChange,
+  selectedCategoryId,
+  onCategoryIdChange,
   keyword,
   onKeywordChange,
+  onKeywordSubmit,
   menus,
   selectedMenuId,
   onSelectMenu,
@@ -20,14 +21,21 @@ export default function MenuListPanel({
     <div className="menu-management__list">
       <div className="menu-management__toolbar">
         <div className="menu-management__tabs">
-          {categories.map((label) => (
+          <button
+            type="button"
+            className={selectedCategoryId === null ? "is-selected" : ""}
+            onClick={() => onCategoryIdChange(null)}
+          >
+            전체
+          </button>
+          {categories.map((category) => (
             <button
-              key={label}
+              key={category.categoryId}
               type="button"
-              className={label === selectedCategory ? "is-selected" : ""}
-              onClick={() => onCategoryChange(label)}
+              className={category.categoryId === selectedCategoryId ? "is-selected" : ""}
+              onClick={() => onCategoryIdChange(category.categoryId)}
             >
-              {label}
+              {category.categoryName}
             </button>
           ))}
         </div>
@@ -40,17 +48,23 @@ export default function MenuListPanel({
               value={keyword}
               placeholder="메뉴명 검색"
               onChange={(next) => onKeywordChange(next)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  onKeywordSubmit?.();
+                }
+              }}
             />
           </label>
           {onCreate ? (
             <button type="button" className="menu-management__create" onClick={onCreate}>
-              신규 메뉴
+              메뉴 추가
             </button>
           ) : null}
         </div>
       </div>
       <div className="menu-management__grid">
-        {menus.length === 0 ? (
+        {menus === null ? (
           <AdminAsyncState
             status="empty"
             layout="inline"
@@ -58,7 +72,7 @@ export default function MenuListPanel({
             description="카테고리·검색어를 바꿔 보세요."
           />
         ) : (
-          menus.map((menu) => (
+          menus?.map((menu) => (
             <article
               key={menu.menuId}
               className={`admin-menu-card${menu.menuId === selectedMenuId ? " is-selected" : ""}`}
@@ -73,7 +87,7 @@ export default function MenuListPanel({
                 }
               }}
             >
-              <img src={menu.detail?.imageUrl || ricottaImage} alt="" />
+              <img src={menu.imageUrl || ricottaImage} alt="" />
               <div>
                 <strong title={menu.name}>{menu.name}</strong>
                 <b>{formatCurrency(menu.price)}</b>

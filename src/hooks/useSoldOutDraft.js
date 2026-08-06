@@ -11,7 +11,11 @@
 //   dirtyCount          → 저장 전에 바뀐 건수 (처음 불러온 때와 비교)
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-// TODO-039: getSoldOutCatalog/saveSoldOutCatalog → soldOutApi.listSoldOutCatalog / patchSoldOut
+// TODO-043: 품절 4/4 — draft 훅/화면 저장 연결과 검증.
+// 1) 초기 load를 mock getSoldOutCatalog -> soldOutApi.listSoldOutCatalog 로 교체
+// 2) save()를 mock saveSoldOutCatalog -> soldOutApi.patchSoldOut 로 교체
+// 3) 실패 시 baseline 롤백, 성공 시 baseline 갱신 규칙은 그대로 유지
+// 4) 검증: 탭/검색/이동/저장/롤백/dirtyCount가 API 응답 후에도 일관적인지 확인
 import { getSoldOutCatalog, saveSoldOutCatalog } from "../mocks/adminMockRepository.js";
 
 /** mock row 고유 키 — targetType + targetId */

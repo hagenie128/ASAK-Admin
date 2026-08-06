@@ -24,7 +24,7 @@ export const ADMIN_PAGINATION = {
     pageSize: 12,
     windowSize: 5,
   },
-  /** SCR-016 메뉴 관리 — 4열 카드 그리드 (3행) */
+  /** SCR-016 메뉴 관리 — 4열 × 3행 카드 그리드 (스크롤 없이 1페이지) */
   menus: {
     pageSize: 12,
     windowSize: 5,
