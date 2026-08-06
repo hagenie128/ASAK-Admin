@@ -1,5 +1,5 @@
 /* SCR-016 / Menu Management — Page는 조합만 */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import AdminAsyncState from "../../components/admin/AdminAsyncState.jsx";
 import AdminConfirmDialog from "../../components/admin/AdminConfirmDialog.jsx";
@@ -46,6 +46,11 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
     onSelectMenu,
     updateMenu,
   } = useMenusQuery({ initialMenuId: urlMenuId });
+  const [draftKeyword, setDraftKeyword] = useState("");
+
+  useEffect(() => {
+    setDraftKeyword(keyword);
+  }, [keyword]);
 
   function handleSelectMenu(menuId) {
     onSelectMenu(menuId);
@@ -58,7 +63,16 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
   }
 
   function handleKeywordChange(value) {
-    onKeywordChange(value);
+    setDraftKeyword(value);
+    if (value.trim() === "" && keyword !== "") {
+      onKeywordChange("");
+      onPageChange(0);
+    }
+  }
+
+  function handleKeywordSubmit() {
+    if (draftKeyword === keyword) return;
+    onKeywordChange(draftKeyword);
     onPageChange(0);
   }
 
@@ -82,10 +96,16 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
       updateMenu(selectedMenu.menuId, payload);
     }
 
-    // TODO-025: 저장 버튼 실연동.
-    // 1) create 모드면 menusApi.createMenu(payload), edit 모드면 menusApi.updateMenu(selectedMenu.menuId, payload) 호출
-    // 2) 성공 시 refetch 또는 optimistic update로 목록/상세/선택 상태를 함께 갱신
-    // 3) 실패 시 toast.error + panelMode 유지 기준 정리
+    // TODO-021: 메뉴 등록 FE 2/3 — create 저장 연결.
+    // 1) create 모드에서 menusApi.createMenu(payload) 호출
+    // 2) 성공 시 새 menuId 선택, 목록 refetch, 상세 패널 진입 규칙 확정
+    // 3) 실패 시 toast.error + panelMode 유지
+    // TODO-022: 메뉴 등록 검증 3/3 — 등록 직후 목록/상세/이미지/검색 반영 확인.
+    // TODO-027: 메뉴 수정 FE 2/3 — edit 저장 연결.
+    // 1) edit 모드에서 menusApi.updateMenu(selectedMenu.menuId, payload) 호출
+    // 2) 성공 시 refetch 또는 optimistic update로 목록/상세/선택 상태 동기화
+    // 3) 실패 시 toast.error + panelMode 유지
+    // TODO-028: 메뉴 수정 검증 3/3 — 수정 직후 카드/상세/검색 결과 반영 확인.
     toast.success(
       panelMode === "create"
         ? `메뉴 등록 stub: ${payload.name || "(이름 없음)"}`
@@ -101,10 +121,11 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
 
   function handleDeleteConfirm() {
     setDeleteConfirmOpen(false);
-    // TODO-031: 삭제 확인 후 menusApi.deleteMenu(selectedMenu.menuId) 호출.
-    // 1) 삭제 API 호출
-    // 2) 성공 시 refetch
-    // 3) 선택 메뉴 이동(다음 메뉴 또는 null) + view 모드 복귀 처리
+    // TODO-033: 메뉴 삭제 FE 2/3 — delete 연결.
+    // 1) menusApi.deleteMenu(selectedMenu.menuId) 호출
+    // 2) 성공 시 refetch + 선택 메뉴 이동(다음 메뉴 또는 null) + view 모드 복귀
+    // 3) 실패 시 다이얼로그/토스트 처리 기준 정리
+    // TODO-034: 메뉴 삭제 검증 3/3 — 삭제 후 pagination, 검색 결과, 선택 상태 일관성 확인.
     toast.success(`mock에서는 삭제 stub만: ${selectedMenu?.name ?? ""}`);
     setPanelMode("view");
   }
@@ -134,8 +155,9 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
           categories={categories}
           selectedCategoryId={selectedCategoryId}
           onCategoryIdChange={handleCategoryIdChange}
-          keyword={keyword}
+          keyword={draftKeyword}
           onKeywordChange={handleKeywordChange}
+          onKeywordSubmit={handleKeywordSubmit}
           menus={menus}
           selectedMenuId={selectedMenuId}
           onSelectMenu={handleSelectMenu}

@@ -12,11 +12,26 @@ function tagClassName(code = "") {
 }
 
 function formatIngredientMeta(ingredient) {
-  const qty = `${ingredient.quantity ?? ""}${ingredient.unit ?? ""}`.trim();
+  const qty =
+    `${ingredient.quantity !== 0 ? `${ingredient.quantity}${ingredient.unit}` : ""}`.trim();
   const parts = [qty || null];
   if (ingredient.isDefault) parts.push("기본 포함");
   parts.push(ingredient.canRemove === false ? "제거 불가" : "제거 가능");
   return parts.filter(Boolean).join(" · ");
+}
+
+function formatOptionRule(group) {
+  const requirement = group.isRequired ? "필수" : "선택";
+
+  if (group.selectType === "SINGLE") {
+    return `${requirement} · 1개 선택`;
+  }
+
+  if (group.maxSelect != null && group.maxSelect > 0) {
+    return `${requirement} · 최대 ${group.maxSelect}개`;
+  }
+
+  return requirement;
 }
 
 export default function MenuDetailPanel({ menu, onEdit, onDelete }) {
@@ -38,8 +53,12 @@ export default function MenuDetailPanel({ menu, onEdit, onDelete }) {
   const ingredients = menu.ingredients ?? [];
   const core = ingredients.filter((row) => row.role === "core");
   const base = ingredients.filter((row) => row.role === "base");
-  const plain = ingredients.filter((row) => row.role === "plain");
+  const plain = ingredients.filter((row) => row.role === "default");
   const optionGroups = menu.optionGroups ?? [];
+  const sortedOptionGroups = [...optionGroups].sort((a, b) => {
+    if (Boolean(a.isRequired) === Boolean(b.isRequired)) return 0;
+    return a.isRequired ? -1 : 1;
+  });
   const nutrition = menu.nutrition ?? {};
   const allergens = menu.allergens ?? [];
   const tags = menu.tags ?? [];
@@ -69,9 +88,7 @@ export default function MenuDetailPanel({ menu, onEdit, onDelete }) {
             <div className="menu-detail-basic__info">
               <div className="menu-detail-basic__name">
                 <strong>{menu.name}</strong>
-                <AdminStatusBadge
-                  role={menu.isSoldOut ? "soldOut" : "selling" : "inactive"}
-                />
+                <AdminStatusBadge role={menu.isSoldOut ? "soldOut" : "selling"} />
               </div>
               <p>
                 <span>카테고리</span>
@@ -130,8 +147,7 @@ export default function MenuDetailPanel({ menu, onEdit, onDelete }) {
                   <span key={ingredient.ingredientId}>
                     {ingredient.name}{" "}
                     <i>
-                      {ingredient.quantity}
-                      {ingredient.unit}
+                      {ingredient.quantity !== 0 ? `${ingredient.quantity}${ingredient.unit}` : ""}
                     </i>
                   </span>
                 ))}
@@ -143,9 +159,9 @@ export default function MenuDetailPanel({ menu, onEdit, onDelete }) {
         <section className="menu-detail-card menu-detail-options">
           <h3>옵션 그룹</h3>
           <div className="menu-detail-options__grid">
-            {optionGroups.map((group) => (
+            {sortedOptionGroups.map((group) => (
               <article
-                key={group.groupId}
+                key={group.optionGroupId}
                 className={`menu-detail-options__item${
                   group.isRequired ? "" : " menu-detail-options__item--optional"
                 }`}
@@ -154,7 +170,8 @@ export default function MenuDetailPanel({ menu, onEdit, onDelete }) {
                   <strong>{group.name}</strong>
                   <AdminStatusBadge role={group.isRequired ? "required" : "optional"} />
                 </div>
-                <p>{group.recommendedLabel ? `추천 : ${group.recommendedLabel}` : "추천 없음"}</p>
+                <p>{formatOptionRule(group)}</p>
+                <p>{group.recommendedLabel ? `추천: ${group.recommendedLabel}` : "추천 없음"}</p>
               </article>
             ))}
           </div>

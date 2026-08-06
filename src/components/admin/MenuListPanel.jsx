@@ -10,6 +10,7 @@ export default function MenuListPanel({
   onCategoryIdChange,
   keyword,
   onKeywordChange,
+  onKeywordSubmit,
   menus,
   selectedMenuId,
   onSelectMenu,
@@ -47,6 +48,12 @@ export default function MenuListPanel({
               value={keyword}
               placeholder="메뉴명 검색"
               onChange={(next) => onKeywordChange(next)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  onKeywordSubmit?.();
+                }
+              }}
             />
           </label>
           {onCreate ? (
