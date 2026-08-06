@@ -1,6 +1,6 @@
 // Page → mode / period 로 getter 고르기
 // return { status, data, error, refetch } — data 는 envelope.data
-// TODO-056: getSalesSummary/getMonthly/getDaily mock → salesApi.getSummary/getMonthly/getDaily
+// TODO-055: getSalesSummary/getMonthly/getDaily mock → salesApi.getSummary/getMonthly/getDaily
 
 import { useEffect, useState } from "react";
 import { getDailySales, getMonthlySales, getSalesSummary } from "../mocks/adminMockRepository";

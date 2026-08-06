@@ -11,7 +11,7 @@
 //   dirtyCount          → 저장 전에 바뀐 건수 (처음 불러온 때와 비교)
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-// TODO-022: getSoldOutCatalog/saveSoldOutCatalog → soldOutApi.listSoldOutCatalog / patchSoldOut
+// TODO-039: getSoldOutCatalog/saveSoldOutCatalog → soldOutApi.listSoldOutCatalog / patchSoldOut
 import { getSoldOutCatalog, saveSoldOutCatalog } from "../mocks/adminMockRepository.js";
 
 /** mock row 고유 키 — targetType + targetId */

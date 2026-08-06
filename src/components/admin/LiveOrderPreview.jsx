@@ -277,7 +277,7 @@ export default function LiveOrderPreview() {
         await ordersApi.changeOrderStatus(orderId, status);
       }
       toast.success(SUCCESS_MESSAGE[status]);
-      // TODO-013: COMPLETED 등 성공 후 TTS 호출. TTS 실패 시 toast만, 주문 상태는 유지
+      // TTS: COMPLETED 성공 후 speak 호출. 실패 시 toast만, 주문 상태는 유지 (명세 013a~d는 보류)
       if (status === "COMPLETED") {
         try {
           const order = orders.find((o) => o.orderId === orderId);
@@ -340,7 +340,7 @@ export default function LiveOrderPreview() {
         </div>
       </header>
       <main className="live-order-preview__content">
-        {/* TODO-023: livePage 제거 → useRef 보드 + scrollBy 가로 스크롤, orders.map 전부 렌더 */}
+        {/* TODO-059: livePage 제거 → useRef 보드 + scrollBy 가로 스크롤, orders.map 전부 렌더 */}
         <button
           type="button"
           className="live-order-preview__arrow"
