@@ -1,7 +1,8 @@
 // 메뉴 목록 조회 Hook (SCR-016)
-// TODO-024: getAdminMenus mock → menusApi.listMenus / getMenu 실연동
-import { useEffect, useMemo, useState } from "react";
-import { getAdminMenus } from "../mocks/adminMockRepository.js";
+// 목록·필터·페이지네이션은 백엔드 PageResult(content, totalElements) 기준
+import { useEffect, useState } from "react";
+import { menusApi } from "../api/menusApi.js";
+import { ADMIN_PAGINATION } from "../constants/pagination.js";
 
 function getOptionGroupCatalog(menus) {
   const groupsById = new Map();
@@ -13,52 +14,118 @@ function getOptionGroupCatalog(menus) {
   return [...groupsById.values()];
 }
 
-export function useMenusQuery({ initialMenuId = null } = {}) {
+function buildListParams({ page, pageSize, selectedCategoryId, keyword }) {
+  const params = {
+    page,
+    size: pageSize,
+    sort: "name,asc",
+  };
+  const q = keyword.trim();
+  if (q) params.keyword = q;
+  if (selectedCategoryId != null) params.categoryId = selectedCategoryId;
+  return params;
+}
+
+export function useMenusQuery({
+  initialMenuId = null,
+  pageSize = ADMIN_PAGINATION.menus.pageSize,
+} = {}) {
   const [menus, setMenus] = useState([]);
   const [status, setStatus] = useState("loading");
-  const [selectedCategory, setSelectedCategory] = useState("전체");
+  const [error, setError] = useState(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [keyword, setKeyword] = useState("");
   const [selectedMenuId, setSelectedMenuId] = useState(null);
+  const [page, setPage] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+  const [tick, setTick] = useState(0);
+  const [categories, setCategories] = useState([]);
+  const [selectedMenu, setSelectedMenu] = useState(null);
 
   useEffect(() => {
-    const envelope = getAdminMenus();
-    const rows = envelope.data?.content ?? [];
-    setMenus(rows);
-    const matched = rows.find((row) => String(row.menuId) === String(initialMenuId));
-    setSelectedMenuId(matched?.menuId ?? rows[0]?.menuId ?? null);
-    setStatus("ready");
-  }, [initialMenuId]);
+    let cancelled = false;
 
-  const categories = useMemo(() => {
-    const names = [...new Set(menus.map((row) => row.categoryName).filter(Boolean))];
-    return ["전체", ...names];
-  }, [menus]);
+    async function fetchMenus() {
+      setStatus("loading");
+      try {
+        const response = await menusApi.listMenus(
+          buildListParams({ page, pageSize, selectedCategoryId, keyword }),
+        );
+        if (cancelled) return;
 
-  const filteredMenus = useMemo(() => {
-    const q = keyword.trim().toLowerCase();
-    return menus.filter((row) => {
-      if (selectedCategory !== "전체" && row.categoryName !== selectedCategory) return false;
-      if (q && !String(row.name ?? "").toLowerCase().includes(q)) return false;
-      return true;
-    });
-  }, [menus, selectedCategory, keyword]);
+        const content = response.content ?? [];
+        setMenus(content);
+        setTotalElements(Number(response.totalElements) || 0);
+        setStatus(content.length === 0 ? "empty" : "success");
+        setError(null);
 
-  // 옵션 그룹은 mock 목록에서 파생한 값이라 별도 Hook 상태가 필요 없다.
+        setSelectedMenuId((current) => {
+          if (initialMenuId) {
+            const matched = content.find((row) => String(row.menuId) === String(initialMenuId));
+            if (matched) return matched.menuId;
+          }
+          if (current && content.some((row) => row.menuId === current)) {
+            return current;
+          }
+          return content[0]?.menuId ?? null;
+        });
+      } catch (err) {
+        if (cancelled) return;
+        setMenus([]);
+        setTotalElements(0);
+        setStatus("error");
+        setError(err);
+      }
+    }
+
+    fetchMenus();
+    return () => {
+      cancelled = true;
+    };
+  }, [initialMenuId, page, pageSize, selectedCategoryId, keyword, tick]);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await menusApi.listCategories();
+        setCategories(response.content ?? []);
+      } catch (err) {
+        setCategories([]);
+        setError(err);
+      }
+    }
+
+    fetchCategories();
+  }, []);
+
   const optionGroupCatalog = getOptionGroupCatalog(menus);
 
   useEffect(() => {
-    if (filteredMenus.length === 0) {
-      setSelectedMenuId(null);
-      return;
-    }
-    const stillVisible = filteredMenus.some((row) => row.menuId === selectedMenuId);
-    if (!stillVisible) {
-      setSelectedMenuId(filteredMenus[0].menuId);
-    }
-  }, [filteredMenus, selectedMenuId]);
+    let cancelled = false;
 
-  const selectedMenu =
-    filteredMenus.find((row) => row.menuId === selectedMenuId) ?? filteredMenus[0] ?? null;
+    async function fetchSelectedMenu() {
+      if (!selectedMenuId) {
+        setSelectedMenu(null);
+        return;
+      }
+
+      try {
+        const response = await menusApi.getMenu(selectedMenuId);
+        if (cancelled) return;
+        setSelectedMenu(response ?? null);
+        setError(null);
+      } catch (err) {
+        if (cancelled) return;
+        setSelectedMenu(null);
+        setError(err);
+      }
+    }
+
+    fetchSelectedMenu();
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedMenuId]);
 
   function updateMenu(menuId, payload) {
     setMenus((prev) =>
@@ -84,19 +151,44 @@ export function useMenusQuery({ initialMenuId = null } = {}) {
         };
       }),
     );
+    setSelectedMenu((prev) =>
+      prev && prev.menuId === menuId
+        ? {
+            ...prev,
+            name: payload.name,
+            categoryName: payload.categoryName,
+            price: payload.price,
+            isActive: payload.isActive,
+            description: payload.description,
+            imageUrl: payload.imageUrl,
+            ingredients: payload.ingredients,
+            optionGroups: payload.optionGroups,
+            nutrition: payload.nutrition,
+            allergens: payload.allergens,
+            tags: payload.tags,
+          }
+        : prev,
+    );
   }
 
   return {
     status,
+    totalElements,
+    page,
+    pageSize,
     categories,
+    error,
     optionGroupCatalog,
-    filteredMenus,
+    menus,
+    selectedMenuId,
     selectedMenu,
-    selectedCategory,
+    selectedCategoryId,
     keyword,
-    setSelectedCategory,
-    setKeyword,
-    selectMenu: setSelectedMenuId,
+    onCategoryIdChange: setSelectedCategoryId,
+    onKeywordChange: setKeyword,
+    onSelectMenu: setSelectedMenuId,
     updateMenu,
+    onPageChange: (nextPage) => setPage(Math.max(0, nextPage)),
+    refetch: () => setTick((n) => n + 1),
   };
 }

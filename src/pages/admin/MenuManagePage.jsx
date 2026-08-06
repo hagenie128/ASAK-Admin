@@ -8,12 +8,11 @@ import AdminPagination from "../../components/admin/AdminPagination.jsx";
 import MenuListPanel from "../../components/admin/MenuListPanel.jsx";
 import MenuDetailPanel from "../../components/admin/MenuDetailPanel.jsx";
 import MenuEditPanel from "../../components/admin/MenuEditPanel.jsx";
-import { ADMIN_PAGINATION } from "../../constants/pagination.js";
 import { useMenusQuery } from "../../hooks/useMenusQuery.js";
-import { usePagination } from "../../hooks/usePagination.js";
+import { ADMIN_PAGINATION } from "../../constants/pagination.js";
 import { toast } from "../../utils/toast.js";
 
-const MENUS_PAGINATION = ADMIN_PAGINATION.menus;
+// const MENUS_PAGINATION = ADMIN_PAGINATION.menus;
 
 /**
  * panelMode: view | edit | create
@@ -33,31 +32,34 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
     status,
     categories,
     optionGroupCatalog,
-    filteredMenus,
+    menus,
+    page,
+    onPageChange,
+    pageSize,
+    totalElements,
+    selectedMenuId,
     selectedMenu,
-    selectedCategory,
+    selectedCategoryId,
     keyword,
-    setSelectedCategory,
-    setKeyword,
-    selectMenu,
+    onCategoryIdChange,
+    onKeywordChange,
+    onSelectMenu,
     updateMenu,
   } = useMenusQuery({ initialMenuId: urlMenuId });
 
-  const menusPage = usePagination(filteredMenus, { pageSize: MENUS_PAGINATION.pageSize });
-
   function handleSelectMenu(menuId) {
-    selectMenu(menuId);
-    if (panelMode !== "view") setPanelMode("view");
+    onSelectMenu(menuId);
+    setPanelMode("view");
   }
 
-  function handleCategoryChange(name) {
-    setSelectedCategory(name);
-    menusPage.resetPage();
+  function handleCategoryIdChange(categoryId) {
+    onCategoryIdChange(categoryId);
+    onPageChange(0);
   }
 
   function handleKeywordChange(value) {
-    setKeyword(value);
-    menusPage.resetPage();
+    onKeywordChange(value);
+    onPageChange(0);
   }
 
   function handleEdit() {
@@ -66,6 +68,8 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
   }
 
   function handleCreate() {
+    onPageChange(0);
+    if (panelMode !== "view") onPageChange(0);
     setPanelMode("create");
   }
 
@@ -78,7 +82,10 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
       updateMenu(selectedMenu.menuId, payload);
     }
 
-    // TODO-025: create → menusApi.createMenu / edit → menusApi.updateMenu 후 refetch
+    // TODO-025: 저장 버튼 실연동.
+    // 1) create 모드면 menusApi.createMenu(payload), edit 모드면 menusApi.updateMenu(selectedMenu.menuId, payload) 호출
+    // 2) 성공 시 refetch 또는 optimistic update로 목록/상세/선택 상태를 함께 갱신
+    // 3) 실패 시 toast.error + panelMode 유지 기준 정리
     toast.success(
       panelMode === "create"
         ? `메뉴 등록 stub: ${payload.name || "(이름 없음)"}`
@@ -94,7 +101,10 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
 
   function handleDeleteConfirm() {
     setDeleteConfirmOpen(false);
-    // TODO-031: menusApi.deleteMenu(selectedMenu.menuId) 후 목록 갱신
+    // TODO-031: 삭제 확인 후 menusApi.deleteMenu(selectedMenu.menuId) 호출.
+    // 1) 삭제 API 호출
+    // 2) 성공 시 refetch
+    // 3) 선택 메뉴 이동(다음 메뉴 또는 null) + view 모드 복귀 처리
     toast.success(`mock에서는 삭제 stub만: ${selectedMenu?.name ?? ""}`);
     setPanelMode("view");
   }
@@ -122,37 +132,33 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
       <div className="menu-management__workspace">
         <MenuListPanel
           categories={categories}
-          selectedCategory={selectedCategory}
-          onCategoryChange={handleCategoryChange}
+          selectedCategoryId={selectedCategoryId}
+          onCategoryIdChange={handleCategoryIdChange}
           keyword={keyword}
           onKeywordChange={handleKeywordChange}
-          menus={menusPage.pageItems}
-          selectedMenuId={selectedMenu?.menuId ?? null}
+          menus={menus}
+          selectedMenuId={selectedMenuId}
           onSelectMenu={handleSelectMenu}
           onCreate={handleCreate}
           pagination={
             <AdminPagination
               className="menu-management__pagination"
-              page={menusPage.page}
-              pageSize={menusPage.pageSize}
-              totalElements={menusPage.totalElements}
-              windowSize={MENUS_PAGINATION.windowSize}
-              onPageChange={menusPage.goToPage}
+              page={page}
+              pageSize={pageSize}
+              totalElements={totalElements}
+              windowSize={ADMIN_PAGINATION.menus.windowSize}
+              onPageChange={onPageChange}
             />
           }
         />
 
         {panelMode === "view" ? (
-          <MenuDetailPanel
-            menu={selectedMenu}
-            onEdit={handleEdit}
-            onDelete={handleDeleteRequest}
-          />
+          <MenuDetailPanel menu={selectedMenu} onEdit={handleEdit} onDelete={handleDeleteRequest} />
         ) : (
           <MenuEditPanel
             mode={panelMode}
             menu={panelMode === "edit" ? selectedMenu : null}
-            categoryOptions={categories.filter((name) => name !== "전체")}
+            categoryOptions={categories.filter((category) => category.categoryId !== null)}
             optionGroupCatalog={optionGroupCatalog}
             onCancel={handleCancelEdit}
             onSave={handleSaveEdit}

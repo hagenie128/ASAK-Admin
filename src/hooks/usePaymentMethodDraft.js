@@ -3,7 +3,10 @@
 // 저장 실패(asak_mock_fail_save=1) 시 baselineRows 스냅샷으로 롤백.
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-// TODO-047: getPaymentMethods/savePaymentMethods → paymentMethodsApi.list / patch
+// TODO-047: 결제수단 draft 훅 실연동.
+// 1) 초기 load를 mock getPaymentMethods -> paymentMethodsApi.listPaymentMethods 로 교체
+// 2) save()를 mock savePaymentMethods -> paymentMethodsApi.patchPaymentMethod 로 교체
+// 3) 실패 시 baselineRows 롤백, 성공 시 baseline 갱신 규칙은 그대로 유지
 import { getPaymentMethods, savePaymentMethods } from "../mocks/adminMockRepository.js";
 
 function cloneRows(rows) {

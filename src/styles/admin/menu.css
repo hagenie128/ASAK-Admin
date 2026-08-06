@@ -19,6 +19,7 @@
 }
 
 .menu-management__workspace {
+  height: 100%;
   display: flex;
   flex-direction: row;
   flex: 1 1 0;
@@ -29,6 +30,7 @@
 }
 
 .menu-management__list {
+  height: 100%;
   flex: 1 1 0;
   min-width: 0;
   min-height: 0;
@@ -147,18 +149,15 @@
   cursor: pointer;
 }
 
-/* Menu-Grid (134:12156) — 4열 × 196×234, 간격 16. 넘치면 목록 영역만 스크롤 */
+/* Menu-Grid (134:12156) — 4열 × 3행, 페이지네이션으로 넘김 (내부 스크롤 없음) */
 .menu-management__grid {
-  margin-top: 24px;
-  flex: 1 1 0;
-  min-height: 0;
+  flex: 0 0 auto;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 196px));
   gap: 16px;
+  margin: 0 auto;
   align-content: start;
-  overflow-x: hidden;
-  overflow-y: auto;
-  scrollbar-width: thin;
+  overflow: visible;
 }
 
 .menu-management__pagination {
@@ -192,11 +191,11 @@
 }
 
 .admin-menu-card img {
-  width: 100%;
-  height: 180px;
+  width: auto;
+  height: auto;
   flex: 0 0 180px;
   border-radius: 8px;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .admin-menu-card div {
