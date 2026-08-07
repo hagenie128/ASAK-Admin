@@ -1,9 +1,0 @@
-/**
- * 호환용 진입점 (구 import 경로 유지).
- * 정본은 Kiosk와 동일: tokens → reset → global → commonStyle
- * (AdminApp.jsx에서 4파일을 직접 import)
- */
-@import "./tokens.css";
-@import "./reset.css";
-@import "./global.css";
-@import "./commonStyle.css";

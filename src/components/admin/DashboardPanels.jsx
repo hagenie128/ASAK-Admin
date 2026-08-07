@@ -1,4 +1,4 @@
-/* SCR-022 대시보드 섹션들 — Page는 조립만 */
+﻿/* SCR-022 대시보드 섹션들 — Page는 조립만 */
 import { formatCurrency } from "../../utils/currency.js";
 import { ORDER_TYPE_LABEL, ORDER_STATUS_LABEL } from "../../constants/orderLabels.js";
 

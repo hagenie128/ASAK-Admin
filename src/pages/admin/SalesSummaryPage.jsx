@@ -1,9 +1,9 @@
 /* SCR-019 / Sales Summary — Page는 조합만 */
 import { useMemo, useState } from "react";
 import calendarIcon from "../../assets/figma/icon-calendar.svg";
-import AdminAsyncState from "../../components/admin/AdminAsyncState.jsx";
-import AdminTopHeader from "../../components/admin/AdminTopHeader.jsx";
-import AdminDatePicker from "../../components/admin/AdminDatePicker.jsx";
+import AdminAsyncState from "../../components/admin/shared/AdminAsyncState.jsx";
+import AdminTopHeader from "../../components/admin/shared/AdminTopHeader.jsx";
+import AdminDatePicker from "../../components/admin/shared/AdminDatePicker.jsx";
 import SalesShareCard from "../../components/admin/SalesShareCard.jsx";
 import { useSalesQuery } from "../../hooks/useSalesQuery.js";
 import { PERIODS } from "../../constants/orderLabels.js";

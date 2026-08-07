@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
-import AdminConfirmDialog from "../../components/admin/AdminConfirmDialog.jsx";
-import AdminDatePicker from "../../components/admin/AdminDatePicker.jsx";
-import AdminFilterDropdown from "../../components/admin/AdminFilterDropdown.jsx";
-import AdminPagination from "../../components/admin/AdminPagination.jsx";
-import AdminSearchInput from "../../components/admin/AdminSearchInput.jsx";
-import AdminTopHeader from "../../components/admin/AdminTopHeader.jsx";
-import OrderDetailPanel from "../../components/admin/OrderDetailPanel.jsx";
-import OrderTable from "../../components/admin/OrderTable.jsx";
+import AdminConfirmDialog from "../../components/admin/shared/AdminConfirmDialog.jsx";
+import AdminDatePicker from "../../components/admin/shared/AdminDatePicker.jsx";
+import AdminFilterDropdown from "../../components/admin/shared/AdminFilterDropdown.jsx";
+import AdminPagination from "../../components/admin/shared/AdminPagination.jsx";
+import AdminSearchInput from "../../components/admin/shared/AdminSearchInput.jsx";
+import AdminTopHeader from "../../components/admin/shared/AdminTopHeader.jsx";
+import OrderDetailPanel from "../../components/admin/orders/OrderDetailPanel.jsx";
+import OrderTable from "../../components/admin/orders/OrderTable.jsx";
 import {
   ORDER_STATUS_LABEL,
   ORDER_TYPE_LABEL,
@@ -38,8 +38,8 @@ const ORDER_TYPE_OPTIONS = [
   ...Object.entries(ORDER_TYPE_LABEL).map(([value, label]) => ({ value, label })),
 ];
 
-/* SCR-010 / Order Management — ordersApi → useOrdersQuery */
-export default function OrderManagementPreview() {
+/* SCR-010 / 주문 관리 — 목록 + 상세 패널 (/orders) */
+export default function OrderManagePage() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [draftFilters, setDraftFilters] = useState({
     orderStatus: "",
@@ -199,6 +199,7 @@ export default function OrderManagementPreview() {
             orders={orders}
             selectedOrderId={selectedOrder?.orderId ?? null}
             onOrderDetail={handleOrderDetail}
+            onRetry={refetch}
           />
           <AdminPagination
             page={page}

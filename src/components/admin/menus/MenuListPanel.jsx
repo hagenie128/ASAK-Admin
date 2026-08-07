@@ -1,8 +1,8 @@
-/* SCR-016 메뉴 목록 (탭·검색·그리드) */
-import ricottaImage from "../../assets/figma/soldout-ricotta.png";
-import { formatCurrency } from "../../utils/currency.js";
-import AdminAsyncState from "./AdminAsyncState.jsx";
-import AdminSearchInput from "./AdminSearchInput.jsx";
+﻿/* SCR-016 메뉴 목록 (탭·검색·그리드) */
+import ricottaImage from "../../../assets/figma/soldout-ricotta.png";
+import { formatCurrency } from "../../../utils/currency.js";
+import AdminAsyncState from "../shared/AdminAsyncState.jsx";
+import AdminSearchInput from "../shared/AdminSearchInput.jsx";
 
 export default function MenuListPanel({
   categories,

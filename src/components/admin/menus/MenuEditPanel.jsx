@@ -1,4 +1,4 @@
-/*
+﻿/*
  * SCR-016 Detail Add/Edit — Figma 134:12400 menu-edit-operational
  * 메뉴 관리 우측 패널: 신규·수정 공용 편집 카드
  * TODO-038: 재료 검색 FE 2/3 — IngredientSelectModal 자동완성/선택 연결.
@@ -7,10 +7,10 @@
  * TODO-039: 재료 검색 검증 3/3 — 저장 payload의 ingredients 구조와 검색/선택 흐름 확인.
  */
 import { useEffect, useMemo, useState } from "react";
-import ricottaImage from "../../assets/figma/soldout-ricotta.png";
-import { formatCurrency } from "../../utils/currency.js";
-import AdminConfirmDialog from "./AdminConfirmDialog.jsx";
-import AdminStatusBadge from "./AdminStatusBadge.jsx";
+import ricottaImage from "../../../assets/figma/soldout-ricotta.png";
+import { formatCurrency } from "../../../utils/currency.js";
+import AdminConfirmDialog from "../shared/AdminConfirmDialog.jsx";
+import AdminStatusBadge from "../shared/AdminStatusBadge.jsx";
 import IngredientSelectModal from "./IngredientSelectModal.jsx";
 
 const DESC_MAX = 300;

@@ -1,8 +1,8 @@
-/* Figma Admin/DetailPanel (150:5418) — 주문 상세 우측 패널 */
-import emptyBoxOpen from "../../assets/figma/empty-box-open.svg";
-import { ORDER_STATUS, PAYMENT_METHOD_LABEL, PAYMENT_STATUS } from "../../constants/orderLabels.js";
-import { formatCurrency } from "../../utils/currency.js";
-import { formatDateTime } from "../../utils/date.js";
+﻿/* Figma Admin/DetailPanel (150:5418) — 주문 상세 우측 패널 */
+import emptyBoxOpen from "../../../assets/figma/empty-box-open.svg";
+import { ORDER_STATUS, PAYMENT_METHOD_LABEL, PAYMENT_STATUS } from "../../../constants/orderLabels.js";
+import { formatCurrency } from "../../../utils/currency.js";
+import { formatDateTime } from "../../../utils/date.js";
 
 function getPositiveQuantity(value) {
   const quantity = Number(value);

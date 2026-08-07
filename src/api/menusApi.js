@@ -3,12 +3,13 @@ import { apiClient } from "./apiClient.js";
 export const menusApi = {
   listMenus: (params) => apiClient.get("/admin/menus", { params }),
   getMenu: (menuId) => apiClient.get(`/admin/menus/${menuId}`),
-  listActiveMenus: () => apiClient.get("/admin/menus/active"),
   listCategories: () => apiClient.get("/admin/menus/categories"),
+  // BE에 /admin/menus/active 없음 — 필요 시 Controller 추가 후 함수 재도입
   // TODO-020: 메뉴 등록 FE 1/3 — createMenu API 함수 추가.
   // 1) backend TODO-017~019 완료 후 payload/request type(JSON vs multipart) 확정
   // 2) POST /api/admin/menus 호출 함수(createMenu) 추가
   // 3) 성공 응답에서 menuId/name/imageUrl를 화면이 바로 쓸 수 있게 유지
+
   // TODO-026: 메뉴 수정 FE 1/3 — updateMenu API 함수 추가.
   // 1) backend TODO-023~025 완료 후 수정 payload 확정
   // 2) PATCH /api/admin/menus/{menuId} 호출 함수(updateMenu) 추가

@@ -10,7 +10,7 @@ export function useDashboard() {
     try {
       const envelope = getDashboard();
       setData(envelope.data ?? null);
-      setStatus("ready");
+      setStatus("success");
     } catch {
       setData(null);
       setStatus("error");

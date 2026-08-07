@@ -1,4 +1,4 @@
-/*
+﻿/*
  * SCR-009 / Live Order
  * API: GET /api/admin/orders/live
  * 응답: data.content[]의 orderId, orderNo, orderTypeLabel, orderStatus,
@@ -13,9 +13,9 @@ import chipBagIcon from "../../assets/figma/icon-order-side.svg";
 import { formatCurrency } from "../../utils/currency.js";
 import { formatDate, formatTime } from "../../utils/date.js";
 import { toast } from "../../utils/toast.js";
-import AdminAsyncState from "./AdminAsyncState.jsx";
-import AdminConfirmDialog from "./AdminConfirmDialog.jsx";
-import AdminSidebar from "./AdminSidebar.jsx";
+import AdminAsyncState from "./shared/AdminAsyncState.jsx";
+import AdminConfirmDialog from "./shared/AdminConfirmDialog.jsx";
+import AdminSidebar from "./shared/AdminSidebar.jsx";
 import { createOrderCompletedMessage, speak } from "../../utils/ttsMessages.js";
 
 function optionIcon(tone) {
@@ -216,7 +216,7 @@ function OrderCard({ order, now, onAction, actionPending = false }) {
   );
 }
 
-export default function LiveOrderPreview() {
+export default function LiveOrderBoard() {
   const [status, setStatus] = useState("loading");
   const [orders, setOrders] = useState([]);
   const [actionPending, setActionPending] = useState(false);
@@ -243,7 +243,7 @@ export default function LiveOrderPreview() {
       const content = liveBoard?.content ?? [];
 
       setOrders(content);
-      setStatus(content.length === 0 ? "empty" : "ready");
+      setStatus(content.length === 0 ? "empty" : "success");
     } catch {
       setOrders([]);
       setStatus("error");
@@ -344,7 +344,7 @@ export default function LiveOrderPreview() {
         <button
           type="button"
           className="live-order-preview__arrow"
-          disabled={status !== "ready" || orders.length <= 0}
+          disabled={status !== "success" || orders.length <= 0}
           aria-label="가장 오래된 주문"
           onClick={() => moveToEdge("start")}
         >
@@ -387,7 +387,7 @@ export default function LiveOrderPreview() {
         <button
           type="button"
           className="live-order-preview__arrow"
-          disabled={status !== "ready" || orders.page >= orders.totalPages - 1}
+          disabled={status !== "success" || orders.page >= orders.totalPages - 1}
           aria-label="가장 최근 주문"
           onClick={() => moveToEdge("end")}
         >

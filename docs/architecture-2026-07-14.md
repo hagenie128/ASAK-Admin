@@ -16,8 +16,10 @@ src/
     pages/                   # 화면 단위: orders, sold-out, menus, sales
     components/              # 재사용 가능한 관리자 UI
   api/
-    client.js                # base URL, envelope, interceptor
-    orders.js                # GET/PATCH 주문 API
+    apiClient.js             # base URL, envelope
+    ordersApi.js             # GET/PATCH 주문 API
+    menusApi.js              # 메뉴 목록·상세
+    # salesApi / soldOutApi / paymentMethodsApi / adminApi — 미구현 셸
     soldOut.js               # 품절 API
   store/                     # 로그인 세션, 화면 공통 상태
   styles/                    # 토큰, 레이아웃, 공통 스타일

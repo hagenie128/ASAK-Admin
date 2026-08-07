@@ -1,11 +1,17 @@
-/* 주문 목록 표 (SCR-010) */
-import { formatDate } from "../../utils/date.js";
-import { formatCurrency } from "../../utils/currency.js";
-import { ORDER_TYPE_LABEL } from "../../constants/orderLabels.js";
-import AdminAsyncState from "./AdminAsyncState.jsx";
+﻿/* 주문 목록 표 (SCR-010) */
+import { formatDate } from "../../../utils/date.js";
+import { formatCurrency } from "../../../utils/currency.js";
+import { ORDER_TYPE_LABEL } from "../../../constants/orderLabels.js";
+import AdminAsyncState from "../shared/AdminAsyncState.jsx";
 import OrderStatusBadge from "./OrderStatusBadge.jsx";
 
-export default function OrderTable({ status, orders, onOrderDetail, selectedOrderId = null }) {
+export default function OrderTable({
+  status,
+  orders,
+  onOrderDetail,
+  selectedOrderId = null,
+  onRetry,
+}) {
   if (status === "loading" || status === "idle") {
     return (
       <AdminAsyncState
@@ -24,6 +30,7 @@ export default function OrderTable({ status, orders, onOrderDetail, selectedOrde
         layout="section"
         title="주문 내역을 불러오지 못했습니다"
         description="잠시 후 다시 시도해 주세요."
+        onRetry={onRetry}
       />
     );
   }

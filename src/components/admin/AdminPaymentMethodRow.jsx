@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 결제수단 행 (SCR-018)
  * mock: getPaymentMethods().data[] — methodId, name, description, isActive, isMaintenance, sortOrder
  */

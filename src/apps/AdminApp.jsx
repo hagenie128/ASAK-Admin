@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import OrderListPage from "../pages/admin/OrderListPage.jsx";
+import LiveOrderPage from "../pages/admin/LiveOrderPage.jsx";
 import LoginPage from "../pages/admin/LoginPage.jsx";
-import OrderManagementPreview from "../pages/admin/OrderManagementPreview.jsx";
+import OrderManagePage from "../pages/admin/OrderManagePage.jsx";
 import SoldOutManagePage from "../pages/admin/SoldOutManagePage.jsx";
 import MenuManagePage from "../pages/admin/MenuManagePage.jsx";
 import MenuEditPage from "../pages/admin/MenuEditPage.jsx";
@@ -11,7 +11,7 @@ import SalesSummaryPage from "../pages/admin/SalesSummaryPage.jsx";
 import DailySalesPage from "../pages/admin/DailySalesPage.jsx";
 import MonthlySalesPage from "../pages/admin/MonthlySalesPage.jsx";
 import DashboardPage from "../pages/admin/DashboardPage.jsx";
-import UiStatePreviewPage from "../pages/admin/UiStatePreviewPage.jsx";
+import UiStatePreviewPage from "../pages/dev/UiStatePreviewPage.jsx";
 import AdminLayout from "../layouts/AdminLayout.jsx";
 import { isAdminLoggedIn } from "../auth/adminSession.js";
 import "../styles/tokens.css";
@@ -26,10 +26,10 @@ import "../styles/commonStyle.css";
  * - Canonical `/orders/live` → `/` soft alias (문서·북마크 정렬용, 실서버 아님)
  * - `/dashboard` = SCR-022 대시보드 (사이드바 Home)
  * - `/login` = SCR-015 (이미 로그인된 경우 `/`로 보냄)
+ * - `/orders` = SCR-010 주문 관리(목록 + 상세 패널)
  *
  * 실행 정본은 이 파일의 코드 경로다.
  */
-// 이번 mock 범위: 주문 상세는 /orders 패널이 정본. OrderDetailPage 별도 라우트는 팀 합의 후.
 
 function AdminScreen({ title, screenId }) {
   return (
@@ -84,13 +84,14 @@ export default function AdminApp() {
   }
 
   // 로그인 후 `/` = 주문 현황 (운영 홈). Canonical `/orders/live`는 `/`로 정렬.
-  if (pathname === "/") return <OrderListPage />;
+  if (pathname === "/") return <LiveOrderPage />;
   if (pathname === "/orders/live") return <Navigate to="/" replace />;
 
-  // TODO-069: 문서 Canonical(/soldOut, /paymentMethods)과 kebab(/sold-out, /payment-methods) 경로 정렬
+  // TODO-069: Canonical camel(/soldOut, /paymentMethods) → 실행 kebab과 soft alias 정렬
+  // 실행 정본은 아래 kebab 경로.
   const staticPages = {
     "/dashboard": <DashboardPage />,
-    "/orders": <OrderManagementPreview />,
+    "/orders": <OrderManagePage />,
     "/sold-out": <SoldOutManagePage />,
     "/menus": <MenuManagePage />,
     "/menus/new": <MenuEditPage />,
