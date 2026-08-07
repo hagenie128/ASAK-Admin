@@ -11,7 +11,7 @@
  */
 
 import { useEffect, useState } from "react";
-import AdminSidebar from "../components/admin/AdminSidebar.jsx";
+import AdminSidebar from "../components/admin/shared/AdminSidebar.jsx";
 
 const TABLET_MQ = "(max-width: 1280px)";
 const CANVAS_W = 1920;

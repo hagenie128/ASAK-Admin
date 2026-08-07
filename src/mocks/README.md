@@ -1,9 +1,10 @@
 # 관리자 mock 안내
 
-백엔드 준비 전에는 이 폴더에 API 계약과 동일한 필드명의 JSON fixture를 둡니다.
+JSON fixture 위치: **`public/mocks/asak-admin-data.json`**
+코드 입구: **`src/mocks/adminMockRepository.js`만** (Page에서 JSON 직접 import 금지)
 
-- 주문 목록/상세: `orderId`, `orderNo`, `orderStatus`, `paymentStatus`, `totalAmount`
-- 품절: `targetType`, `targetId`, `name`, `isSoldOut`, `reasonType`
-- 매출: 기간, 일별 매출, 메뉴별 판매량
+필드 사전: [`../../public/mocks/README.md`](../../public/mocks/README.md)
+화면별 mock/실API: [`../STRUCTURE_GUIDE.md`](../STRUCTURE_GUIDE.md)
 
-mock 필드명은 `docs/api-integration-2026-07-14.md`와 백엔드 API 명세를 우선합니다.
+현재 mock을 쓰는 화면: 품절 · 결제수단 · 매출 · 대시보드.
+Live·주문·메뉴 목록은 `api/*Api.js` 실연동.

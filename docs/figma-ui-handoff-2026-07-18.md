@@ -13,7 +13,7 @@
 
 | Figma 프레임 | node | 코드 파일 | UI 범위 |
 | --- | --- | --- | --- |
-| `SCR-009 / Live Order / Default` | `134:10607` | `components/admin/LiveOrderPreview.jsx`, `pages/admin/OrderListPage.jsx` | 기존 정적 주문 보드 유지. API/자동 갱신/TTS/상태 변경 없음. |
+| `SCR-009 / Live Order / Default` | `134:10607` | `components/admin/LiveOrderBoard.jsx`, `pages/admin/LiveOrderPage.jsx` | Live 보드. 실API `ordersApi.listLiveOrders`. |
 | `SCR-010 / Order Detail / Default` | `134:10630` | `pages/admin/OrderDetailPage.jsx`, `StaticDataTable.jsx` | 필터, 주문 테이블, 상세 패널 UI. |
 | `SCR-011 / Sold-out Management / Default` | `134:11863` | `pages/admin/SoldOutManagePage.jsx`, `StaticToggle.jsx` | 필터, 품절 테이블, 저장 바 UI. |
 | `SCR-015 / Login / Default` | `134:12033` | `pages/admin/LoginPage.jsx` | 로그인 폼 UI. 인증·세션 저장 없음. |

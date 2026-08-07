@@ -9,12 +9,9 @@ import { ordersApi } from "../api/ordersApi.js";
  * @param {object} [options.filters]
  */
 export function useOrdersQuery({ pageSize = ADMIN_PAGINATION.orders.pageSize, filters = {} } = {}) {
-  // TODO-012: 목록 Empty/Error와 필터 쿼리 정합 최종 검증.
-  // 1) 0건 성공 응답이면 status="empty", 실패면 status="error" 유지 확인
-  // 2) orderStatus/paymentStatus/orderType/dateFrom/dateTo/keyword 가 API 쿼리와 정확히 매핑되는지 확인
-  // 3) OrderManagementPreview / OrderTable 화면 문구와 재시도 흐름까지 수동 검증
   // status: loading | success | empty | error
   // Empty = API 성공 + 0건 / Error = 요청 실패(throw). 둘을 섞지 않는다.
+  // TODO-012 검증(2026-08-07): empty/error 분리·필터 쿼리 매핑·Error 재시도(onRetry→refetch) 확인.
   const [status, setStatus] = useState("loading");
   const [empty, setEmpty] = useState(false);
   const [error, setError] = useState(null);

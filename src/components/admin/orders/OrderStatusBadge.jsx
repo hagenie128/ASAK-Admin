@@ -1,7 +1,7 @@
-/*
+﻿/*
  * 주문/결제 상태 배지
  */
-import { ORDER_STATUS_LABEL, PAYMENT_STATUS_LABEL } from "../../constants/orderLabels.js";
+import { ORDER_STATUS_LABEL, PAYMENT_STATUS_LABEL } from "../../../constants/orderLabels.js";
 
 const ORDER_TONE = {
   RECEIVED: "received",

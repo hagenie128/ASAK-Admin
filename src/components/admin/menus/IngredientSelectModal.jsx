@@ -1,9 +1,9 @@
-/*
+﻿/*
  * Admin/IngredientSelectModal — Figma 150:5525
  * 메뉴 편집 「+ 재료 추가」: 마스터 재료 다중 선택 모달 (mock stub)
  */
 import { useEffect, useMemo, useState } from "react";
-import dismissIcon from "../../assets/figma/icon-dismiss.svg";
+import dismissIcon from "../../../assets/figma/icon-dismiss.svg";
 
 const FILTERS = [
   { key: "전체", tone: "all" },

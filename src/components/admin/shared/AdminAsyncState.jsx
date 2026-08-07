@@ -1,5 +1,5 @@
-/* Figma Shared/LoadingState · EmptyState · ErrorState (145:2) */
-import emptyIcon from "../../assets/figma/empty-box-open.svg";
+﻿/* Figma Shared/LoadingState · EmptyState · ErrorState (145:2) */
+import emptyIcon from "../../../assets/figma/empty-box-open.svg";
 
 const DEFAULT_COPY = {
   loading: {

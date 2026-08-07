@@ -67,10 +67,10 @@ Figma `Admin/Navbar` (`227:5009`, 240×1080)와 코드 사이드바가 구성 �
 
 | Figma 노드 | Figma 에셋 | 프로젝트 파일 | 사용 위치 | 상태 |
 | --- | --- | --- | --- | --- |
-| `134:10624` / `Admin/Navbar`, model=`logo` | `ASAK s logo` | `src/assets/svg/logo-S.svg` | `AdminSidebar.jsx`, `LiveOrderPreview.jsx` | 공통 정본 SVG를 프로젝트 내부 에셋으로 사용 |
-| `134:10612` / `Admin/OrderCard` | `akar-icons:plus` | `src/assets/figma/icon-order-plus.svg` | `LiveOrderPreview.jsx` | 텍스트 `+` 대체 |
-| `134:10612` / `Admin/OrderCard` | `pinhead:chip-bag-with-chip` | `src/assets/figma/icon-order-side.svg` | `LiveOrderPreview.jsx` | 임시 사각형 기호 대체 |
-| `134:10612` / `Admin/OrderCard` | `mdi:drink-outline` | `src/assets/figma/icon-order-drink.svg` | `LiveOrderPreview.jsx` | 임시 사각형 기호 대체 |
+| `134:10624` / `Admin/Navbar`, model=`logo` | `ASAK s logo` | `src/assets/svg/logo-S.svg` | `AdminSidebar.jsx`, `LiveOrderBoard.jsx` | 공통 정본 SVG를 프로젝트 내부 에셋으로 사용 |
+| `134:10612` / `Admin/OrderCard` | `akar-icons:plus` | `src/assets/figma/icon-order-plus.svg` | `LiveOrderBoard.jsx` | 텍스트 `+` 대체 |
+| `134:10612` / `Admin/OrderCard` | `pinhead:chip-bag-with-chip` | `src/assets/figma/icon-order-side.svg` | `LiveOrderBoard.jsx` | 임시 사각형 기호 대체 |
+| `134:10612` / `Admin/OrderCard` | `mdi:drink-outline` | `src/assets/figma/icon-order-drink.svg` | `LiveOrderBoard.jsx` | 임시 사각형 기호 대체 |
 
 Figma MCP가 내려주는 에셋 URL은 단기 URL이므로, 코드에는 URL을 남기지 않고 위의 내부 파일만 참조한다. 외부 CDN이나 Figma 런타임 의존성은 만들지 않는다.
 
@@ -115,7 +115,7 @@ Figma MCP가 내려주는 에셋 URL은 단기 URL이므로, 코드에는 URL을
 
 | 화면 | Figma 노드 | 코드 화면 | 에셋/효과 대조 | 상태 |
 | --- | --- | --- | --- | --- |
-| Live Order / Default | `134:10607` | `components/admin/LiveOrderPreview.jsx` | navbar 원본 logo 확보, 주문 카드 대조 진행 중 | 진행 중 |
+| Live Order / Default | `134:10607` | `components/admin/LiveOrderBoard.jsx` | navbar 원본 logo 확보, 주문 카드 대조 진행 중 | 진행 중 |
 | Order Detail / Default | `134:10630` | `pages/admin/OrderManagementPreview.jsx` | 1920×1080 대조 완료. 필터·10행 테이블·상세 패널을 정적 목업으로 반영, 로고 교체 대기 | 진행 중 |
 | Sold-out / Default | `134:11863` | `pages/admin/SoldOutManagePage.jsx` | 현재 노드 썸네일을 로컬로 내려받음. 정적 2보드 레이아웃, 선택·이동·저장 affordance는 비활성 렌더. `1920×1080` 브라우저 캡처 확인. | UI 완료 / 데이터 adapter 보류 |
 

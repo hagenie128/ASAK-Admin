@@ -30,33 +30,29 @@
 
 ## Repository → 화면 연결표
 
-| Getter | JSON 경로 | 쓰는 화면 / 컴포넌트 | `data`에서 꺼내는 것 |
-|--------|-----------|----------------------|----------------------|
-| `getLiveOrders()` | `liveOrders` | `LiveOrderPreview` · OrderList(Live) | `data.content[]` |
-| `getAdminOrders()` | `orders` | 주문 관리 목록 | `data.content[]` · `{ empty: true }`면 빈 목록 |
-| `getAdminOrderById(id)` | `orders` 검색 | 주문 상세 | `data` = 주문 1건 또는 404 envelope |
+> Live·주문·메뉴 목록은 **실API**로 옮겼다. 아래 mock getter는 품절·결제·매출·대시보드·(레거시) 주문 fixture용.
+
+| Getter | JSON 경로 | 쓰는 화면 | `data`에서 꺼내는 것 |
+|--------|-----------|-----------|----------------------|
 | `getDashboard()` | `dashboard` | DashboardPage | `data` 전체 |
 | `getSoldOutCatalog()` | `soldOut` | SoldOutManagePage | `data.available[]` · `data.soldOut[]` |
-| `getAdminMenus()` | `menus` | MenuManagePage | `data.content[]` |
-| `getPaymentMethods()` | `paymentMethods` | PaymentMethodPage | `data[]` (배열) |
-| `getSalesSummary(period)` | `sales.summary` | SalesSummaryPage | period 병합된 `data` |
-| `getDailySales()` | `sales.daily` | DailySalesPage | `data.rows[]` · `data.totals` |
+| `getPaymentMethods()` | `paymentMethods` | PaymentMethodPage | `data[]` |
+| `getSalesSummary(period)` | `sales.summary` | SalesSummaryPage | period 병합 `data` |
+| `getDailySales()` | `sales.daily` | DailySalesPage | `data.rows[]` · totals |
 | `getMonthlySales()` | `sales.monthly` | MonthlySalesPage | `data.rows[]` |
+| `getLiveOrders()` / `getAdminOrders()` | live/orders | (레거시 fixture) | 주문 실연동 후 참고용 |
 
 ```js
 import {
-  getAdminOrders,
-  getAdminOrderById,
   getSalesSummary,
-  getLiveOrders,
   getDailySales,
   getMonthlySales,
-} from "@/mocks/adminMockRepository";
+  getSoldOutCatalog,
+  getPaymentMethods,
+  getDashboard,
+} from "../src/mocks/adminMockRepository.js";
 
-getAdminOrders();
-getAdminOrders({ empty: true });
 getSalesSummary("empty");
-getSalesSummary("partial");
 getDailySales();
 ```
 
@@ -72,7 +68,7 @@ getDailySales();
 
 ### 1) Live 주문 카드 — `getLiveOrders().data.content[]`
 
-`LiveOrderPreview` → `StaticOrderCard` / `StaticMenuCard`가 쓰는 값.
+`LiveOrderBoard`가 쓰는 Live 카드 필드 (실API 응답 기준, mock fixture와 유사).
 
 | 필드 | 타입 | 화면에서 | 비고 |
 |------|------|----------|------|
@@ -108,7 +104,7 @@ getDailySales();
 컴포넌트 props 매핑:
 
 ```text
-LiveOrderPreview
+LiveOrderBoard
   orders = getLiveOrders().data.content
   → StaticOrderCard({ order })
        order.orderNo, order.orderTypeLabel, order.wide,
@@ -362,7 +358,7 @@ JSON 예시 (`getMonthlySales().data` — 일부):
 > 각 페이지에서 **현재 하드코딩**으로 박혀 있는 데이터를 **JSON의 어떤 필드로 교체해야 하는지** 대조표.
 > ✅ = 이미 hook/repository로 연결됨, ❌ = 하드코딩 → 연결 필요
 
-### 1) `LiveOrderPreview.jsx` → `getLiveOrders()`
+### 1) `LiveOrderBoard.jsx` → Live API / (레거시 `getLiveOrders()`)
 
 | 화면 요소 | 현재 | JSON 바인딩 |
 |-----------|------|-------------|

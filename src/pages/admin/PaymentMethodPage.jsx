@@ -3,11 +3,11 @@
  * getPaymentMethods() → usePaymentMethodDraft → AdminPaymentMethodRow
  */
 import { useState } from "react";
-import AdminAsyncState from "../../components/admin/AdminAsyncState.jsx";
-import AdminConfirmDialog from "../../components/admin/AdminConfirmDialog.jsx";
-import AdminTopHeader from "../../components/admin/AdminTopHeader.jsx";
+import AdminAsyncState from "../../components/admin/shared/AdminAsyncState.jsx";
+import AdminConfirmDialog from "../../components/admin/shared/AdminConfirmDialog.jsx";
+import AdminTopHeader from "../../components/admin/shared/AdminTopHeader.jsx";
 import AdminPaymentMethodRow from "../../components/admin/AdminPaymentMethodRow.jsx";
-import AdminSaveBar from "../../components/admin/AdminSaveBar.jsx";
+import AdminSaveBar from "../../components/admin/shared/AdminSaveBar.jsx";
 import { getPaymentMethodGlyph } from "../../constants/paymentMethodGlyphs.js";
 import { usePaymentMethodDraft } from "../../hooks/usePaymentMethodDraft.js";
 import { toast } from "../../utils/toast.js";

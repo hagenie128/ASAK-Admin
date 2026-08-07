@@ -1,7 +1,7 @@
-/* SCR-016 메뉴 상세 보기 (읽기 전용) — Figma Basic-Info 등 */
-import ricottaImage from "../../assets/figma/soldout-ricotta.png";
-import { formatCurrency } from "../../utils/currency.js";
-import AdminStatusBadge from "./AdminStatusBadge.jsx";
+﻿/* SCR-016 메뉴 상세 보기 (읽기 전용) — Figma Basic-Info 등 */
+import ricottaImage from "../../../assets/figma/soldout-ricotta.png";
+import { formatCurrency } from "../../../utils/currency.js";
+import AdminStatusBadge from "../shared/AdminStatusBadge.jsx";
 
 function tagClassName(code = "") {
   const upper = String(code).toUpperCase();

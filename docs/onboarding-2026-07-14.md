@@ -19,9 +19,9 @@ npm run dev
 
 ```dotenv
 VITE_API_BASE_URL=http://localhost:8080
-VITE_USE_MOCK=true
 ```
 
+화면별 mock/실API는 `src/STRUCTURE_GUIDE.md` 표를 본다. (`VITE_USE_MOCK` 없음)
 ## 매일 시작/종료 루틴
 
 1. 시작: `git pull --rebase origin main` 후 `npm run lint`를 실행한다.

@@ -2,17 +2,22 @@
 
 | 기능 | 화면 파일 힌트 | API 힌트 | 완료 기준 |
 | --- | --- | --- | --- |
-| 로그인 | `pages/admin/LoginPage.jsx` | 인증 API 확정 필요 | 비인증 접근 차단 |
-| 주문 목록 | `OrderListPage`, `OrderTable` | API-007 | 필터·loading·empty·error |
-| 주문 상세/상태 | `OrderDetailPage`, `OrderStatusBadge` | API-007/008 | 상태 변경 반영 |
-| 품절 관리 | `SoldOutManagePage`, `SoldOutToggle` | API-009/010 | 대상별 품절 상태 반영 확인 |
-| 메뉴 관리 | `MenuManagePage`, `MenuEditPage` | API-011/012 | 폼 검증 |
-| 결제수단 | `PaymentMethodPage` | API-013/014 | 활성화·정렬 |
-| 매출 | `SalesSummaryPage`, `SalesChart` | API-015 | 기간별 요약 |
+| 로그인 | `pages/admin/LoginPage.jsx` | `auth/adminSession` (JWT TODO) | 비인증 접근 차단 |
+| Live 주문 현황 | `LiveOrderPage`, `LiveOrderBoard` | API-021 `orders/live` | 카드·경과·상태 |
+| 주문 관리(목록+상세) | `OrderManagePage`, `OrderTable`, `OrderDetailPanel` | API-007/008 | 필터·loading·empty·error · 패널 |
+| 품절 관리 | `SoldOutManagePage` | API-009/010 (현재 mock) | 대상별 품절 반영 |
+| 메뉴 관리 | `MenuManagePage`, `MenuEditPage` | API-011/012 | 목록 실연동 · 저장 stub |
+| 결제수단 | `PaymentMethodPage` | API-015/016 (현재 mock) | 활성화·정렬 |
+| 매출 | `SalesSummaryPage`, `SalesShareCard` | API-017~019 (현재 mock) | 기간별 요약 |
+
+## 라우트
+
+- **실행 정본 (AdminApp):** kebab — `/`, `/orders`, `/sold-out`, `/payment-methods`, `/sales`, …
+- Canonical camel (`/soldOut`, `/paymentMethods`)과의 정렬: `TODO-069`
+- 데이터 소스 표: [STRUCTURE_GUIDE.md](../STRUCTURE_GUIDE.md)
 
 ## Canonical contract relationship
 
 - Status: Needs Review — current Admin Frontend expected shape.
-- Canonical routes and API decisions: [ASAK docs](../../../ASAK/docs/README.md) and [Canonical Contract Decisions](../../../ASAK/docs/governance/canonical-contract-decisions-2026-07-16.md).
-- Canonical Admin routes use `/orders/live`, `/soldOut`, and `/paymentMethods`; existing assumptions are not changed here.
-- Adapter/Backend DTO confirmation is required before implementation.
+- Canonical routes and API decisions: [ASAK docs](../../../ASAK/docs/README.md).
+- BE DTO 확인: `types/*.js`. adapter는 화면 전용 가공이 필요할 때 추가.

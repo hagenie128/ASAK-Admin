@@ -2,8 +2,8 @@
  * SCR-022 / Dashboard
  * Page = 조합만. 섹션 UI는 DashboardPanels.
  */
-import AdminAsyncState from "../../components/admin/AdminAsyncState.jsx";
-import AdminTopHeader from "../../components/admin/AdminTopHeader.jsx";
+import AdminAsyncState from "../../components/admin/shared/AdminAsyncState.jsx";
+import AdminTopHeader from "../../components/admin/shared/AdminTopHeader.jsx";
 import {
   DashboardInventoryAlerts,
   DashboardKpis,

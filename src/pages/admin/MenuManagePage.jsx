@@ -1,13 +1,13 @@
 /* SCR-016 / Menu Management — Page는 조합만 */
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import AdminAsyncState from "../../components/admin/AdminAsyncState.jsx";
-import AdminConfirmDialog from "../../components/admin/AdminConfirmDialog.jsx";
-import AdminTopHeader from "../../components/admin/AdminTopHeader.jsx";
-import AdminPagination from "../../components/admin/AdminPagination.jsx";
-import MenuListPanel from "../../components/admin/MenuListPanel.jsx";
-import MenuDetailPanel from "../../components/admin/MenuDetailPanel.jsx";
-import MenuEditPanel from "../../components/admin/MenuEditPanel.jsx";
+import AdminAsyncState from "../../components/admin/shared/AdminAsyncState.jsx";
+import AdminConfirmDialog from "../../components/admin/shared/AdminConfirmDialog.jsx";
+import AdminTopHeader from "../../components/admin/shared/AdminTopHeader.jsx";
+import AdminPagination from "../../components/admin/shared/AdminPagination.jsx";
+import MenuListPanel from "../../components/admin/menus/MenuListPanel.jsx";
+import MenuDetailPanel from "../../components/admin/menus/MenuDetailPanel.jsx";
+import MenuEditPanel from "../../components/admin/menus/MenuEditPanel.jsx";
 import { useMenusQuery } from "../../hooks/useMenusQuery.js";
 import { ADMIN_PAGINATION } from "../../constants/pagination.js";
 import { toast } from "../../utils/toast.js";
