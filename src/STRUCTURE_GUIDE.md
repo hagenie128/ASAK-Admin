@@ -59,7 +59,7 @@ Page → Hook → api/*Api.js 또는 mocks/adminMockRepository.js
 | `/sales` · `/sales/monthly` · `/sales/daily` | 매출 3화면 | mock `useSalesQuery` |
 | `/ui-preview/...` | `pages/dev/UiStatePreviewPage` | 정적 |
 
-실행 경로 = **kebab-case**. Canonical camel(`/soldOut` 등)과의 정렬은 `TODO-069`.
+실행 경로 = **kebab-case**. 정본 camel(`/soldOut` 등)과의 정렬은 `TODO-069`.
 
 ## 폴더
 

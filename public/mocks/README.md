@@ -30,7 +30,7 @@
 
 ## Repository → 화면 연결표
 
-> Live·주문·메뉴 목록은 **실API**로 옮겼다. 아래 mock getter는 품절·결제·매출·대시보드·(레거시) 주문 fixture용.
+> Live·주문·메뉴 목록은 **실API**로 옮겼다. 아래 mock getter는 품절·결제·매출·대시보드·(레거시) 주문 테스트용 데이터용.
 
 | Getter | JSON 경로 | 쓰는 화면 | `data`에서 꺼내는 것 |
 |--------|-----------|-----------|----------------------|
@@ -40,7 +40,7 @@
 | `getSalesSummary(period)` | `sales.summary` | SalesSummaryPage | period 병합 `data` |
 | `getDailySales()` | `sales.daily` | DailySalesPage | `data.rows[]` · totals |
 | `getMonthlySales()` | `sales.monthly` | MonthlySalesPage | `data.rows[]` |
-| `getLiveOrders()` / `getAdminOrders()` | live/orders | (레거시 fixture) | 주문 실연동 후 참고용 |
+| `getLiveOrders()` / `getAdminOrders()` | live/orders | (레거시 테스트용 데이터) | 주문 실연동 후 참고용 |
 
 ```js
 import {
@@ -68,7 +68,7 @@ getDailySales();
 
 ### 1) Live 주문 카드 — `getLiveOrders().data.content[]`
 
-`LiveOrderBoard`가 쓰는 Live 카드 필드 (실API 응답 기준, mock fixture와 유사).
+`LiveOrderBoard`가 쓰는 Live 카드 필드 (실API 응답 기준, mock 테스트용 데이터와 유사).
 
 | 필드 | 타입 | 화면에서 | 비고 |
 |------|------|----------|------|

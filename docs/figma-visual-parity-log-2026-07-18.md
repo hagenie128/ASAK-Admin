@@ -98,7 +98,7 @@ Figma MCP가 내려주는 에셋 URL은 단기 URL이므로, 코드에는 URL을
 
 `Live Order`의 옵션 원형은 원본 48px에서 시각 크기를 40px으로 축소했지만, 실제 선택 기능 구현 시에는 48px 이상의 투명한/여백 포함 클릭 영역을 별도로 둔다. 또한 문서의 Blue 제거 원칙에 따라 음료 아이콘 wrapper의 blue border는 Brand Primary로 교체했다.
 
-0718 handoff의 `00. START HERE`는 전체 텍스트를 `Noto Sans KR`로 마이그레이션했다고 기록하지만, 일부 이전 화면 노드는 Pretendard/Inter를 포함한다. 공통 CSS는 `Noto Sans KR`을 첫 폴백으로 두고 Pretendard를 보조 폴백으로 둔다. 개별 화면에서 실제 캡처와 글자 폭이 달라질 경우 해당 화면의 source node를 우선해 font/weight를 따로 기록한다.
+0718 넘김의 `00. START HERE`는 전체 텍스트를 `Noto Sans KR`로 마이그레이션했다고 기록하지만, 일부 이전 화면 노드는 Pretendard/Inter를 포함한다. 공통 CSS는 `Noto Sans KR`을 첫 폴백으로 두고 Pretendard를 보조 폴백으로 둔다. 개별 화면에서 실제 캡처와 글자 폭이 달라질 경우 해당 화면의 source node를 우선해 font/weight를 따로 기록한다.
 
 ## 이전 초안 참고 기록
 
@@ -140,12 +140,12 @@ Figma MCP가 내려주는 에셋 URL은 단기 URL이므로, 코드에는 URL을
 | 2 | ASAK 1 | `k67gDKvnB29ILSzIpFYSaT` | 이전 공통/Kiosk/Admin 컴포넌트·상태 용어. | 현재 화면을 확인한 뒤 빠진 상태를 해석할 때만 참고. 브랜딩·이미지는 기본으로 가져오지 않는다. |
 | 3 | ASAK 2 | `UkpdbylxruMqzf6bSzZ4Rb` | 이전 결제·매출 컴포넌트 대안. | 결제/매출 컴포넌트 구조 참고용이며, 시각 우선 원본으로 쓰지 않는다. |
 | 4 | Design System Product UI — 2026-07-14 | `VXKyzoNdsgM4oN57mrECxb` | ASAK 1과 2 사이 병합·이전 목록. | 노드 단위 현재 화면 대조가 끝날 때까지 추적용으로만 둔다. |
-| 5 | Design System Product UI 0715 | `JSrjOy668zhfkiLplCkreh` | 분리된 handoff 사본. `0:1`에는 실제 화면 에셋이 로컬로 옮겨졌고 외부 라이브러리 참조가 제거됐다고 적혀 있다. | 격리 벤치마크로 유용. 더 새 화면·로고의 대체 원본으로 쓰지 않는다. |
+| 5 | Design System Product UI 0715 | `JSrjOy668zhfkiLplCkreh` | 분리된 넘김 사본. `0:1`에는 실제 화면 에셋이 로컬로 옮겨졌고 외부 라이브러리 참조가 제거됐다고 적혀 있다. | 격리 벤치마크로 유용. 더 새 화면·로고의 대체 원본으로 쓰지 않는다. |
 | 참고만 | kiosk_design (initial) | `iqaoVwFjFE6Zq1WpOVgjeG` | 가장 이른 Kiosk 원본. 제공 노드 `551:2992`는 light/dark material·색상 견본이 있는 component/foundation 캔버스. | 원래 흐름·의도를 볼 때만 확인. platform material 효과, 라벨 없는 색, 레거시 시각 언어는 현재 웹 UI로 그대로 옮기지 않는다. |
 
-### 이전 handoff 파일에서 유지할 좋은 패턴
+### 이전 넘김 파일에서 유지할 좋은 패턴
 
-- 0715 handoff는 재사용 primitive 계층을 문서화한다: 공통 `Button`, `Modal`, `EmptyState`, `ErrorState`, `LoadingState`, `ConfirmDialog`, 그다음 Kiosk/Admin composite. 구현도 **공통 primitive → 기능 컴포넌트 → 페이지** 방향을 유지하고, 페이지 전용 CSS를 중복하지 않는다.
+- 0715 넘김는 재사용 primitive 계층을 문서화한다: 공통 `Button`, `Modal`, `EmptyState`, `ErrorState`, `LoadingState`, `ConfirmDialog`, 그다음 Kiosk/Admin composite. 구현도 **공통 primitive → 기능 컴포넌트 → 페이지** 방향을 유지하고, 페이지 전용 CSS를 중복하지 않는다.
 - 원본 목록은 이후 정적 UI 작업의 올바른 분해를 알려 준다: `Admin/DataTableHeader`, `DataTableRow`, `OrderDetailInfo`, `OrderDetailMenuItem`, `SoldOutCard`, `PaymentMethodSettingRow`, `SalesPeriodFilter`. 이름은 구현 힌트이며, 옛 스타일을 그대로 복사하라는 뜻은 아니다.
 - 현재 0718 대시보드는 *부분 데이터*를 명시적으로 모델링한다: 하나의 위젯만 사용 불가일 때 inline `ErrorState`를 쓰고, 영향 없는 위젯은 그대로 보인다. 전체 대시보드를 하나의 오류 페이지로 바꾸는 것보 낫다. 이후 mock 화면도 이 구분을 유지해 실제 API 상태와 매핑하기 쉽게 한다.
 - 초기 `kiosk_design` component 캔버스는 역사적 UX 단서로는 가치가 있지만, `Regular`, `Thick`, `Chrome`, light/dark 같은 platform-style material mode를 쓴다. 웹 Kiosk에서는 현재 Figma 화면이 같은 시각 의도를 확인해 줄 때만, 기존 surface·border·shadow 토큰으로 번역한다.

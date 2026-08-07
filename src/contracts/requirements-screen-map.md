@@ -13,11 +13,11 @@
 ## 라우트
 
 - **실행 정본 (AdminApp):** kebab — `/`, `/orders`, `/sold-out`, `/payment-methods`, `/sales`, …
-- Canonical camel (`/soldOut`, `/paymentMethods`)과의 정렬: `TODO-069`
+- 정본 camel (`/soldOut`, `/paymentMethods`)과의 정렬: `TODO-069`
 - 데이터 소스 표: [STRUCTURE_GUIDE.md](../STRUCTURE_GUIDE.md)
 
-## Canonical contract relationship
+## 정본 계약과의 관계
 
-- Status: Needs Review — current Admin Frontend expected shape.
-- Canonical routes and API decisions: [ASAK docs](../../../ASAK/docs/README.md).
+- 상태: 검토 필요 — 현재 Admin 프론트에서 기대하는 형태.
+- 정본 라우트·API 결정: [ASAK docs](../../../ASAK/docs/README.md).
 - BE DTO 확인: `types/*.js`. adapter는 화면 전용 가공이 필요할 때 추가.

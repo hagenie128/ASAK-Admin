@@ -9,7 +9,7 @@
 | [Mock 필드 사전](../public/mocks/README.md) | 화면 바인딩 시 | repository getter · JSON 필드 |
 | [Git 운영](git-workflow-2026-07-14.md) | 브랜치/PR 전 | 브랜치, 커밋, PR, 충돌 대응 |
 | [API 연동](api-integration-2026-07-14.md) | 서버 연결 시 | 응답 envelope, 인증, 오류 처리 |
-| [Figma UI handoff](figma-ui-handoff-2026-07-18.md) | 디자인 대조 시 | 화면·노드 매핑 기록 |
+| [Figma UI 넘김](figma-ui-handoff-2026-07-18.md) | 디자인 대조 시 | 화면·노드 매핑 기록 |
 | [시각 패리티 로그](figma-visual-parity-log-2026-07-18.md) | 시안 QA 이력 | 캡처·대조 메모 |
 
 문서와 구현이 충돌하면 API 계약과 운영 정책을 먼저 확인하고, 결정 사항을 해당 문서에 갱신합니다.

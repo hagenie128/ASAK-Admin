@@ -1,6 +1,6 @@
 # 관리자 mock 안내
 
-JSON fixture 위치: **`public/mocks/asak-admin-data.json`**
+JSON 테스트용 데이터 위치: **`public/mocks/asak-admin-data.json`**
 코드 입구: **`src/mocks/adminMockRepository.js`만** (Page에서 JSON 직접 import 금지)
 
 필드 사전: [`../../public/mocks/README.md`](../../public/mocks/README.md)
