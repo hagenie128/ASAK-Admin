@@ -4,7 +4,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--admin-space-lg);
   color: var(--admin-text-primary);
   min-height: 0;
   overflow: hidden;
@@ -122,7 +122,7 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
-  margin-top: 16px;
+  margin-top: var(--admin-space-md);
   color: var(--admin-text-secondary);
 }
 .order-management__pagination b,
@@ -177,10 +177,10 @@
 .order-detail-panel__content {
   flex: 1 1 0;
   min-height: 0;
-  padding: 24px 28px;
+  padding: var(--admin-space-lg) 28px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--admin-space-md);
   width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
@@ -371,7 +371,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  padding: 16px 28px 20px;
+  padding: var(--admin-space-md) 28px 20px;
   border-top: 1px solid var(--admin-border);
   background: var(--admin-panel);
   box-shadow: 0 -8px 18px rgba(15, 23, 42, 0.04);
@@ -401,7 +401,7 @@
 .order-detail-panel__btn {
   box-sizing: border-box;
   height: 36px;
-  padding: 10px 16px;
+  padding: 10px var(--admin-space-md);
   border-radius: 8px;
   border: 1px solid var(--admin-border);
   background: var(--admin-panel);
@@ -459,7 +459,7 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 32px 24px;
+  padding: var(--admin-space-xl) var(--admin-space-lg);
   text-align: center;
 }
 .order-detail-panel__empty-icon {
@@ -520,7 +520,7 @@
   }
   .admin-sidebar:not(.admin-sidebar--logo) {
     min-height: auto;
-    padding: 8px 16px;
+    padding: 8px var(--admin-space-md);
     flex-direction: row;
     align-items: center;
   }
@@ -544,7 +544,7 @@
     display: none;
   }
   .admin-main {
-    padding: 28px 16px;
+    padding: 28px var(--admin-space-md);
   }
   .admin-page__header {
     align-items: stretch;
@@ -561,7 +561,7 @@
     grid-template-columns: 1fr;
   }
   .admin-method-row {
-    padding: 16px;
+    padding: var(--admin-space-md);
   }
   .admin-method-row__controls button {
     display: none;

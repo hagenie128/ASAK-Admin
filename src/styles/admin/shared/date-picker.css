@@ -12,9 +12,9 @@
   right: 0;
   z-index: 40;
   box-sizing: border-box;
-  padding: 16px;
+  padding: var(--admin-space-md);
   border-radius: 12px;
-  background: var(--admin-panel, #fff);
+  background: var(--admin-panel, var(--admin-panel));
   box-shadow:
     0 10px 28px rgba(0, 0, 0, 0.12),
     0 2px 6px rgba(0, 0, 0, 0.06);
@@ -22,12 +22,12 @@
 
 .admin-date-picker__panel.is-single {
   width: 312px;
-  padding: 16px 16px 12px;
+  padding: var(--admin-space-md) var(--admin-space-md) 12px;
 }
 
 .admin-date-picker__panel.is-range {
   width: 625px;
-  padding: 12px 16px 12px;
+  padding: 12px var(--admin-space-md) 12px;
 }
 
 .admin-date-picker__presets {
@@ -42,8 +42,8 @@
   padding: 0 14px;
   border: 0;
   border-radius: 999px;
-  background: var(--admin-brand-subtle, #f5fbe0);
-  color: var(--admin-text-secondary, #6b7280);
+  background: var(--admin-brand-subtle, var(--admin-brand-subtle));
+  color: var(--admin-text-secondary, var(--admin-text-secondary));
   font: inherit;
   font-size: 14px;
   font-weight: 500;
@@ -52,8 +52,8 @@
 }
 
 .admin-date-picker__presets button.is-active {
-  background: var(--admin-brand-secondary, #6c9700);
-  color: #fff;
+  background: var(--admin-brand-secondary, var(--admin-brand-secondary));
+  color: var(--admin-text-on-dark);
 }
 
 .admin-date-picker__months {
@@ -66,9 +66,9 @@
 }
 
 .admin-date-picker__months.is-dual .admin-date-picker__month + .admin-date-picker__month {
-  margin-left: 16px;
-  padding-left: 16px;
-  border-left: 1px solid var(--admin-border, #e5e7eb);
+  margin-left: var(--admin-space-md);
+  padding-left: var(--admin-space-md);
+  border-left: 1px solid var(--admin-border, var(--admin-border));
 }
 
 .admin-date-picker__month {
@@ -90,7 +90,7 @@
   border: 0;
   border-radius: 4px;
   background: transparent;
-  color: var(--admin-text-secondary, #6b7280);
+  color: var(--admin-text-secondary, var(--admin-text-secondary));
   font-size: 18px;
   font-weight: 500;
   line-height: 1;
@@ -98,14 +98,14 @@
 }
 
 .admin-date-picker__nav button:hover {
-  background: var(--admin-bg-subtle, #f5f5f5);
+  background: var(--admin-bg-subtle, var(--admin-bg-subtle));
 }
 
 .admin-date-picker__nav strong {
   font-size: 16px;
   font-weight: 600;
   line-height: 21px;
-  color: var(--admin-text-primary, #111827);
+  color: var(--admin-text-primary, var(--admin-text));
 }
 
 .admin-date-picker__weekdays,
@@ -133,7 +133,7 @@
   font-size: 13px;
   font-weight: 500;
   line-height: 18px;
-  color: var(--admin-text-secondary, #6b7280);
+  color: var(--admin-text-secondary, var(--admin-text-secondary));
 }
 
 /* 상위(.sales-daily__date 등) span 필 스타일 누수 방지 */
@@ -149,13 +149,13 @@
 .admin-date-picker__weekdays span.is-sun,
 .admin-date-picker__grid button.is-sun:not(.is-outside):not(.is-selected):not(.is-range-edge)
   .admin-date-picker__day-label {
-  color: var(--admin-danger, #ef4444);
+  color: var(--admin-danger, var(--admin-danger));
 }
 
 .admin-date-picker__weekdays span.is-sat,
 .admin-date-picker__grid button.is-sat:not(.is-outside):not(.is-selected):not(.is-range-edge)
   .admin-date-picker__day-label {
-  color: #3b82f6;
+  color: var(--admin-status-info);
 }
 
 .admin-date-picker__grid {
@@ -192,18 +192,18 @@
 }
 
 .admin-date-picker__grid button.is-outside .admin-date-picker__day-label {
-  color: var(--admin-text-secondary, #6b7280);
+  color: var(--admin-text-secondary, var(--admin-text-secondary));
 }
 
 .admin-date-picker__grid button.is-outside.is-sun .admin-date-picker__day-label,
 .admin-date-picker__grid button.is-outside.is-sat .admin-date-picker__day-label {
-  color: var(--admin-text-secondary, #6b7280);
+  color: var(--admin-text-secondary, var(--admin-text-secondary));
 }
 
 /* 선택 끝: brand secondary 원 + 흰 글자 */
 .admin-date-picker__grid button.is-selected .admin-date-picker__day-label,
 .admin-date-picker__grid button.is-range-edge .admin-date-picker__day-label {
-  color: #fff;
+  color: var(--admin-text-on-dark);
   font-weight: 600;
 }
 
@@ -217,14 +217,14 @@
   width: 32px;
   height: 32px;
   border-radius: 999px;
-  background: var(--admin-brand-secondary, #6c9700);
+  background: var(--admin-brand-secondary, var(--admin-brand-secondary));
   transform: translate(-50%, -50%);
 }
 
 /* 중간 연녹 바 */
 .admin-date-picker__grid button.is-in-range:not(.is-range-edge) {
   border-radius: 0;
-  background: var(--admin-brand-subtle, #f5fbe0);
+  background: var(--admin-brand-subtle, var(--admin-brand-subtle));
 }
 
 .admin-date-picker__grid button.is-in-range:not(.is-range-edge) .admin-date-picker__day-label {
@@ -233,11 +233,11 @@
 }
 
 .admin-date-picker__grid button.is-in-range.is-sun:not(.is-range-edge) .admin-date-picker__day-label {
-  color: var(--admin-danger, #ef4444);
+  color: var(--admin-danger, var(--admin-danger));
 }
 
 .admin-date-picker__grid button.is-in-range.is-sat:not(.is-range-edge) .admin-date-picker__day-label {
-  color: #3b82f6;
+  color: var(--admin-status-info);
 }
 
 /* 시작/끝 옆 연녹 반쪽 바 (연속 구간) */
@@ -248,7 +248,7 @@
   z-index: 0;
   top: 0;
   bottom: 0;
-  background: var(--admin-brand-subtle, #f5fbe0);
+  background: var(--admin-brand-subtle, var(--admin-brand-subtle));
 }
 
 .admin-date-picker__grid button.is-range-start:not(.is-range-single)::before {
@@ -272,7 +272,7 @@
   gap: 12px;
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid var(--admin-border, #e5e7eb);
+  border-top: 1px solid var(--admin-border, var(--admin-border));
 }
 
 .admin-date-picker__footer p {
@@ -280,17 +280,17 @@
   font-size: 14px;
   font-weight: 500;
   line-height: 19px;
-  color: var(--admin-text-primary, #111827);
+  color: var(--admin-text-primary, var(--admin-text));
 }
 
 .admin-date-picker__footer button.is-primary {
   height: 36px;
   min-width: 66px;
-  padding: 0 16px;
+  padding: 0 var(--admin-space-md);
   border: 0;
   border-radius: 8px;
-  background: var(--admin-brand-secondary, #6c9700);
-  color: #fff;
+  background: var(--admin-brand-secondary, var(--admin-brand-secondary));
+  color: var(--admin-text-on-dark);
   font: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -310,10 +310,10 @@
 .admin-filter-dropdown__trigger {
   height: 40px;
   padding: 0 14px;
-  border: 1px solid var(--admin-border, #e5e7eb);
+  border: 1px solid var(--admin-border, var(--admin-border));
   border-radius: 8px;
-  background: #fff;
-  color: var(--admin-text-secondary, #6b7280);
+  background: var(--admin-panel);
+  color: var(--admin-text-secondary, var(--admin-text-secondary));
   font: inherit;
   font-size: 14px;
   cursor: pointer;
@@ -322,8 +322,8 @@
 }
 
 .admin-filter-dropdown__trigger.is-active {
-  color: var(--admin-text-primary, #111827);
-  border-color: var(--admin-brand-primary, #b5e30f);
+  color: var(--admin-text-primary, var(--admin-text));
+  border-color: var(--admin-brand-primary, var(--admin-brand-primary));
 }
 
 .admin-filter-dropdown__menu {
@@ -333,9 +333,9 @@
   z-index: 40;
   min-width: 100%;
   padding: 6px;
-  border: 1px solid var(--admin-border, #e5e7eb);
+  border: 1px solid var(--admin-border, var(--admin-border));
   border-radius: 10px;
-  background: #fff;
+  background: var(--admin-panel);
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.1);
 }
 
@@ -350,17 +350,17 @@
   text-align: left;
   font: inherit;
   font-size: 14px;
-  color: var(--admin-text-primary, #111827);
+  color: var(--admin-text-primary, var(--admin-text));
   cursor: pointer;
 }
 
 .admin-filter-dropdown__menu button:hover,
 .admin-filter-dropdown__menu button.is-selected {
-  background: var(--admin-brand-subtle, #f5fbe0);
+  background: var(--admin-brand-subtle, var(--admin-brand-subtle));
 }
 
 .order-management__table tr.is-selected {
-  background: var(--admin-brand-subtle, #f5fbe0);
+  background: var(--admin-brand-subtle, var(--admin-brand-subtle));
 }
 
 .payment-method-row__badge {
@@ -368,8 +368,8 @@
   margin-left: 8px;
   padding: 2px 8px;
   border-radius: 999px;
-  background: var(--admin-danger-soft, #fff0eb);
-  color: var(--admin-danger, #ef4444);
+  background: var(--admin-danger-soft, var(--admin-danger-soft));
+  color: var(--admin-danger, var(--admin-danger));
   font-size: 11px;
   font-weight: 700;
   vertical-align: middle;
@@ -381,7 +381,7 @@
 }
 
 .sales-summary__range.is-open {
-  border-color: var(--admin-brand-primary, #b5e30f);
+  border-color: var(--admin-brand-primary, var(--admin-brand-primary));
 }
 
 .sales-daily__date {

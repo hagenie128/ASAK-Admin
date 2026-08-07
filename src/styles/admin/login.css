@@ -2,7 +2,7 @@
 .admin-login-page {
   position: relative;
   min-height: 100vh;
-  padding: 48px 24px;
+  padding: 48px var(--admin-space-lg);
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -28,7 +28,7 @@
    두 겹의 합성 결과(하단 알파 1-0.8²=0.36)를 한 레이어로 계산해 넣었다. */
 .admin-login-page__veil {
   backdrop-filter: blur(10px);
-  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.36) 100%);
+  background: linear-gradient(180deg, var(--admin-panel) 0%, rgba(255, 255, 255, 0.36) 100%);
 }
 
 .admin-login-page__tint {
@@ -76,7 +76,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--admin-space-lg);
 }
 
 .admin-login-field {
@@ -95,7 +95,7 @@
 
 .admin-login-field input {
   height: 48px;
-  padding: 0 16px;
+  padding: 0 var(--admin-space-md);
   border: 1px solid var(--admin-border);
   border-radius: 8px;
   background: var(--admin-panel);
@@ -142,7 +142,7 @@
   border: 0;
   border-radius: 8px;
   background: var(--admin-brand-primary);
-  color: #ffffff;
+  color: var(--admin-text-on-dark);
   font-family: inherit;
   font-size: 16px;
   line-height: 24px;

@@ -16,7 +16,7 @@
 }
 
 .admin-search-input::placeholder {
-  color: #9ca3af;
+  color: var(--admin-cool-gray-400);
 }
 
 .admin-search-input:focus {
@@ -76,7 +76,7 @@
   top: 2px;
   width: 5px;
   height: 9px;
-  border: solid #111827;
+  border: solid var(--admin-text);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }

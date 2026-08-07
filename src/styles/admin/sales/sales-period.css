@@ -3,7 +3,7 @@
 .sales-monthly {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--admin-space-lg);
   width: 100%;
   height: 100%;
   min-height: 0;
@@ -15,7 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--admin-space-md);
 }
 .sales-daily__header h1,
 .sales-monthly__header h1 {
@@ -23,14 +23,14 @@
   font-size: 24px;
   line-height: 32px;
   font-weight: 700;
-  color: #111827;
+  color: var(--admin-text);
 }
 .sales-daily__header p,
 .sales-monthly__header p {
   margin: 4px 0 0;
   font-size: 14px;
   line-height: 20px;
-  color: #6b7280;
+  color: var(--admin-text-secondary);
 }
 .sales-daily__date,
 .sales-monthly__year {
@@ -45,7 +45,7 @@
   margin: 0;
   padding: 10px 14px;
   border-radius: 10px;
-  background: #fff8e6;
+  background: var(--admin-warning-soft);
   color: #8a6d00;
   font-size: 13px;
   line-height: 18px;
@@ -56,10 +56,10 @@
 .sales-monthly__year > button {
   width: 32px;
   height: 32px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--admin-border);
   border-radius: 8px;
-  background: #fff;
-  color: #111827;
+  background: var(--admin-panel);
+  color: var(--admin-text);
   font-size: 18px;
   line-height: 1;
   padding: 0;
@@ -78,11 +78,11 @@
   width: auto !important;
   min-width: 140px;
   height: auto !important;
-  padding: 8px 16px !important;
+  padding: 8px var(--admin-space-md) !important;
   border: 0 !important;
   border-radius: 100px !important;
-  background: #b5e30f !important;
-  color: #111827 !important;
+  background: var(--admin-brand-primary) !important;
+  color: var(--admin-text) !important;
   font-size: 16px !important;
   line-height: 22px !important;
   font-weight: 700 !important;
@@ -95,7 +95,7 @@
 .sales-daily__kpis,
 .sales-monthly__kpis {
   display: grid;
-  gap: 16px;
+  gap: var(--admin-space-md);
 }
 .sales-daily__kpis {
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -105,10 +105,10 @@
 }
 .sales-daily__kpis article,
 .sales-monthly__kpis article {
-  padding: 24px;
-  border: 1px solid #e5e7eb;
+  padding: var(--admin-space-lg);
+  border: 1px solid var(--admin-border);
   border-radius: 12px;
-  background: #fff;
+  background: var(--admin-panel);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -117,14 +117,14 @@
 .sales-monthly__kpis span {
   font-size: 14px;
   line-height: 20px;
-  color: #6b7280;
+  color: var(--admin-text-secondary);
 }
 .sales-daily__kpis strong,
 .sales-monthly__kpis strong {
   font-size: 28px;
   line-height: 36px;
   font-weight: 700;
-  color: #111827;
+  color: var(--admin-text);
 }
 .sales-daily__kpis p,
 .sales-monthly__kpis p {
@@ -134,14 +134,14 @@
   align-items: center;
   font-size: 13px;
   line-height: 18px;
-  color: #6b7280;
+  color: var(--admin-text-secondary);
 }
 .sales-daily__kpis p b {
-  color: #ef4444;
+  color: var(--admin-danger);
 }
 .sales-daily__kpis p.is-peak b,
 .sales-monthly__kpis p.is-ok small {
-  color: #b5e30f;
+  color: var(--admin-brand-primary);
   font-weight: 700;
 }
 .sales-daily__middle,
@@ -149,27 +149,27 @@
 .sales-monthly__bottom {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;
-  gap: 16px;
+  gap: var(--admin-space-md);
   align-items: start;
 }
 .sales-daily__right,
 .sales-monthly__right {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--admin-space-md);
 }
 .sales-compare-card {
-  padding: 24px;
-  border: 1px solid #e5e7eb;
+  padding: var(--admin-space-lg);
+  border: 1px solid var(--admin-border);
   border-radius: 8px;
-  background: #fff;
+  background: var(--admin-panel);
 }
 .sales-compare-card h2 {
-  margin: 0 0 16px;
+  margin: 0 0 var(--admin-space-md);
   font-size: 16px;
   line-height: 24px;
   font-weight: 600;
-  color: #111827;
+  color: var(--admin-text);
 }
 .sales-compare-card__row {
   display: flex;
@@ -182,30 +182,30 @@
   display: flex;
   justify-content: space-between;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--admin-text-secondary);
 }
 .sales-compare-card__row b {
-  color: #111827;
+  color: var(--admin-text);
 }
 .sales-compare-card__row i {
   display: block;
   height: 8px;
   border-radius: 999px;
-  background: #f3f4f6;
+  background: var(--admin-cool-gray-50);
   overflow: hidden;
 }
 .sales-compare-card__row em {
   display: block;
   height: 100%;
-  background: #c8f064;
+  background: var(--admin-lime-soft);
 }
 .sales-compare-card__row em.is-primary {
-  background: #b5e30f;
+  background: var(--admin-brand-primary);
 }
 .sales-compare-card__note {
   margin: 0;
   font-size: 13px;
-  color: #6b7280;
+  color: var(--admin-text-secondary);
 }
 .sales-chart--compact {
   min-height: 180px;

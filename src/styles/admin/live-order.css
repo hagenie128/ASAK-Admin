@@ -36,7 +36,7 @@
   align-items: center;
   justify-content: space-between;
   min-width: 0;
-  padding: 16px 40px 16px 30px;
+  padding: var(--admin-space-md) 40px var(--admin-space-md) 30px;
   box-sizing: border-box;
 }
 
@@ -61,7 +61,7 @@
 
 .live-order-preview__title-group p {
   margin: 0;
-  color: var(--admin-orange-500);
+  color: var(--admin-orange-alt);
   font-size: var(--admin-font-size-body);
   line-height: var(--admin-line-height-body);
   font-weight: 500;
@@ -83,14 +83,14 @@
   align-items: start;
   gap: 8px;
   min-height: calc(100vh - 72px);
-  padding: 24px 32px;
+  padding: var(--admin-space-lg) var(--admin-space-xl);
   box-sizing: border-box;
 }
 
 .live-order-preview__board {
   display: flex;
   flex-wrap: nowrap;
-  gap: 32px;
+  gap: var(--admin-space-xl);
   align-items: flex-start;
   overflow-x: auto;
   padding: 20px 4px;
@@ -109,7 +109,7 @@
   display: flex;
   min-width: 0;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--admin-space-md);
   padding: 20px;
   border-radius: 16px;
   background: var(--admin-panel);
@@ -138,7 +138,7 @@
 
 .live-order-card__type {
   align-self: flex-start;
-  padding: 4px 16px;
+  padding: 4px var(--admin-space-md);
   border-radius: 999px;
   background: var(--admin-lime);
   font-size: 1.125rem;
@@ -163,7 +163,7 @@
 .live-order-item p,
 .live-order-item ul {
   margin: 8px 0 0;
-  color: var(--admin-cool-gray-700);
+  color: var(--admin-slate-700);
   font-size: 0.875rem;
 }
 
@@ -191,7 +191,7 @@
   min-height: 851px;
   flex: 0 0 380px;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--admin-space-md);
   padding: 20px;
   overflow: clip;
   border-radius: 16px;
@@ -235,7 +235,7 @@
   align-items: center;
   justify-content: center;
   height: 30px;
-  padding: 0 16px;
+  padding: 0 var(--admin-space-md);
   border-radius: 999px;
   background: var(--admin-brand-primary);
   color: var(--admin-text);
@@ -326,7 +326,7 @@
 }
 
 .figma-order-menu__dressing {
-  color: var(--admin-neutral-600);
+  color: var(--admin-ink-650);
 }
 
 .figma-order-menu__base b,
@@ -336,7 +336,7 @@
 
 .figma-order-menu__options ul {
   margin: 0;
-  padding: 0 16px 10px;
+  padding: 0 var(--admin-space-md) 10px;
   list-style: none;
   display: flex;
   flex-direction: column;
@@ -358,7 +358,7 @@
   min-width: 0;
   font-size: var(--admin-font-size-caption);
   line-height: 1;
-  color: var(--admin-neutral-600);
+  color: var(--admin-ink-650);
 }
 
 .figma-order-option span {
@@ -423,7 +423,7 @@
   margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--admin-space-md);
   width: 100%;
 }
 
@@ -431,7 +431,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: 0 var(--admin-space-md);
   font-size: var(--admin-font-size-label);
   font-weight: 700;
   line-height: var(--admin-line-height-label);
@@ -485,7 +485,7 @@
 
 @media (max-width: 1280px) {
   .live-order-preview__board {
-    gap: 16px;
+    gap: var(--admin-space-md);
   }
 
   .figma-order-card,
