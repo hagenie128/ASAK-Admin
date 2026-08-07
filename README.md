@@ -58,4 +58,4 @@ public/mocks/     asak-admin-data.json
 
 ## 라우트
 
-실행 정본은 **kebab-case** (`/sold-out`, `/payment-methods`). Canonical camel과의 정렬은 `TODO-069`.
+실행 정본은 **kebab-case** (`/sold-out`, `/payment-methods`). 정본 camel과의 정렬은 `TODO-069`.
