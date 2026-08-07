@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 24px;
+  gap: var(--admin-space-lg);
   color: var(--admin-text-primary);
   overflow-x: hidden;
   overflow-y: auto;
@@ -39,10 +39,10 @@
 .payment-settings__body {
   width: 100%;
   max-width: 1600px;
-  margin-top: 32px;
+  margin-top: var(--admin-space-xl);
   display: flex;
   align-items: flex-start;
-  gap: 16px;
+  gap: var(--admin-space-md);
 }
 
 .payment-settings h2 {
@@ -60,7 +60,7 @@
 
 /* Admin/PaymentMethodRow (551:74314) — 898×88 */
 .payment-method-list {
-  margin-top: 16px;
+  margin-top: var(--admin-space-md);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -68,10 +68,10 @@
 
 .payment-method-row {
   height: 88px;
-  padding: 20px 24px;
+  padding: 20px var(--admin-space-lg);
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--admin-space-md);
   border: 1px solid var(--admin-border);
   border-radius: 12px;
   background: var(--admin-panel);
@@ -85,7 +85,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  background: #f2f5f5;
+  background: var(--admin-surface-disabled);
   font-size: 18px;
   line-height: 24px;
 }
@@ -139,18 +139,18 @@
   width: 48px;
   height: 28px;
   flex: 0 0 48px;
-  padding: 4px 4px 4px 24px;
+  padding: 4px 4px 4px var(--admin-space-lg);
   display: flex;
   align-items: center;
   border: 0;
   border-radius: 14px;
-  background: #6c9700;
+  background: var(--admin-brand-secondary);
   cursor: pointer;
 }
 
 .payment-toggle--off {
-  padding: 4px 24px 4px 4px;
-  background: #d1d5db;
+  padding: 4px var(--admin-space-lg) 4px 4px;
+  background: var(--admin-slate-300);
 }
 
 .payment-toggle:disabled {
@@ -162,30 +162,30 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #ffffff;
+  background: var(--admin-panel);
   pointer-events: none;
 }
 
 /* PoliciesSection (134:11563) */
 .payment-settings__policies-title {
-  margin-top: 32px;
+  margin-top: var(--admin-space-xl);
   font-size: 16px;
   line-height: 24px;
   font-weight: 700;
 }
 
 .payment-policy-row {
-  margin-top: 16px;
+  margin-top: var(--admin-space-md);
   display: flex;
   align-items: flex-start;
-  gap: 16px;
+  gap: var(--admin-space-md);
 }
 
 .payment-policy-card {
   width: 441px;
   flex: 1 1 441px;
   min-width: 0;
-  padding: 24px;
+  padding: var(--admin-space-lg);
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -236,7 +236,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--admin-space-md);
 }
 
 .payment-settings__preview-head p {
@@ -248,11 +248,11 @@
 
 .payment-preview-card {
   height: 591px;
-  margin-top: 16px;
-  padding: 28px 24px;
+  margin-top: var(--admin-space-md);
+  padding: 28px var(--admin-space-lg);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--admin-space-md);
   border: 1px solid var(--admin-border);
   border-radius: 12px;
   background: var(--admin-panel);
@@ -262,10 +262,10 @@
   width: 100%;
   max-width: 638px;
   min-height: 84px;
-  padding: 20px 24px;
+  padding: 20px var(--admin-space-lg);
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--admin-space-md);
   border-radius: 12px;
 }
 
@@ -284,23 +284,23 @@
 
 .payment-save-bar {
   width: 560px;
-  padding: 16px 32px;
+  padding: var(--admin-space-md) var(--admin-space-xl);
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-radius: 12px;
-  background: #fffbeb;
+  background: var(--admin-warning-bg);
 }
 
 .payment-save-bar p {
   font-size: 14px;
   line-height: 20px;
   font-weight: 500;
-  color: #92400e;
+  color: var(--admin-warning-text);
 }
 
 .payment-save-bar button {
-  padding: 10px 24px;
+  padding: 10px var(--admin-space-lg);
   border: 0;
   border-radius: 12px;
   background: var(--admin-brand-primary);

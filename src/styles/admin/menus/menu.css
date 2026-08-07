@@ -6,7 +6,7 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--admin-space-lg);
   color: var(--admin-text-primary);
   overflow: hidden;
 }
@@ -24,7 +24,7 @@
   flex-direction: row;
   flex: 1 1 0;
   align-items: stretch;
-  gap: 24px;
+  gap: var(--admin-space-lg);
   min-height: 0;
   overflow: hidden;
 }
@@ -36,7 +36,7 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--admin-space-md);
   overflow: hidden;
 }
 
@@ -49,7 +49,7 @@
 .menu-management__toolbar {
   height: 52px;
   flex: 0 0 auto;
-  padding: 0 16px;
+  padding: 0 var(--admin-space-md);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -62,7 +62,7 @@
 .menu-management__tabs {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--admin-space-md);
 }
 
 .menu-management__tabs button {
@@ -138,7 +138,7 @@
 
 .menu-management__create {
   height: 36px;
-  padding: 0 16px;
+  padding: 0 var(--admin-space-md);
   border: 0;
   border-radius: 18px;
   background: var(--admin-brand-primary);
@@ -154,7 +154,7 @@
   flex: 0 0 auto;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 196px));
-  gap: 16px;
+  gap: var(--admin-space-md);
   margin: 0 auto;
   align-content: start;
   overflow: visible;
@@ -185,7 +185,7 @@
 }
 
 .menu-management__empty {
-  margin: 24px 8px;
+  margin: var(--admin-space-lg) 8px;
   color: var(--admin-text-secondary);
   font-size: 14px;
 }
@@ -252,10 +252,10 @@
   min-height: 0;
   height: auto;
   max-height: none;
-  padding: 24px;
+  padding: var(--admin-space-lg);
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--admin-space-lg);
   overflow-x: hidden;
   overflow-y: auto;
   scrollbar-width: thin;
@@ -267,7 +267,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--admin-space-md);
 }
 
 .menu-detail__header h2 {
@@ -317,7 +317,7 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--admin-space-md);
   border-radius: 12px;
   background: var(--admin-panel);
 }
@@ -404,8 +404,8 @@
 }
 
 .menu-detail-basic__desc {
-  padding-top: 16px;
-  border-top: var(--admin-border-w) solid var(--admin-neutral-100);
+  padding-top: var(--admin-space-md);
+  border-top: var(--admin-border-w) solid var(--admin-ink-50);
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -460,7 +460,7 @@
 
 .menu-ingredient-row {
   height: 88px;
-  padding: 16px 20px;
+  padding: var(--admin-space-md) 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -596,13 +596,13 @@
 /* Allergies-Tags-Section (134:12307) — 306 카드 2장 */
 .menu-detail-tags {
   display: flex;
-  gap: 16px;
+  gap: var(--admin-space-md);
 }
 
 .menu-detail-tags article {
   flex: 1 0 0;
   min-width: 0;
-  padding: 16px;
+  padding: var(--admin-space-md);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -668,10 +668,10 @@
 .menu-edit-panel__scroll {
   flex: 1 1 0;
   min-height: 0;
-  padding: 24px;
+  padding: var(--admin-space-lg);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--admin-space-md);
   overflow-x: hidden;
   overflow-y: auto;
   scrollbar-width: thin;
@@ -681,7 +681,7 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--admin-space-md);
   border: var(--admin-border-w) solid var(--admin-border);
   border-radius: 12px;
   background: var(--admin-panel);
@@ -690,7 +690,7 @@
 .menu-edit-card__top {
   display: grid;
   grid-template-columns: 160px minmax(0, 1fr);
-  gap: 16px;
+  gap: var(--admin-space-md);
 }
 
 .menu-edit-image {
@@ -881,7 +881,7 @@
   width: 28px;
   height: 16px;
   border-radius: 8px;
-  background: var(--admin-cool-gray-300);
+  background: var(--admin-slate-300);
   position: relative;
 }
 
@@ -1137,7 +1137,7 @@ button.is-link {
 .menu-edit-tags-row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: var(--admin-space-md);
 }
 
 .menu-edit-chips {
@@ -1201,7 +1201,7 @@ button.is-link {
 
 .menu-edit-bottombar {
   flex: 0 0 auto;
-  padding: 12px 24px;
+  padding: 12px var(--admin-space-lg);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1242,7 +1242,7 @@ button.is-link {
   .menu-edit-panel__scroll {
     flex: 1 1 auto;
     min-height: 0;
-    padding: 24px;
+    padding: var(--admin-space-lg);
     overflow-y: auto;
   }
   .menu-management__grid {
@@ -1260,7 +1260,7 @@ button.is-link {
 @media (max-width: 720px) {
   .menu-management__toolbar {
     height: auto;
-    padding: 12px 16px;
+    padding: 12px var(--admin-space-md);
     gap: 12px;
     flex-direction: column;
     align-items: stretch;

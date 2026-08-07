@@ -40,7 +40,7 @@
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
-  color: var(--admin-neutral-500);
+  color: var(--admin-neutral-450);
 }
 
 .admin-dashboard__date {
@@ -67,7 +67,7 @@
   padding-top: 6px;
   font-size: 13px;
   line-height: 18px;
-  color: var(--admin-neutral-700);
+  color: var(--admin-ink-600);
 }
 
 /* KPI Cards (227:5664) — 1008×120, gap 16 */
@@ -77,7 +77,7 @@
   height: 120px;
   flex: 0 0 auto;
   display: flex;
-  gap: 16px;
+  gap: var(--admin-space-md);
 }
 
 .admin-dashboard__kpis article {
@@ -109,7 +109,7 @@
 
 /* 공통 패널 표면 — 콘텐츠 높이, stretch로 늘어나지 않음 */
 .dashboard-panel {
-  padding: 16px 20px;
+  padding: var(--admin-space-md) 20px;
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
@@ -134,7 +134,7 @@
   flex: 0 0 auto;
   display: flex;
   align-items: flex-start;
-  gap: 16px;
+  gap: var(--admin-space-md);
 }
 
 /* Dashboard Recent Orders Panel — 콘텐츠 높이 */
@@ -163,7 +163,7 @@
 
 .dashboard-orders__head {
   height: 36px;
-  padding: 8px 16px;
+  padding: 8px var(--admin-space-md);
   border-radius: 4px;
   background: var(--admin-bg);
   color: var(--admin-text-tertiary);
@@ -172,8 +172,8 @@
 
 .dashboard-orders__row {
   height: 40px;
-  padding: 10px 16px;
-  border-bottom: var(--admin-border-w) solid var(--admin-neutral-100);
+  padding: 10px var(--admin-space-md);
+  border-bottom: var(--admin-border-w) solid var(--admin-ink-50);
   color: var(--admin-neutral-800);
   font-weight: 500;
 }
@@ -257,7 +257,7 @@
 
 .dashboard-status-summary__row p span {
   font-weight: 500;
-  color: var(--admin-neutral-650);
+  color: var(--admin-ink-700);
 }
 
 .dashboard-status-summary__row p b {
@@ -270,7 +270,7 @@
   width: 100%;
   height: 8px;
   border-radius: 4px;
-  background: var(--admin-neutral-150);
+  background: var(--admin-ink-100);
   overflow: hidden;
 }
 
@@ -332,7 +332,7 @@
   flex: 0 0 auto;
   display: flex;
   align-items: flex-start;
-  gap: 16px;
+  gap: var(--admin-space-md);
 }
 
 /* Dashboard Inventory Alert Panel — 콘텐츠 높이(하단 빈 공간 제거) */
@@ -350,7 +350,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: var(--admin-border-w) solid var(--admin-neutral-100);
+  border-bottom: var(--admin-border-w) solid var(--admin-ink-50);
 }
 
 .dashboard-inventory__row span {
@@ -405,7 +405,7 @@
   height: 200px;
   padding: 20px;
   display: flex;
-  gap: 24px;
+  gap: var(--admin-space-lg);
   align-items: flex-end;
   border-radius: 8px;
   background: var(--admin-surface-muted);
@@ -443,7 +443,7 @@
   height: 50px;
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: var(--admin-space-xl);
 }
 
 .dashboard-trend__stats div {
@@ -457,7 +457,7 @@
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
-  color: var(--admin-neutral-450);
+  color: var(--admin-neutral-500);
 }
 
 .dashboard-trend__stats b {
@@ -520,7 +520,7 @@
     display: none;
   }
   .dashboard-trend__stats {
-    gap: 16px;
+    gap: var(--admin-space-md);
     flex-wrap: wrap;
   }
 }

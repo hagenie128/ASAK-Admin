@@ -45,7 +45,7 @@
   flex-direction: column;
   gap: 28px;
   background: var(--admin-panel);
-  color: #737373;
+  color: var(--admin-sidebar-text);
   overflow: hidden;
   box-shadow:
     0.5px 0.5px 0.5px rgba(200, 241, 104, 0.25),
@@ -79,7 +79,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: var(--admin-space-lg);
   width: 100%;
   flex: 0 0 auto;
 }
@@ -97,7 +97,7 @@
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
-  color: #6b7280;
+  color: var(--admin-text-secondary);
   white-space: nowrap;
 }
 
@@ -107,7 +107,7 @@
   line-height: 36px;
   font-weight: 700;
   letter-spacing: -0.14px;
-  color: #111827;
+  color: var(--admin-text);
   white-space: nowrap;
 }
 
@@ -116,7 +116,7 @@
   font-size: 14px;
   line-height: 20px;
   font-weight: 400;
-  color: #6b7280;
+  color: var(--admin-text-secondary);
   white-space: nowrap;
 }
 
@@ -136,7 +136,7 @@
 }
 
 .admin-screen h1 {
-  margin: 8px 0 16px;
+  margin: 8px 0 var(--admin-space-md);
   font-size: clamp(2rem, 5vw, 3.2rem);
   letter-spacing: -0.05em;
 }
@@ -150,10 +150,10 @@
 
 .empty-state {
   margin-top: 44px;
-  padding: 24px;
+  padding: var(--admin-space-lg);
   border-radius: 12px;
   border: 1px solid #e0e5db;
-  background: #fff;
+  background: var(--admin-panel);
   color: #426349;
 }
 
@@ -163,6 +163,6 @@
   }
 
   .admin-main {
-    padding: 40px 24px;
+    padding: 40px var(--admin-space-lg);
   }
 }

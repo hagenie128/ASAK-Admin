@@ -3,19 +3,19 @@
 
 .admin-async-state {
   min-height: 240px;
-  padding: 32px;
+  padding: var(--admin-space-xl);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: var(--admin-space-md);
   border-radius: var(--admin-radius-lg);
   background: transparent;
   text-align: center;
 }
 .admin-async-state--inline {
   min-height: 0;
-  padding: 16px;
+  padding: var(--admin-space-md);
   gap: 8px;
 }
 .admin-async-state h2,
@@ -102,21 +102,21 @@
 }
 .admin-skeleton--card {
   width: min(300px, 100%);
-  padding: 16px;
+  padding: var(--admin-space-md);
   border-radius: var(--admin-radius-lg);
   background: var(--admin-panel);
 }
 .admin-skeleton--table {
   width: min(600px, 100%);
   gap: 8px;
-  padding: 16px 0;
+  padding: var(--admin-space-md) 0;
 }
 .admin-skeleton--button {
   width: 120px;
   height: 40px;
   align-items: center;
   justify-content: center;
-  padding: 0 16px;
+  padding: 0 var(--admin-space-md);
   border-radius: var(--admin-radius-md);
   background: var(--admin-bg-subtle);
 }
@@ -142,7 +142,7 @@
 .admin-skeleton__row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: var(--admin-space-md);
   width: 100%;
 }
 .admin-skeleton__row > span {
@@ -162,7 +162,7 @@
   z-index: 50;
   display: grid;
   place-items: center;
-  padding: 24px;
+  padding: var(--admin-space-lg);
   background: rgba(0, 0, 0, 0.45);
 }
 .admin-confirm {
@@ -171,7 +171,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: var(--admin-space-lg);
   border-radius: var(--admin-radius-xl);
   background: var(--admin-panel);
   box-shadow: var(--admin-shadow-floating);
@@ -214,7 +214,7 @@
 .admin-confirm__actions button {
   flex: 1;
   background: var(--admin-bg-subtle);
-  color: #404040;
+  color: var(--admin-neutral-800);
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -223,7 +223,7 @@
 .admin-confirm__actions .is-primary {
   border-color: transparent;
   background: var(--admin-danger);
-  color: #fff;
+  color: var(--admin-text-on-dark);
 }
 .admin-confirm--warning .admin-confirm__actions .is-primary {
   background: var(--admin-brand-primary);
@@ -243,7 +243,7 @@
   z-index: 60;
   width: min(300px, calc(100vw - 48px));
   min-height: 80px;
-  padding: 14px 16px;
+  padding: 14px var(--admin-space-md);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -271,7 +271,7 @@
   background: var(--admin-warning);
 }
 .admin-toast--info .admin-toast__icon {
-  background: #404040;
+  background: var(--admin-neutral-800);
 }
 .admin-toast--loading .admin-toast__icon {
   background: var(--admin-text-tertiary);

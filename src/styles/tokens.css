@@ -29,12 +29,13 @@
   --admin-text-secondary: #6b7280; /* Text/Admin/Secondary · CoolGray/700 */
   --admin-muted: #6b7280;
   --admin-text-tertiary: #737373; /* Text/Tertiary */
+  --admin-text-on-dark: #ffffff; /* Semantic/Text/Primary · Color/White — 브랜드·컬러 버튼 위 글자/체크표시 */
 
   /* Border / Status */
   --admin-border: #e5e7eb; /* Border/Default · CoolGray/200 */
   --admin-danger: #ef4444; /* Status/Error */
   --admin-danger-soft: #fff0eb; /* Status/ErrorBG */
-  --admin-warning: #fbbf24; /* Status/Warning · Shared/Toast */
+  --admin-warning: #fbbf24; /* Semantic/Status/Warning — 쓰이는 곳: Shared Toast 컴포넌트 */
   --admin-warning-bg: #fffbeb; /* Status/WarningBG · Yellow/50 */
   --admin-warning-text: #92400e; /* Status/WarningText */
   --admin-warning-soft: #fff8e6;
@@ -55,29 +56,22 @@
   --admin-border-w: 1px; /* Border/Width/Default · Number/Border/Thin */
   --admin-border-w-strong: 1.5px; /* Border/Width/Strong · Number/Border/Medium */
   --admin-text-inverse: #292d30; /* Text/Inverse · Toast 본문 */
-  --admin-shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.08); /* Shadow/Subtle · Toast */
-  --admin-shadow-floating: 0 2px 6px rgba(0, 0, 0, 0.06), 0 10px 28px rgba(0, 0, 0, 0.12); /* Shadow/Floating · Confirm */
+  /* 아래 둘은 Variable이 아니라 Figma Effect 스타일 대응이다 (변수 대조 대상 아님). */
+  --admin-shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.08); /* Effect 스타일 "ASAK|Shadow|Subtle" — Toast */
+  --admin-shadow-floating: 0 2px 6px rgba(0, 0, 0, 0.06), 0 10px 28px rgba(0, 0, 0, 0.12); /* Effect 스타일 "ASAK|Shadow|Floating" — Confirm */
 
   /* Category (StatusBadge · Ingredient chips) */
   --admin-category-dressing: #6d3fc4; /* Category/Dressing */
   --admin-category-dressing-bg: #eee8fc; /* Category/DressingBG */
 
-  /* Figma Primitive 대응 (0718 `ASAK / Primitive`) */
+  /* Figma Primitive 정확 대응 (0718 `ASAK / Primitive`) — 이름·값이 Variable과 일치 */
   --admin-neutral-800: #404040; /* Color/Neutral/800 */
   --admin-neutral-850: #333333; /* Color/Neutral/850 */
-  --admin-neutral-700: #666666; /* Color/Neutral/700 */
-  --admin-neutral-650: #4d4d4d;
-  --admin-neutral-600: #525252; /* Color/Neutral/600 */
-  --admin-neutral-500: #808080; /* Color/Neutral/500 */
-  --admin-neutral-450: #888888;
+  --admin-neutral-500: #888888; /* Color/Neutral/500 */
+  --admin-neutral-450: #808080; /* Color/Neutral/450 */
   --admin-neutral-200: #bfbfbf; /* Color/Neutral/200 */
-  --admin-neutral-100: #f2f2f2;
-  --admin-neutral-150: #f0f0f0;
-  --admin-cool-gray-700: #374151; /* Color/CoolGray/700 */
   --admin-cool-gray-400: #9ca3af; /* Color/CoolGray/400 */
-  --admin-cool-gray-300: #d1d5db;
   --admin-cool-gray-50: #f3f4f6; /* Color/CoolGray/50 */
-  --admin-orange-500: #f97316; /* Color/Orange/500 */
   --admin-orange-400: #ff8d28; /* Color/Orange/400 = Semantic/Category/Side */
   --admin-red-800: #e50004; /* Color/Red/800 */
   --admin-accent-blue: #0088ff; /* Color/Accent/Blue */
@@ -94,10 +88,24 @@
   --admin-chart-bar-current: #6ba629;
   --admin-chart-bar-alt: #4caf50;
 
-  /* near-black 통합 — Figma Primitive에 없는 코드 전용 값이라 Figma식 이름을 쓰지 않는다.
-     Primitive의 near-black은 Neutral/850 #333333, Neutral/900 #212121, Black #000000 뿐. */
+  /* 중성 회색 — Figma Primitive에 없는 코드 전용 값이라 Figma식 이름을 쓰지 않는다.
+     Primitive의 near-black은 Neutral/850 #333333, Neutral/900 #212121, Black #000000 뿐.
+     숫자가 클수록 어둡다. 값은 화면 실측이므로 Variable로 치환하지 말 것. */
   --admin-ink-900: #171717; /* 구 #0d0d0d + #171717 */
   --admin-ink-800: #242424; /* 구 #212121 + #262626 + #292d30(raw) · 33~38 중점 */
+  --admin-ink-700: #4d4d4d; /* 구 --admin-neutral-650 */
+  --admin-ink-650: #525252; /* 구 --admin-neutral-600 — Figma Neutral 600은 #737373로 다른 색 */
+  --admin-ink-600: #666666; /* 구 --admin-neutral-700 — Figma에 Neutral 700 자체가 없음 */
+  --admin-ink-100: #f0f0f0; /* 구 --admin-neutral-150 — Figma Neutral 150은 #f3f3f3 */
+  --admin-ink-50: #f2f2f2; /* 구 --admin-neutral-100 — Figma Neutral 100은 #f5f5f5 */
+
+  /* 푸른기 도는 회색 — Tailwind 계열 실측값. Figma CoolGray와 다른 색이라 이름을 분리한다.
+     (Figma CoolGray/700은 #6b7280, CoolGray/300은 아예 없다.) */
+  --admin-slate-700: #374151; /* 구 --admin-cool-gray-700 */
+  --admin-slate-300: #d1d5db; /* 구 --admin-cool-gray-300 */
+
+  /* Figma Orange/500(#f28c0d)과 다른 주황. 코드 전용. */
+  --admin-orange-alt: #f97316; /* 구 --admin-orange-500 */
 
   /* Live order action states */
   --admin-action-received: #e5ff52;

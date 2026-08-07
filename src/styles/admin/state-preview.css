@@ -2,15 +2,15 @@
 .admin-state-preview {
   min-height: 100vh;
   background: var(--admin-page-bg);
-  color: #111827;
+  color: var(--admin-text);
 }
 .admin-state-preview > header {
   height: 72px;
-  padding: 0 32px;
+  padding: 0 var(--admin-space-xl);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #fff;
+  background: var(--admin-panel);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 .admin-state-preview > header strong {
@@ -19,12 +19,12 @@
   letter-spacing: -0.08em;
 }
 .admin-state-preview > header span {
-  color: #6b7280;
+  color: var(--admin-text-secondary);
   font-size: 14px;
 }
 .admin-state-preview > section {
   min-height: calc(100vh - 72px);
-  padding: 48px 24px;
+  padding: 48px var(--admin-space-lg);
   display: grid;
   align-content: center;
   justify-items: center;
@@ -32,7 +32,7 @@
 }
 .admin-state-preview > section > p {
   margin: 0;
-  color: #6b7280;
+  color: var(--admin-text-secondary);
   font-size: 18px;
   font-weight: 700;
 }
@@ -43,10 +43,10 @@
   display: grid;
   align-content: center;
   justify-items: center;
-  gap: 16px;
+  gap: var(--admin-space-md);
   border: 1px solid var(--admin-border);
   border-radius: 12px;
-  background: #fff;
+  background: var(--admin-panel);
   text-align: center;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
 }
@@ -58,37 +58,37 @@
   font-size: 24px;
 }
 .admin-state-card p {
-  color: #6b7280;
+  color: var(--admin-text-secondary);
   line-height: 1.5;
 }
 .admin-state-card i {
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: #b5e30f;
+  background: var(--admin-brand-primary);
 }
 .admin-state-card code {
   padding: 5px 10px;
   border-radius: 999px;
-  background: #f3f4f6;
-  color: #6b7280;
+  background: var(--admin-cool-gray-50);
+  color: var(--admin-text-secondary);
 }
 .admin-state-card--progress i {
-  border: 7px solid #e5e7eb;
-  border-top-color: #b5e30f;
+  border: 7px solid var(--admin-border);
+  border-top-color: var(--admin-brand-primary);
   background: transparent;
 }
 .admin-state-card--empty i {
-  background: #d1d5db;
+  background: var(--admin-slate-300);
 }
 .admin-state-card--error i {
-  background: #ef4444;
+  background: var(--admin-danger);
 }
 .admin-state-card--confirm i {
-  background: #fbbf24;
+  background: var(--admin-warning);
 }
 .admin-state-card--success i {
-  background: #5da45d;
+  background: var(--admin-success);
 }
 .admin-state-card > div {
   display: flex;
@@ -99,8 +99,8 @@
   height: 40px;
   border: 1px solid var(--admin-border);
   border-radius: 8px;
-  background: #f3f4f6;
-  color: #9ca3af;
+  background: var(--admin-cool-gray-50);
+  color: var(--admin-cool-gray-400);
   font: inherit;
 }
 

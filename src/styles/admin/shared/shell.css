@@ -189,7 +189,7 @@
 /* Promotional Banner. overflow를 자르지 않아야 야채 일러스트가 카드 위로 넘친다. */
 .admin-sidebar__promo {
   height: 168px;
-  padding: 24px 16px 20px;
+  padding: var(--admin-space-lg) var(--admin-space-md) 20px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -259,7 +259,7 @@
 .admin-sidebar__logout {
   width: 100%;
   min-width: 177px;
-  padding: 10px 8px 10px 16px;
+  padding: 10px 8px 10px var(--admin-space-md);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -270,7 +270,7 @@
   font-size: 14px;
   line-height: 20px;
   font-weight: 500;
-  color: var(--admin-neutral-450);
+  color: var(--admin-neutral-500);
 }
 
 .admin-sidebar__logout img {
@@ -294,7 +294,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 24px;
+  gap: var(--admin-space-lg);
 }
 
 .admin-page__header h1 {
@@ -359,14 +359,14 @@
   width: 100%;
   min-width: 720px;
   border-collapse: collapse;
-  color: var(--admin-cool-gray-700);
+  color: var(--admin-slate-700);
   font-size: 14px;
 }
 
 .admin-table th,
 .admin-table td {
   height: 48px;
-  padding: 12px 16px;
+  padding: 12px var(--admin-space-md);
   border-bottom: var(--admin-border-w) solid var(--admin-cool-gray-50);
   text-align: left;
   white-space: nowrap;
@@ -402,8 +402,8 @@
 }
 
 .admin-detail-panel {
-  margin-top: 24px;
-  padding: 24px;
+  margin-top: var(--admin-space-lg);
+  padding: var(--admin-space-lg);
   border: 1px solid var(--admin-border);
   border-radius: 12px;
   background: var(--admin-panel);
@@ -421,7 +421,7 @@
 
 .admin-detail-panel button {
   min-height: 40px;
-  padding: 10px 16px;
+  padding: 10px var(--admin-space-md);
   border: 1px solid var(--admin-border);
   border-radius: 8px;
   background: var(--admin-cool-gray-50);
@@ -430,12 +430,12 @@
 
 .admin-save-bar {
   width: min(560px, 100%);
-  margin: 24px 0 0 auto;
-  padding: 16px 20px;
+  margin: var(--admin-space-lg) 0 0 auto;
+  padding: var(--admin-space-md) 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--admin-space-md);
   border-radius: 12px;
   background: var(--admin-warning-bg);
   color: var(--admin-warning-text);
@@ -479,7 +479,7 @@
   resize: none;
 }
 .admin-form section {
-  padding: 16px;
+  padding: var(--admin-space-md);
   border-radius: 8px;
   background: var(--admin-bg);
 }
@@ -491,15 +491,15 @@
 
 .admin-method-list {
   display: grid;
-  gap: 16px;
+  gap: var(--admin-space-md);
 }
 
 .admin-method-row {
   min-height: 88px;
-  padding: 20px 24px;
+  padding: 20px var(--admin-space-lg);
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--admin-space-md);
   border: 1px solid var(--admin-border);
   border-radius: 12px;
   background: var(--admin-panel);
@@ -540,11 +540,11 @@
 .admin-kpi-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: var(--admin-space-md);
   margin-bottom: 20px;
 }
 .admin-kpi-grid article {
-  padding: 24px;
+  padding: var(--admin-space-lg);
   display: grid;
   gap: 8px;
   border: 1px solid var(--admin-border);
@@ -562,7 +562,7 @@
 
 .admin-chart-card {
   margin-bottom: 20px;
-  padding: 24px;
+  padding: var(--admin-space-lg);
   border: 1px solid var(--admin-border);
   border-radius: 10px;
   background: var(--admin-panel);
@@ -598,11 +598,11 @@
 .admin-dashboard-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: var(--admin-space-md);
 }
 .admin-dashboard-grid section {
   min-height: 220px;
-  padding: 24px;
+  padding: var(--admin-space-lg);
   border: 1px solid var(--admin-border);
   border-radius: 10px;
   background: var(--admin-panel);
@@ -612,6 +612,6 @@
   font-size: 16px;
 }
 .admin-dashboard-grid p {
-  margin: 16px 0 0;
+  margin: var(--admin-space-md) 0 0;
   color: var(--admin-text-secondary);
 }
