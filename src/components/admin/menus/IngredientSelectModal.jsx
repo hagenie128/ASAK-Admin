@@ -119,9 +119,17 @@ export const MOCK_INGREDIENT_CATALOG = [
 ];
 
 function formatNutrition(row) {
-  const kcal = row.kcal != null ? `${row.kcal}kcal` : null;
-  const protein = row.proteinG != null ? `단백질 ${row.proteinG}g` : null;
-  return [kcal, protein].filter(Boolean).join(" · ") || "-";
+  const parts = [
+    row.servingG != null ? `${row.servingG}g` : null,
+    row.kcal != null ? `${row.kcal}kcal` : null,
+    row.carbG != null ? `탄수 ${row.carbG}g` : null,
+    row.sugarG != null ? `당류 ${row.sugarG}g` : null,
+    row.proteinG != null ? `단백질 ${row.proteinG}g` : null,
+    row.fatG != null ? `지방 ${row.fatG}g` : null,
+    row.saturatedFatG != null ? `포화 ${row.saturatedFatG}g` : null,
+    row.sodiumMg != null ? `나트륨 ${row.sodiumMg}mg` : null,
+  ];
+  return parts.filter(Boolean).join(" · ") || "-";
 }
 
 function categoryTone(category = "") {

@@ -41,10 +41,22 @@ export function useMenusQuery({
   const [tick, setTick] = useState(0);
   const [categories, setCategories] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState(null);
+  const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
     let cancelled = false;
-
+    menusApi
+      .getIngredients()
+      .then((response) => {
+        if (cancelled) return;
+        setIngredients(response ?? []);
+      })
+      .catch(() => {
+        setIngredients([]);
+      });
+  }, []);
+  useEffect(() => {
+    let cancelled = false;
     async function fetchMenus() {
       setStatus("loading");
       try {
@@ -52,7 +64,6 @@ export function useMenusQuery({
           buildListParams({ page, pageSize, selectedCategoryId, keyword }),
         );
         if (cancelled) return;
-
         const content = response.content ?? [];
         setMenus(content);
         setTotalElements(Number(response.totalElements) || 0);
@@ -171,12 +182,46 @@ export function useMenusQuery({
     );
   }
 
+  function createMenu(payload) {
+    const request = {
+      categoryId: payload.categoryId ? Number(payload.categoryId) : null,
+      name: payload.name,
+      price: Number(payload.price) || 0,
+      imageUrl: payload.imageUrl || null,
+      description: payload.description || null,
+      ingredients: (payload.ingredients ?? []).map((row) => ({
+        ingredientId: row.ingredientId,
+        role: row.role,
+        quantity: row.quantity,
+        unit: row.unit,
+        isDefault: row.isDefault,
+        canRemove: row.canRemove,
+      })),
+      optionGroups: (payload.optionGroups ?? []).map((group) => ({
+        optionGroupId: group.optionGroupId ?? group.groupId,
+        isRequired: group.isRequired,
+        recommendedOptionItemId:
+          group.recommendedOptionItemId ??
+          group.items?.find((item) => item.isRecommended)?.optionItemId ??
+          null,
+        items: group.items,
+      })),
+      nutrition: payload.nutrition,
+      tags: (payload.tags ?? []).map((tag) => ({
+        code: tag.code,
+        name: tag.name,
+      })),
+    };
+    return menusApi.createMenu(request);
+  }
+
   return {
     status,
     totalElements,
     page,
     pageSize,
     categories,
+    ingredients,
     error,
     optionGroupCatalog,
     menus,
@@ -188,6 +233,7 @@ export function useMenusQuery({
     onKeywordChange: setKeyword,
     onSelectMenu: setSelectedMenuId,
     updateMenu,
+    createMenu,
     onPageChange: (nextPage) => setPage(Math.max(0, nextPage)),
     refetch: () => setTick((n) => n + 1),
   };

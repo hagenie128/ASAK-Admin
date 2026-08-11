@@ -12,6 +12,7 @@ import { formatCurrency } from "../../../utils/currency.js";
 import AdminConfirmDialog from "../shared/AdminConfirmDialog.jsx";
 import AdminStatusBadge from "../shared/AdminStatusBadge.jsx";
 import IngredientSelectModal from "./IngredientSelectModal.jsx";
+import { menusApi } from "../../../api/menusApi.js";
 
 const DESC_MAX = 300;
 const TAG_OPTIONS = [
@@ -22,7 +23,7 @@ const TAG_OPTIONS = [
 
 const EMPTY_FORM = {
   name: "",
-  categoryName: "",
+  categoryId: "",
   price: "",
   description: "",
   isActive: true,
@@ -73,6 +74,35 @@ function normalizeOptionGroups(groups = []) {
   });
 }
 
+/** API IngredientResponse → IngredientSelectModal catalog row */
+function toIngredientCatalogItem(item) {
+  const category = item.roleName || item.unitName || item.type || "기타";
+  const hint = String(item.roleName || item.role || category).toLowerCase();
+  let role = "plain";
+  if (hint.includes("base") || category === "베이스") role = "base";
+  else if (hint.includes("core") || category === "단백질" || category.includes("핵심")) {
+    role = "core";
+  }
+
+  return {
+    ingredientId: item.id ?? item.ingredientId,
+    name: item.name,
+    category,
+    role,
+    quantity: item.quantity ?? item.servingG ?? 0,
+    unit: item.unitName || item.unit || "g",
+    servingG: item.servingG,
+    kcal: item.kcal,
+    carbG: item.carbG,
+    sugarG: item.sugarG,
+    proteinG: item.proteinG,
+    fatG: item.fatG,
+    saturatedFatG: item.saturatedFatG,
+    sodiumMg: item.sodiumMg,
+    isSoldOut: !!(item.isSoldOut ?? item.soldOut),
+  };
+}
+
 function IngredientGroup({ title, tone, rows, onRemove }) {
   if (!rows.length) return null;
   return (
@@ -116,9 +146,11 @@ export default function MenuEditPanel({
   const [tags, setTags] = useState([]);
   const [baseline, setBaseline] = useState("");
   const [ingredientModalOpen, setIngredientModalOpen] = useState(false);
+  const [ingredientCatalog, setIngredientCatalog] = useState([]);
   const [tagPickerOpen, setTagPickerOpen] = useState(false);
   const [optionGroupPickerOpen, setOptionGroupPickerOpen] = useState(false);
   const [pendingOptionGroup, setPendingOptionGroup] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
     if (isCreate || !menu) {
@@ -137,7 +169,7 @@ export default function MenuEditPanel({
     }
     const next = {
       name: menu.name ?? "",
-      categoryName: menu.categoryName ?? "",
+      categoryId: menu.categoryId ?? "",
       price: menu.price != null ? String(menu.price) : "",
       description: menu.detail?.description ?? "",
       isActive: menu.isActive !== false,
@@ -163,6 +195,28 @@ export default function MenuEditPanel({
     );
   }, [isCreate, menu]);
 
+  useEffect(() => {
+    if (!ingredientModalOpen) return undefined;
+    let cancelled = false;
+
+    async function loadIngredients() {
+      try {
+        const page = await menusApi.getIngredients();
+        if (cancelled) return;
+        const content = page?.content ?? [];
+        setIngredientCatalog(content.map(toIngredientCatalogItem));
+      } catch {
+        if (cancelled) return;
+        setIngredientCatalog([]);
+      }
+    }
+
+    loadIngredients();
+    return () => {
+      cancelled = true;
+    };
+  }, [ingredientModalOpen]);
+
   const dirtyCount = useMemo(() => {
     const current = JSON.stringify({
       ...form,
@@ -171,12 +225,11 @@ export default function MenuEditPanel({
       tags,
     });
     return current === baseline ? 0 : 1;
-  }, [form, ingredients, optionGroups, baseline]);
+  }, [form, ingredients, optionGroups, tags, baseline]);
 
   const core = ingredients.filter((row) => row.role === "core");
   const base = ingredients.filter((row) => row.role === "base");
   const plain = ingredients.filter((row) => row.role === "plain");
-  const imageSrc = form.imageUrl || ricottaImage;
   const descLen = form.description.length;
 
   function updateField(key, value) {
@@ -187,6 +240,10 @@ export default function MenuEditPanel({
     onSave?.({
       ...form,
       price: Number(form.price) || 0,
+      categoryId:
+        form.categoryId === "" || form.categoryId == null
+          ? null
+          : Number(form.categoryId),
       ingredients,
       optionGroups,
       nutrition,
@@ -224,10 +281,7 @@ export default function MenuEditPanel({
       const usedIds = new Set(prev.map((row) => row.ingredientId));
       const usedNames = new Set(prev.map((row) => String(row.name).trim()));
       const next = selected
-        .filter(
-          (row) =>
-            !usedIds.has(row.ingredientId) && !usedNames.has(String(row.name).trim()),
-        )
+        .filter((row) => !usedIds.has(row.ingredientId) && !usedNames.has(String(row.name).trim()))
         .map((row) => ({
           ingredientId: row.ingredientId,
           name: row.name,
@@ -271,9 +325,7 @@ export default function MenuEditPanel({
 
   function confirmOptionGroupRemoval() {
     if (!pendingOptionGroup) return;
-    setOptionGroups((prev) =>
-      prev.filter((group) => group.groupId !== pendingOptionGroup.groupId),
-    );
+    setOptionGroups((prev) => prev.filter((group) => group.groupId !== pendingOptionGroup.groupId));
     setPendingOptionGroup(null);
   }
 
@@ -285,17 +337,17 @@ export default function MenuEditPanel({
             <div className="menu-edit-image">
               <span>메뉴 이미지</span>
               <div className="menu-edit-image__preview">
-                <img src={imageSrc} alt="" />
+                <img src={imageFile ? URL.createObjectURL(imageFile) : ricottaImage} alt="" />
                 <div className="menu-edit-image__actions">
-                  <button type="button" disabled>
-                    파일 선택
+                  <button type="button" onClick={() => setImageFile(null)}>
+                    {imageFile ? "이미지 변경" : "파일 선택"}
                   </button>
                   <button
                     type="button"
                     className="is-danger"
                     aria-label="이미지 제거"
-                    disabled={!form.imageUrl}
-                    onClick={() => updateField("imageUrl", "")}
+                    disabled={!imageFile}
+                    onClick={() => setImageFile(null)}
                   >
                     ×
                   </button>
@@ -336,13 +388,13 @@ export default function MenuEditPanel({
             <label className="menu-edit-field">
               <span>카테고리</span>
               <select
-                value={form.categoryName}
-                onChange={(event) => updateField("categoryName", event.target.value)}
+                value={form.categoryId === "" || form.categoryId == null ? "" : String(form.categoryId)}
+                onChange={(event) => updateField("categoryId", event.target.value)}
               >
                 <option value="">카테고리 선택</option>
-                {categoryOptions.map((name) => (
-                  <option key={name} value={name}>
-                    {name}
+                {categoryOptions.map((category) => (
+                  <option key={category.categoryId} value={String(category.categoryId)}>
+                    {category.categoryName}
                   </option>
                 ))}
               </select>
@@ -353,9 +405,7 @@ export default function MenuEditPanel({
                 value={form.price}
                 inputMode="numeric"
                 placeholder="0"
-                onChange={(event) =>
-                  updateField("price", event.target.value.replace(/[^\d]/g, ""))
-                }
+                onChange={(event) => updateField("price", event.target.value.replace(/[^\d]/g, ""))}
               />
               <small>{form.price ? formatCurrency(Number(form.price)) : "0원"}</small>
             </label>
@@ -368,6 +418,7 @@ export default function MenuEditPanel({
               maxLength={DESC_MAX}
               placeholder="메뉴 설명"
               onChange={(event) => updateField("description", event.target.value)}
+              rows={6}
             />
             <em>
               {descLen} / {DESC_MAX}자
@@ -395,21 +446,12 @@ export default function MenuEditPanel({
               <h3>기본 재료</h3>
               <p>재료의 역할과 분량 정보입니다. 수량과 단위는 마스터 데이터에서 자동 적용됩니다.</p>
             </div>
-            <button
-              type="button"
-              className="is-link"
-              onClick={() => setIngredientModalOpen(true)}
-            >
+            <button type="button" className="is-link" onClick={() => setIngredientModalOpen(true)}>
               + 재료 추가
             </button>
           </header>
 
-          <IngredientGroup
-            title="핵심 재료"
-            tone="core"
-            rows={core}
-            onRemove={removeIngredient}
-          />
+          <IngredientGroup title="핵심 재료" tone="core" rows={core} onRemove={removeIngredient} />
           <IngredientGroup
             title="베이스 재료"
             tone="base"
@@ -441,7 +483,11 @@ export default function MenuEditPanel({
             </button>
           </header>
           {optionGroupPickerOpen ? (
-            <div className="menu-edit-option-picker" role="listbox" aria-label="추가할 옵션 그룹 선택">
+            <div
+              className="menu-edit-option-picker"
+              role="listbox"
+              aria-label="추가할 옵션 그룹 선택"
+            >
               {availableOptionGroups.map((group) => (
                 <button
                   key={group.groupId}
@@ -485,11 +531,9 @@ export default function MenuEditPanel({
                       <legend>추천 옵션</legend>
                       {(group.items ?? []).length > 0 ? (
                         <select
-                          value={
-                            String(
-                              group.items.find((item) => item.isRecommended)?.optionItemId ?? "",
-                            )
-                          }
+                          value={String(
+                            group.items.find((item) => item.isRecommended)?.optionItemId ?? "",
+                          )}
                           onChange={(event) =>
                             selectRecommendedOption(group.groupId, Number(event.target.value))
                           }
@@ -563,9 +607,11 @@ export default function MenuEditPanel({
             <h3>알레르기 정보</h3>
             <p>기본 재료와 옵션 기준 자동 집계. 재료 변경 시 갱신됩니다.</p>
             <div className="menu-edit-chips">
-              {allergens.length > 0
-                ? allergens.map((name) => <span key={name}>{name}</span>)
-                : <span>없음</span>}
+              {allergens.length > 0 ? (
+                allergens.map((name) => <span key={name}>{name}</span>)
+              ) : (
+                <span>없음</span>
+              )}
             </div>
           </section>
           <section className="menu-edit-card menu-edit-card--half">
@@ -635,6 +681,7 @@ export default function MenuEditPanel({
 
       <IngredientSelectModal
         open={ingredientModalOpen}
+        catalog={ingredientCatalog}
         existingIngredients={ingredients}
         onClose={() => setIngredientModalOpen(false)}
         onConfirm={handleAddIngredients}

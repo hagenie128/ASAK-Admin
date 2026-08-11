@@ -1,15 +1,15 @@
 /* SCR-016 / Menu Management — Page는 조합만 */
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import AdminAsyncState from "../../components/admin/shared/AdminAsyncState.jsx";
-import AdminConfirmDialog from "../../components/admin/shared/AdminConfirmDialog.jsx";
-import AdminTopHeader from "../../components/admin/shared/AdminTopHeader.jsx";
-import AdminPagination from "../../components/admin/shared/AdminPagination.jsx";
-import MenuListPanel from "../../components/admin/menus/MenuListPanel.jsx";
 import MenuDetailPanel from "../../components/admin/menus/MenuDetailPanel.jsx";
 import MenuEditPanel from "../../components/admin/menus/MenuEditPanel.jsx";
-import { useMenusQuery } from "../../hooks/useMenusQuery.js";
+import MenuListPanel from "../../components/admin/menus/MenuListPanel.jsx";
+import AdminAsyncState from "../../components/admin/shared/AdminAsyncState.jsx";
+import AdminConfirmDialog from "../../components/admin/shared/AdminConfirmDialog.jsx";
+import AdminPagination from "../../components/admin/shared/AdminPagination.jsx";
+import AdminTopHeader from "../../components/admin/shared/AdminTopHeader.jsx";
 import { ADMIN_PAGINATION } from "../../constants/pagination.js";
+import { useMenusQuery } from "../../hooks/useMenusQuery.js";
 import { toast } from "../../utils/toast.js";
 
 // const MENUS_PAGINATION = ADMIN_PAGINATION.menus;
@@ -27,12 +27,12 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
     return "view";
   });
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-
   const {
     status,
     categories,
     optionGroupCatalog,
     menus,
+    ingredients,
     page,
     onPageChange,
     pageSize,
@@ -45,6 +45,8 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
     onKeywordChange,
     onSelectMenu,
     updateMenu,
+    createMenu,
+    refetch,
   } = useMenusQuery({ initialMenuId: urlMenuId });
   const [draftKeyword, setDraftKeyword] = useState("");
 
@@ -91,26 +93,33 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
     setPanelMode("view");
   }
 
-  function handleSaveEdit(payload) {
+  async function handleSaveEdit(payload) {
     if (panelMode === "edit" && selectedMenu) {
       updateMenu(selectedMenu.menuId, payload);
+      toast.success(`메뉴 수정 반영: ${payload.name || selectedMenu?.name}`);
+      setPanelMode("view");
+      return;
     }
 
-    // TODO-021: 메뉴 등록 FE 2/3 — create 저장 연결.
-    // 1) create 모드에서 menusApi.createMenu(payload) 호출
-    // 2) 성공 시 새 menuId 선택, 목록 refetch, 상세 패널 진입 규칙 확정
-    // 3) 실패 시 toast.error + panelMode 유지
-    // TODO-022: 메뉴 등록 검증 3/3 — 등록 직후 목록/상세/이미지/검색 반영 확인.
-    // TODO-027: 메뉴 수정 FE 2/3 — edit 저장 연결.
-    // 1) edit 모드에서 menusApi.updateMenu(selectedMenu.menuId, payload) 호출
-    // 2) 성공 시 refetch 또는 optimistic update로 목록/상세/선택 상태 동기화
-    // 3) 실패 시 toast.error + panelMode 유지
-    // TODO-028: 메뉴 수정 검증 3/3 — 수정 직후 카드/상세/검색 결과 반영 확인.
-    toast.success(
-      panelMode === "create"
-        ? `메뉴 등록 stub: ${payload.name || "(이름 없음)"}`
-        : `메뉴 수정 반영: ${payload.name || selectedMenu?.name}`,
-    );
+    if (panelMode !== "create") return;
+
+    try {
+      const request = await createMenu(payload);
+      if (!request.categoryId) {
+        toast.error("카테고리를 선택해 주세요.");
+        return;
+      }
+      if (!request.name?.trim()) {
+        toast.error("메뉴명을 입력해 주세요.");
+        return;
+      }
+    } catch (err) {
+      toast.error(err?.message || `메뉴 등록 실패: ${payload.name}`);
+      return;
+    }
+    toast.success(`메뉴 등록 성공: ${payload.name}`);
+    if (request?.menuId != null) onSelectMenu(request.menuId);
+    refetch?.();
     setPanelMode("view");
   }
 
@@ -180,7 +189,8 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
           <MenuEditPanel
             mode={panelMode}
             menu={panelMode === "edit" ? selectedMenu : null}
-            categoryOptions={categories.filter((category) => category.categoryId !== null)}
+            categoryOptions={categories.filter((c) => c.categoryId != null)}
+            ingredients={ingredients}
             optionGroupCatalog={optionGroupCatalog}
             onCancel={handleCancelEdit}
             onSave={handleSaveEdit}
