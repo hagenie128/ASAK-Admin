@@ -136,50 +136,39 @@ export function useMenusQuery({
     return () => {
       cancelled = true;
     };
-  }, [selectedMenuId]);
+  }, [selectedMenuId, tick]);
 
   function updateMenu(menuId, payload) {
-    setMenus((prev) =>
-      prev.map((menu) => {
-        if (menu.menuId !== menuId) return menu;
-
-        return {
-          ...menu,
-          name: payload.name,
-          categoryName: payload.categoryName,
-          price: payload.price,
-          isActive: payload.isActive,
-          detail: {
-            ...menu.detail,
-            description: payload.description,
-            imageUrl: payload.imageUrl,
-            ingredients: payload.ingredients,
-            optionGroups: payload.optionGroups,
-            nutrition: payload.nutrition,
-            allergens: payload.allergens,
-            tags: payload.tags,
-          },
-        };
-      }),
-    );
-    setSelectedMenu((prev) =>
-      prev && prev.menuId === menuId
-        ? {
-            ...prev,
-            name: payload.name,
-            categoryName: payload.categoryName,
-            price: payload.price,
-            isActive: payload.isActive,
-            description: payload.description,
-            imageUrl: payload.imageUrl,
-            ingredients: payload.ingredients,
-            optionGroups: payload.optionGroups,
-            nutrition: payload.nutrition,
-            allergens: payload.allergens,
-            tags: payload.tags,
-          }
-        : prev,
-    );
+    const request = {
+      categoryId: payload.categoryId ? Number(payload.categoryId) : null,
+      name: payload.name,
+      price: Number(payload.price) || 0,
+      imageUrl: payload.imageUrl || null,
+      description: payload.description || null,
+      ingredients: (payload.ingredients ?? []).map((row) => ({
+        ingredientId: row.ingredientId,
+        role: row.role,
+        quantity: row.quantity,
+        unit: row.unit,
+        isDefault: row.isDefault,
+        canRemove: row.canRemove,
+      })),
+      optionGroups: (payload.optionGroups ?? []).map((group) => ({
+        optionGroupId: group.optionGroupId ?? group.groupId,
+        isRequired: group.isRequired,
+        recommendedOptionItemId:
+          group.recommendedOptionItemId ??
+          group.items?.find((item) => item.isRecommended)?.optionItemId ??
+          null,
+        items: group.items,
+      })),
+      nutrition: payload.nutrition,
+      tags: (payload.tags ?? []).map((tag) => ({
+        code: tag.code,
+        name: tag.name,
+      })),
+    };
+    return menusApi.updateMenu(menuId, request);
   }
 
   function createMenu(payload) {

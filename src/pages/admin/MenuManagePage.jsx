@@ -11,6 +11,7 @@ import AdminTopHeader from "../../components/admin/shared/AdminTopHeader.jsx";
 import { ADMIN_PAGINATION } from "../../constants/pagination.js";
 import { useMenusQuery } from "../../hooks/useMenusQuery.js";
 import { toast } from "../../utils/toast.js";
+import { menusApi } from "../../api/menusApi.js";
 
 // const MENUS_PAGINATION = ADMIN_PAGINATION.menus;
 
@@ -94,30 +95,30 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
   }
 
   async function handleSaveEdit(payload) {
-    if (panelMode === "edit" && selectedMenu) {
-      updateMenu(selectedMenu.menuId, payload);
-      toast.success(`메뉴 수정 반영: ${payload.name || selectedMenu?.name}`);
-      setPanelMode("view");
-      return;
-    }
-
-    if (panelMode !== "create") return;
+    let request = null;
+    let type = null;
 
     try {
-      const request = await createMenu(payload);
-      if (!request.categoryId) {
+      if (!payload.categoryId) {
         toast.error("카테고리를 선택해 주세요.");
         return;
       }
-      if (!request.name?.trim()) {
+      if (!payload.name?.trim()) {
         toast.error("메뉴명을 입력해 주세요.");
         return;
       }
+      if (panelMode === "edit" && selectedMenu) {
+        request = await updateMenu(selectedMenu.menuId, payload);
+        type = "수정";
+      } else if (panelMode === "create") {
+        request = await createMenu(payload);
+        type = "등록";
+      }
     } catch (err) {
-      toast.error(err?.message || `메뉴 등록 실패: ${payload.name}`);
+      toast.error(err?.message || `메뉴 ${type} 실패: ${payload.name}`);
       return;
     }
-    toast.success(`메뉴 등록 성공: ${payload.name}`);
+    toast.success(`메뉴 ${type} 성공: ${payload.name}`);
     if (request?.menuId != null) onSelectMenu(request.menuId);
     refetch?.();
     setPanelMode("view");
@@ -127,29 +128,23 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
     if (!selectedMenu) return;
     setDeleteConfirmOpen(true);
   }
+  // TODO-033: 메뉴 삭제 후 선택 상태 정리.
+  // 삭제 API 호출과 성공/실패 토스트는 연결됨.
+  // 남은 작업: 삭제된 메뉴를 선택한 상태가 남지 않도록, 목록 재조회 뒤 다음 메뉴 또는 null을 선택한다.
+  async function handleDeleteConfirm() {
+    if (!selectedMenu) return;
 
-  function handleDeleteConfirm() {
     setDeleteConfirmOpen(false);
-    // TODO-033: 메뉴 삭제 FE 2/3 — delete 연결.
-    // 1) menusApi.deleteMenu(selectedMenu.menuId) 호출
-    // 2) 성공 시 refetch + 선택 메뉴 이동(다음 메뉴 또는 null) + view 모드 복귀
-    // 3) 실패 시 다이얼로그/토스트 처리 기준 정리
-    // TODO-034: 메뉴 삭제 검증 3/3 — 삭제 후 pagination, 검색 결과, 선택 상태 일관성 확인.
-    toast.success(`mock에서는 삭제 stub만: ${selectedMenu?.name ?? ""}`);
-    setPanelMode("view");
-  }
 
-  if (status === "loading") {
-    return (
-      <section className="menu-management">
-        <AdminTopHeader
-          crumb="Admin / 메뉴 관리"
-          title="메뉴 관리"
-          description="상품 기본정보 / 가격 / 카테고리 / 옵션그룹 / 노출여부를 관리하세요."
-        />
-        <AdminAsyncState status="loading" layout="page" loadingVariant="card" />
-      </section>
-    );
+    try {
+      await menusApi.deleteMenu(selectedMenu.menuId);
+
+      toast.success(`메뉴 삭제 성공: ${selectedMenu.name}`);
+      setPanelMode("view");
+      refetch();
+    } catch (err) {
+      toast.error(err?.message || `메뉴 삭제 실패: ${selectedMenu.name}`);
+    }
   }
 
   return (
