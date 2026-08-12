@@ -140,7 +140,7 @@ function OrderCard({ order, now, onAction, actionPending = false }) {
     if (!card) return undefined;
 
     // 메뉴를 1열로 쌓았을 때 화면 높이를 넘는 경우에만 가로로 확장한다.
-    // 확장 중에는 옵션이 2열이라 카드가 짧아지므로, 판정은 항상 --wide를 뗀 상태에서 잰다.
+    // 확장 중에는 메뉴들이 가로로 나란히 배치돼 카드가 짧아지므로, 판정은 항상 --wide를 뗀 상태에서 잰다.
     // 그래야 확장 여부가 현재 모드에 의존하지 않아 켜짐/꺼짐이 반복되지 않는다.
     const syncWideLayout = () => {
       const hadWide = card.classList.contains(WIDE_LAYOUT_CLASS);
