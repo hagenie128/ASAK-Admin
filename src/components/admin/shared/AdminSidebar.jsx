@@ -1,4 +1,5 @@
-﻿import { NavLink, useNavigate } from "react-router-dom";
+﻿import { useState } from "react";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import adminLogo from "../../../assets/svg/logo-L.svg";
 import asakSLogo from "../../../assets/svg/logo-S.svg";
 import dashboardIcon from "../../../assets/figma/icon-nav-dashboard.svg";
@@ -31,6 +32,8 @@ const MODELS = {
 
 export default function AdminSidebar({ model = MODELS.Desktop }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [isSalesOpen, setIsSalesOpen] = useState(() => location.pathname.startsWith("/sales"));
 
   function handleLogout() {
     logoutAdmin();
@@ -112,24 +115,28 @@ export default function AdminSidebar({ model = MODELS.Desktop }) {
                 <button
                   type="button"
                   className="admin-sidebar__caret-button"
-                  aria-expanded="true"
+                  aria-expanded={isSalesOpen}
                   aria-label="매출 관리 하위 메뉴"
-                  disabled
+                  onClick={() => setIsSalesOpen((prev) => !prev)}
                 >
                   <img
-                    className="admin-sidebar__caret is-open"
+                    className={`admin-sidebar__caret${isSalesOpen ? " is-open" : ""}`}
                     alt=""
                     aria-hidden="true"
                     src={caretDownIcon}
                   />
                 </button>
               </div>
-              <NavLink className="admin-sidebar__subitem" to="/sales/daily">
-                <span>일별 매출</span>
-              </NavLink>
-              <NavLink className="admin-sidebar__subitem" to="/sales/monthly">
-                <span>월별 매출</span>
-              </NavLink>
+              {isSalesOpen ? (
+                <>
+                  <NavLink className="admin-sidebar__subitem" to="/sales/daily">
+                    <span>일별 매출</span>
+                  </NavLink>
+                  <NavLink className="admin-sidebar__subitem" to="/sales/monthly">
+                    <span>월별 매출</span>
+                  </NavLink>
+                </>
+              ) : null}
             </div>
             <NavLink end to="/menus">
               <img alt="" aria-hidden="true" src={menuIcon} />
@@ -158,7 +165,11 @@ export default function AdminSidebar({ model = MODELS.Desktop }) {
             주문 현황
           </NavLink>
         </div>
-      ) : null}
+      ) : (
+        <NavLink className="admin-sidebar__live-cta" end to="/" aria-label="주문 현황 (라이브오더)" title="주문 현황">
+          <span className="admin-sidebar__live-dot" aria-hidden="true" />
+        </NavLink>
+      )}
 
       <button type="button" className="admin-sidebar__logout" onClick={handleLogout}>
         <img alt="" aria-hidden="true" src={signOutIcon} />
