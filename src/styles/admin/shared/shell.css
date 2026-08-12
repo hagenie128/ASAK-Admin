@@ -75,6 +75,28 @@
   display: none;
 }
 
+/* Figma Tablet rail(150:4865)에는 없는 항목 — 슬림 모드에서 라이브오더(/)로 갈 방법이 없어 별도 보강.
+   Desktop 프로모 카드(__promo-cta)와 같은 톤(ink-800 배경 + brand-primary)으로 하단에 강조 배치. */
+.admin-sidebar__live-cta {
+  width: 100%;
+  height: 46px;
+  flex: 0 0 46px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--admin-ink-800);
+}
+
+.admin-sidebar__live-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--admin-brand-primary);
+  box-shadow: 0 0 0 5px rgba(181, 227, 15, 0.28);
+}
+
 .admin-sidebar--tablet .admin-sidebar__logout {
   min-width: 0;
   width: auto;
