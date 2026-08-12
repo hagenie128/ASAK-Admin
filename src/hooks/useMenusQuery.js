@@ -8,7 +8,7 @@ function getOptionGroupCatalog(menus) {
   const groupsById = new Map();
   menus.forEach((menu) => {
     (menu.detail?.optionGroups ?? []).forEach((group) => {
-      if (!groupsById.has(group.groupId)) groupsById.set(group.groupId, group);
+      if (!groupsById.has(group.optionGroupId)) groupsById.set(group.optionGroupId, group);
     });
   });
   return [...groupsById.values()];

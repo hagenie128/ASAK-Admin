@@ -299,7 +299,7 @@ export default function MenuEditPanel({
   function selectRecommendedOption(groupId, optionItemId) {
     setOptionGroups((prev) =>
       prev.map((group) => {
-        if (!group.isRequired || group.groupId !== groupId) return group;
+        if (!group.isRequired || group.optionGroupId !== groupId) return group;
 
         const items = (group.items ?? []).map((item) => ({
           ...item,
@@ -342,7 +342,7 @@ export default function MenuEditPanel({
     (option) => !tags.some((tag) => tag.code === option.code),
   );
   const availableOptionGroups = optionGroupCatalog.filter(
-    (group) => !optionGroups.some((connected) => connected.groupId === group.groupId),
+    (group) => !optionGroups.some((connected) => connected.optionGroupId === group.optionGroupId),
   );
 
   function addTag(option) {
@@ -366,7 +366,9 @@ export default function MenuEditPanel({
 
   function confirmOptionGroupRemoval() {
     if (!pendingOptionGroup) return;
-    setOptionGroups((prev) => prev.filter((group) => group.groupId !== pendingOptionGroup.groupId));
+    setOptionGroups((prev) =>
+      prev.filter((group) => group.optionGroupId !== pendingOptionGroup.optionGroupId),
+    );
     setPendingOptionGroup(null);
   }
 
@@ -566,7 +568,9 @@ export default function MenuEditPanel({
                 menu
                   ? optionGroupCatalog.filter(
                       (group) =>
-                        !optionGroups.some((connected) => connected.groupId === group.groupId),
+                        !optionGroups.some(
+                          (connected) => connected.optionGroupId === group.optionGroupId,
+                        ),
                     ).length === 0
                   : availableOptionGroups.length === 0
               }
@@ -583,7 +587,7 @@ export default function MenuEditPanel({
             >
               {availableOptionGroups.map((group) => (
                 <button
-                  key={group.groupId}
+                  key={group.optionGroupId}
                   type="button"
                   role="option"
                   aria-selected="false"
@@ -601,7 +605,7 @@ export default function MenuEditPanel({
             ) : (
               optionGroups.map((group) => (
                 <article
-                  key={group.groupId}
+                  key={group.optionGroupId}
                   className={`menu-edit-options__item${
                     group.isRequired ? "" : " menu-edit-options__item--optional"
                   }`}
@@ -628,7 +632,7 @@ export default function MenuEditPanel({
                             group.items.find((item) => item.isRecommended)?.optionItemId ?? "",
                           )}
                           onChange={(event) =>
-                            selectRecommendedOption(group.groupId, Number(event.target.value))
+                            selectRecommendedOption(group.optionGroupId, Number(event.target.value))
                           }
                         >
                           {group.items.map((item) => (
