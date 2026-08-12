@@ -515,9 +515,7 @@
 }
 
 @media (max-width: 720px) {
-  .admin-app {
-    grid-template-columns: 1fr;
-  }
+  /* .admin-app 1열 전환은 shared/base.css가 담당(중복 정의 금지) */
   .admin-sidebar:not(.admin-sidebar--logo) {
     min-height: auto;
     padding: 8px var(--admin-space-md);

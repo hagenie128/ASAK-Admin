@@ -1221,7 +1221,7 @@ button.is-link {
 }
 
 /* 좁은 화면에서도 기본은 가로(좌 목록 · 우 상세). 아주 좁을 때만 세로 */
-@media (max-width: 1100px) {
+@media (max-width: 1280px) {
   .menu-management__workspace {
     flex-direction: column;
   }
