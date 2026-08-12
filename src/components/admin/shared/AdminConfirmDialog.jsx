@@ -30,7 +30,21 @@ export default function AdminConfirmDialog({
         aria-labelledby="admin-confirm-title"
         onClick={(event) => event.stopPropagation()}
       >
-        <span className="admin-confirm__icon" aria-hidden="true" />
+        <span className="admin-confirm__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {tone === "warning" ? (
+              <>
+                <path d="M10.3 3.9 2.2 18a2 2 0 0 0 1.7 3h16.2a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" />
+                <path d="M12 9v4M12 17h.01" />
+              </>
+            ) : (
+              <>
+                <circle cx="12" cy="12" r="10" />
+                <path d="m15 9-6 6M9 9l6 6" />
+              </>
+            )}
+          </svg>
+        </span>
         <div className="admin-confirm__text">
           <h2 id="admin-confirm-title">{title}</h2>
           <p>{description}</p>
