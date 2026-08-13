@@ -232,12 +232,7 @@ export default function MenuEditPanel({
     setPendingOptionGroup(null);
     setBaseline(
       JSON.stringify(
-        buildChangeSnapshot(
-          next,
-          menu.ingredients ?? [],
-          nextOptionGroups,
-          menu.tags ?? [],
-        ),
+        buildChangeSnapshot(next, menu.ingredients ?? [], nextOptionGroups, menu.tags ?? []),
       ),
     );
   }, [isCreate, menu]);
