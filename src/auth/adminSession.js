@@ -10,7 +10,8 @@ export function isAdminLoggedIn() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return false;
     const parsed = JSON.parse(raw);
-    // TODO-065: token 존재·만료 여부로 판정
+    // TODO-065: TODO-064의 access token 존재·만료·파싱 실패를 기준으로 세션을 판정한다.
+    // 단순 loggedIn 플래그는 JWT 인증 전 임시 mock 호환용이며, 만료 토큰을 로그인 상태로 취급하지 않는다.
     return Boolean(parsed?.loggedIn);
   } catch {
     return false;
@@ -18,7 +19,8 @@ export function isAdminLoggedIn() {
 }
 
 export function loginAdmin({ remember = true } = {}) {
-  // TODO-065: adminApi.login 응답 token 저장 (remember에 따라 storage 선택)
+  // TODO-065: adminApi.login 응답의 token/expiry를 저장한다. remember=true는 localStorage,
+  // false는 sessionStorage를 사용하고, 원문 password·민감 응답은 저장하지 않는다.
   const payload = {
     loggedIn: true,
     loggedInAt: new Date().toISOString(),

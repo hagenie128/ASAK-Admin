@@ -87,8 +87,8 @@ export default function AdminApp() {
   if (pathname === "/") return <LiveOrderPage />;
   if (pathname === "/orders/live") return <Navigate to="/" replace />;
 
-  // TODO-069: Canonical camel(/soldOut, /paymentMethods) → 실행 kebab과 soft alias 정렬
-  // 실행 정본은 아래 kebab 경로.
+  // TODO-069: 화면 URL의 canonical camelCase(/soldOut, /paymentMethods)와 실행 kebab-case/soft alias를 정렬한다.
+  // Figma·Screen Bible의 Route와 React Router 정본을 하나로 정한 뒤, 기존 즐겨찾기용 alias는 Navigate로만 유지한다.
   const staticPages = {
     "/dashboard": <DashboardPage />,
     "/orders": <OrderManagePage />,

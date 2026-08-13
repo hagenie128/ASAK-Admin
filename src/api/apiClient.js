@@ -7,15 +7,18 @@ import axios from "axios";
  */
 
 export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL ?? "/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL ?? "",
   headers: {
     Accept: "application/json",
   },
 });
 
-// TODO-066: request interceptor — Authorization: Bearer <token>
-// TODO-066: response 401 → 로그인 리다이렉트
-// TODO-070: response 403 등 공통 ErrorCode 매핑
+// TODO-066: TODO-064 로그인 응답의 access token을 단일 세션 읽기 함수로 가져와
+// Authorization: Bearer <token>을 붙인다. 로그인·토큰 없는 공개 요청에는 빈 헤더를 보내지 않는다.
+// TODO-066: 401은 토큰 삭제 후 로그인 화면으로 이동하되, 호출 컴포넌트가 중복 toast를 만들지 않게
+// 공통 처리 범위를 먼저 정한다.
+// TODO-070: 403·409·검증 실패는 ApiResponse의 code/message를 보존해 화면별 안내와 매핑한다.
+// interceptor가 성공 응답을 body.data로 unwrap하므로 호출부에서 response.data를 다시 접근하지 않는다.
 
 // 서버 공통 응답 envelope 해제
 export function unwrapResponse(response) {

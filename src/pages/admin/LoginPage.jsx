@@ -21,7 +21,8 @@ export default function LoginPage({ onLoggedIn } = {}) {
     if (submitting) return;
     setSubmitting(true);
     try {
-      // TODO-067: adminApi.login → token 저장(loginAdmin 교체) · 실패 시 401 표시
+      // TODO-067: TODO-064 login API 완료 후 adminApi.login → token 전달(loginAdmin 교체) 순서로 연결한다.
+      // submitting 중 중복 요청을 막고, 401은 비밀번호 오류 안내로 표시하며 네트워크 오류와 구분한다.
       loginAdmin({ remember });
       onLoggedIn?.();
     } finally {

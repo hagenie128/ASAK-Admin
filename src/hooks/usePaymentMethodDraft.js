@@ -4,10 +4,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 // TODO-047: 결제수단 4/4 — draft 훅/화면 저장 연결과 검증.
-// 1) 초기 load를 mock getPaymentMethods -> paymentMethodsApi.listPaymentMethods 로 교체
-// 2) save()를 mock savePaymentMethods -> paymentMethodsApi.patchPaymentMethod 로 교체
-// 3) 실패 시 baselineRows 롤백, 성공 시 baseline 갱신 규칙은 그대로 유지
-// 4) 검증: 토글/정렬/저장/롤백/미리보기(activePreviewRows) 일관성 확인
+// 1) TODO-046 후 초기 load를 mock getPaymentMethods -> paymentMethodsApi.listPaymentMethods 로 교체한다.
+// 2) save()를 mock savePaymentMethods -> paymentMethodsApi.patchPaymentMethod 로 교체한다.
+// 3) 실패 시 baselineRows 롤백, 성공 시 서버 반환값으로 baseline 갱신 규칙은 그대로 유지한다.
+// 4) 저장 중 중복 클릭, 정렬 충돌(409), 새로고침 후 정렬/활성 상태와 미리보기를 수동 QA한다.
 import { getPaymentMethods, savePaymentMethods } from "../mocks/adminMockRepository.js";
 
 function cloneRows(rows) {

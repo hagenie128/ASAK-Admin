@@ -12,10 +12,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 // TODO-043: 품절 4/4 — draft 훅/화면 저장 연결과 검증.
-// 1) 초기 load를 mock getSoldOutCatalog -> soldOutApi.listSoldOutCatalog 로 교체
-// 2) save()를 mock saveSoldOutCatalog -> soldOutApi.patchSoldOut 로 교체
-// 3) 실패 시 baseline 롤백, 성공 시 baseline 갱신 규칙은 그대로 유지
-// 4) 검증: 탭/검색/이동/저장/롤백/dirtyCount가 API 응답 후에도 일관적인지 확인
+// 1) TODO-042 후 초기 load를 mock getSoldOutCatalog -> soldOutApi.listSoldOutCatalog 로 교체한다.
+// 2) save()를 mock saveSoldOutCatalog -> soldOutApi.patchSoldOut 로 교체한다.
+// 3) 실패 시 baseline 롤백, 성공 시 서버 반환값으로 baseline 갱신 규칙은 그대로 유지한다.
+// 4) 메뉴/재료 혼합 변경, 부분 실패, 다른 관리자의 동시 변경(409)에도 dirtyCount를 수동 QA한다.
 import { getSoldOutCatalog, saveSoldOutCatalog } from "../mocks/adminMockRepository.js";
 
 /** mock row 고유 키 — targetType + targetId */

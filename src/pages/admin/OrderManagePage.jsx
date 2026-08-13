@@ -94,7 +94,8 @@ export default function OrderManagePage() {
       dateTo: range.to,
     }));
   }
-  // TODO-075: 환불 API 연결 — ordersApi.refundOrder + ConfirmDialog
+  // TODO-075: backend TODO-071/072 및 frontend TODO-073 완료 후 ordersApi.refundOrder + ConfirmDialog를 연결한다.
+  // 승인 결제만 환불 가능한지와 409/이미 환불됨 응답을 구분하고, 성공 뒤에는 이 훅의 refetch()로 목록을 갱신한다.
   // function handleRefund(orderId) {
   //   setConfirmDialog({
   //     title: "환불하시겠습니까?",
@@ -114,7 +115,8 @@ export default function OrderManagePage() {
   //   });
   // }
 
-  // TODO-076: 영수증 출력 API 연결 — ordersApi.printReceipt + ConfirmDialog
+  // TODO-076: backend 출력 계약과 frontend TODO-074 완료 후 ordersApi.printReceipt + ConfirmDialog를 연결한다.
+  // 출력 취소·실패·재시도 시 주문 상태를 바꾸지 않고, 브라우저 인쇄라면 API 호출 없이 별도 흐름으로 분리한다.
   // function handlePrintReceipt(orderId) {
   //   setConfirmDialog({
   //     title: "영수증을 출력하시겠습니까?",
