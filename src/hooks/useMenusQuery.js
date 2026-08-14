@@ -4,6 +4,42 @@ import { useEffect, useState } from "react";
 import { menusApi } from "../api/menusApi.js";
 import { ADMIN_PAGINATION } from "../constants/pagination.js";
 
+function normalizeUnitForApi(raw) {
+  if (raw == null || String(raw).trim() === "") return "G";
+  const value = String(raw).trim();
+  const upper = value.toUpperCase();
+  if (upper === "G" || upper === "GRAM" || upper === "GRAMS" || value === "그램" || value === "g") {
+    return "G";
+  }
+  if (upper === "ML" || upper === "MILLILITER" || value === "밀리리터") {
+    return "ML";
+  }
+  if (/^[A-Z0-9_]+$/i.test(value)) return upper;
+  return "G";
+}
+
+function normalizeTagsForApi(tags = []) {
+  return tags
+    .map((tag) => {
+      if (typeof tag === "string") {
+        return { code: tag, name: tag };
+      }
+      if (!tag) return null;
+      const code = tag.code ?? tag.name;
+      const name = tag.name ?? tag.code;
+      if (!code && !name) return null;
+      return { code, name };
+    })
+    .filter(Boolean);
+}
+
+function sanitizeNutrition(nutrition) {
+  if (!nutrition || typeof nutrition !== "object") return null;
+  const keys = ["kcal", "carbG", "proteinG", "fatG", "sodiumMg", "servingG"];
+  const hasValue = keys.some((key) => nutrition[key] != null && nutrition[key] !== "");
+  return hasValue ? nutrition : null;
+}
+
 function getOptionGroupCatalog(menus) {
   const groupsById = new Map();
   menus.forEach((menu) => {
@@ -70,12 +106,14 @@ export function useMenusQuery({
         setStatus(content.length === 0 ? "empty" : "success");
         setError(null);
 
+        // 카테고리 이동 등으로 현재 메뉴가 필터 목록에서 빠져도 선택은 유지한다.
+        // (목록에 없다고 다른 메뉴로 바꾸면 이후 카테고리 수정이 엉뚱한 대상에 적용된다.)
         setSelectedMenuId((current) => {
           if (initialMenuId) {
             const matched = content.find((row) => String(row.menuId) === String(initialMenuId));
             if (matched) return matched.menuId;
           }
-          if (current && content.some((row) => row.menuId === current)) {
+          if (current != null) {
             return current;
           }
           return content[0]?.menuId ?? null;
@@ -149,7 +187,7 @@ export function useMenusQuery({
         ingredientId: row.ingredientId,
         role: row.role,
         quantity: row.quantity,
-        unit: row.unit,
+        unit: normalizeUnitForApi(row.unit),
         isDefault: row.isDefault,
         canRemove: row.canRemove,
       })),
@@ -162,11 +200,8 @@ export function useMenusQuery({
           null,
         items: group.items,
       })),
-      nutrition: payload.nutrition,
-      tags: (payload.tags ?? []).map((tag) => ({
-        code: tag.code,
-        name: tag.name,
-      })),
+      nutrition: sanitizeNutrition(payload.nutrition),
+      tags: normalizeTagsForApi(payload.tags),
     };
     return menusApi.updateMenu(menuId, request);
   }
@@ -182,7 +217,7 @@ export function useMenusQuery({
         ingredientId: row.ingredientId,
         role: row.role,
         quantity: row.quantity,
-        unit: row.unit,
+        unit: normalizeUnitForApi(row.unit),
         isDefault: row.isDefault,
         canRemove: row.canRemove,
       })),
@@ -195,11 +230,8 @@ export function useMenusQuery({
           null,
         items: group.items,
       })),
-      nutrition: payload.nutrition,
-      tags: (payload.tags ?? []).map((tag) => ({
-        code: tag.code,
-        name: tag.name,
-      })),
+      nutrition: sanitizeNutrition(payload.nutrition),
+      tags: normalizeTagsForApi(payload.tags),
     };
     return menusApi.createMenu(request);
   }

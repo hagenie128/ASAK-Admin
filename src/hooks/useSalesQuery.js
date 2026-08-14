@@ -17,8 +17,9 @@ export function useSalesQuery({ mode = "summary", period = "month" } = {}) {
   const [error, setError] = useState(null);
 
   const refetch = () => {
-    setStatus("loading");
     setError(null);
+    // 기간 전환 때 화면을 통째로 비우지 않도록, 첫 로딩만 loading으로 둔다.
+    setStatus((current) => (current === "success" ? "success" : "loading"));
     try {
       let envelope;
       switch (mode) {

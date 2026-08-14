@@ -1,7 +1,11 @@
 # 관리자 Mock 데이터
 
-정본: `asak-admin-data.json`  
+> Status: **REFERENCE** — 필드·props 사전
+
+정본 JSON: `src/mocks/asak-admin-data.json`
 접근: `src/mocks/adminMockRepository.js`만 사용 (Page에서 JSON 직접 import 금지)
+
+이 폴더에는 README만 둡니다. 과거 `public` 복제 JSON과 Kiosk 전체 mock은 `ASAK/asak-data/archive/frontend-mocks/`로 옮겼습니다.
 
 공통 Envelope:
 
@@ -20,7 +24,7 @@
 | Dashboard | 최근주문 20 · 상태 4종 카운트 |
 | 품절 | 판매중 다수 + 품절 메뉴 30 + 재료/세트 |
 | 메뉴 | 키오스크 메뉴 전체 동기화 (+ 비활성 일부) |
-| 결제수단 | 4종 (Figma SCR-018: 카드·카카오·네이버·제로) |
+| 결제수단 | 4종 (Figma SCR-018: 카드·카카오·네이버·토스) |
 | 매출 일별 | **7월 31일** |
 | 매출 월별 | **12개월** |
 | 매출 기간 | today / week / month / **empty** / **partial** |
@@ -32,15 +36,15 @@
 
 > Live·주문·메뉴 목록은 **실API**로 옮겼다. 아래 mock getter는 품절·결제·매출·대시보드·(레거시) 주문 테스트용 데이터용.
 
-| Getter | JSON 경로 | 쓰는 화면 | `data`에서 꺼내는 것 |
-|--------|-----------|-----------|----------------------|
-| `getDashboard()` | `dashboard` | DashboardPage | `data` 전체 |
-| `getSoldOutCatalog()` | `soldOut` | SoldOutManagePage | `data.available[]` · `data.soldOut[]` |
-| `getPaymentMethods()` | `paymentMethods` | PaymentMethodPage | `data[]` |
-| `getSalesSummary(period)` | `sales.summary` | SalesSummaryPage | period 병합 `data` |
-| `getDailySales()` | `sales.daily` | DailySalesPage | `data.rows[]` · totals |
-| `getMonthlySales()` | `sales.monthly` | MonthlySalesPage | `data.rows[]` |
-| `getLiveOrders()` / `getAdminOrders()` | live/orders | (레거시 테스트용 데이터) | 주문 실연동 후 참고용 |
+| Getter | API | JSON 경로 | 쓰는 화면 | `data`에서 꺼내는 것 |
+|--------|-----|-----------|-----------|----------------------|
+| `getDashboard()` | API-020 | `dashboard` | DashboardPage | `data` 전체 |
+| `getSoldOutCatalog()` | API-009 / 010 | `soldOut` | SoldOutManagePage | `data.available[]` · `data.soldOut[]` |
+| `getPaymentMethods()` | API-015 / 016 | `paymentMethods` | PaymentMethodPage | `data[]` |
+| `getSalesSummary(period)` | API-018 | `sales.summary` | SalesSummaryPage | period 병합 `data` |
+| `getDailySales()` | API-017 | `sales.daily` | DailySalesPage | `data.rows[]` · totals |
+| `getMonthlySales()` | API-019 | `sales.monthly` | MonthlySalesPage | `data.rows[]` |
+| `getLiveOrders()` / `getAdminOrders()` | API-021 / 007 (레거시) | live/orders | (레거시 테스트용) | 주문은 실연동 후 참고용 |
 
 ```js
 import {
@@ -66,9 +70,9 @@ getDailySales();
 > 정규화한다. 이 문서에서 `totalPrice`와 `CANCELLED`가 보이면 현재 mock의 실제 필드값을
 > 설명하는 것이며, 새 API 계약으로 복사하지 않는다.
 
-### 1) Live 주문 카드 — `getLiveOrders().data.content[]`
+### 1) Live 주문 카드 — API-021 / 레거시 `getLiveOrders()`
 
-`LiveOrderBoard`가 쓰는 Live 카드 필드 (실API 응답 기준, mock 테스트용 데이터와 유사).
+`LiveOrderBoard`는 `ordersApi.listLiveOrders()`의 실API 응답을 사용합니다. 아래 표는 레거시 mock과 화면 구조를 비교하기 위한 참고이며, 금액 필드는 실API에서 `totalAmount`, 레거시 mock에서 `totalPrice`입니다.
 
 | 필드 | 타입 | 화면에서 | 비고 |
 |------|------|----------|------|
@@ -77,7 +81,7 @@ getDailySales();
 | `displayNo` | string | (예비) | 숫자만 `"1400"` |
 | `orderType` | string | — | `EAT_IN` / `TAKE_OUT` |
 | `orderTypeLabel` | string | 매장/포장 뱃지 | `"매장"` / `"포장"` → 포장이면 `--takeout` |
-| `totalPrice` | number | 총액 | `toLocaleString()` |
+| `totalAmount` | number | 총액 | 실API 정본 |
 | `orderStatus` | string | (예비) | `RECEIVED` / `PREPARING` / … |
 | `createdAt` | string | (예비) | ISO |
 | `elapsedSec` | number | 경과 초 표시 | `null`이면 `00:00:00` |
@@ -105,10 +109,10 @@ getDailySales();
 
 ```text
 LiveOrderBoard
-  orders = getLiveOrders().data.content
+  orders = ordersApi.listLiveOrders().data.content
   → StaticOrderCard({ order })
        order.orderNo, order.orderTypeLabel, order.wide,
-       order.elapsedSec, order.totalPrice, order.menus, order.orderId
+       order.elapsedSec, order.totalAmount, order.menus, order.orderId
        → StaticMenuCard({ menu })
             menu.menuName, menu.quantity, menu.base, menu.dressing, menu.options
             option.label, option.tone
@@ -199,7 +203,7 @@ Live(`menus`+`tone`)와 목록(`items`+`optionItems`) **모양이 다름** → �
 
 | 필드 | DB 근거 |
 |------|---------|
-| `description`, `imageUrl` | `menu.description`, `menu.image_url` |
+| `description`, `imageUrl` | `menu.description`, `menu.image_asset_id` → `media_asset.url` (Cloudinary) |
 | `ingredients[]` | `menu_ingredient` + `ingredient` (`ingredientId`, `name`, `quantity`, `unit`, `role`, `isDefault`, `canRemove`) |
 | `optionGroups[]` | `option_group` / `option_item` / `option_policy*` |
 | `nutrition` | `menu_nutrition` (`kcal`, `proteinG`, `carbG`, `fatG`, `sodiumMg`) |
@@ -347,45 +351,44 @@ JSON 예시 (`getMonthlySales().data` — 일부):
 | `totalPrice` vs `totalAmount` | legacy mock=`totalPrice`, API 정본=`totalAmount` → adapter에서 정규화 |
 | `CANCELLED` vs `CANCELED` | legacy mock=`CANCELLED`, API 정본=`CANCELED` → adapter에서 정규화 |
 | `paymentStatus`에 `PAID` | 정본은 READY/APPROVED/FAILED — adapter에서 정규화 |
-| Envelope unwrap | `api/client.js`만 (repository는 envelope 통째 반환) |
+| Envelope unwrap | `api/apiClient.js`만 (repository는 envelope 통째 반환) |
 
 규모 숫자는 JSON `scenarios` / `meta` 키 참고.
 
 ---
 
-## 페이지별 JSON 바인딩 현황 — 하드코딩 vs mock 연결
+## 페이지별 데이터 연결 현황 — 실API vs mock
 
-> 각 페이지에서 **현재 하드코딩**으로 박혀 있는 데이터를 **JSON의 어떤 필드로 교체해야 하는지** 대조표.
-> ✅ = 이미 hook/repository로 연결됨, ❌ = 하드코딩 → 연결 필요
+> 주문·Live·메뉴는 실API, 품절·결제수단·매출·대시보드는 mock입니다. 아래 JSON 필드는 mock 화면과 레거시 회귀 테스트에만 적용합니다.
 
 ### 1) `LiveOrderBoard.jsx` → Live API / (레거시 `getLiveOrders()`)
 
 | 화면 요소 | 현재 | JSON 바인딩 |
 |-----------|------|-------------|
-| 주문 카드 목록 | ✅ `getLiveOrders().data.content` | — |
-| 완료/취소 액션 | ✅ `completeOrder()` / `cancelOrder()` | — |
+| 주문 카드 목록 | ✅ `ordersApi.listLiveOrders()` | 레거시 mock은 참고용 |
+| 완료/취소 액션 | ✅ `ordersApi.changeOrderStatus()` / `cancelOrder()` | — |
 | 상단 날짜/시간 | ✅ `new Date()` 실시간 | — |
 | 좌우 화살표 페이징 | ❌ disabled 고정 | 추후 페이징 구현 시 |
 
-### 2) `OrderManagementPreview.jsx` → `getAdminOrders()`
+### 2) `OrderManagePage.jsx` → `useOrdersQuery` / `ordersApi`
 
 | 화면 요소 | 현재 | JSON 필드 |
 |-----------|------|-----------|
-| 주문 테이블 행 | ✅ hook 연결 | `data.content[]` |
-| 페이지네이션 | ✅ `usePagination` | `data.content.length` |
-| 빈 목록 시나리오 | ✅ `{ empty: true }` | `data.content = []` |
+| 주문 테이블 행 | ✅ API-007 hook 연결 | `data.content[]` |
+| 페이지네이션 | ✅ `useOrdersQuery` | API 응답의 페이징 정보 |
+| 빈 목록 | ✅ API 빈 응답 처리 | `data.content = []` |
 | 필터 (상태/유형·날짜 등) | ✅ `useOrdersQuery` filters · DatePicker | `orderStatus`, `orderType`, `createdAt` 등 · **고도화 잔여** |
 | 목록 상태 변경 UI | ❌ **의도적 없음** (표시·필터만) | Live 완료/취소와 분리 · WBS2-037 |
-| 환불 / 영수증 | ✅ ConfirmDialog | `refundAdminOrder` / `printAdminOrderReceipt` |
+| 환불 / 영수증 | ❌ API·동작 미연결 | backend·frontend TODO 완료 후 연결 |
 
-### 3) `OrderDetailPage.jsx` → `getAdminOrderById(id)`
+### 3) `OrderDetailPanel.jsx` → `ordersApi.getOrder(id)` (API-022)
 
 | 화면 요소 | 현재 | JSON 필드 |
 |-----------|------|-----------|
-| 주문 기본정보 | ✅ hook 연결 | `data.orderNo`, `orderType`, `createdAt`, `totalPrice` |
+| 주문 기본정보 | ✅ 실API 연결 | `data.orderNo`, `orderType`, `createdAt`, `totalAmount` |
 | 품목 목록 | ✅ | `data.items[]` → `menuName`, `quantity`, `unitPrice`, `optionItems[]`, `excludedIngredients[]` |
-| 환불 버튼 | ✅ `refundAdminOrder()` | `paymentStatus === "PAID"` 일 때만 활성 |
-| 영수증 출력 | ✅ `printAdminOrderReceipt()` | `paymentStatus === "PAID"` 일 때만 활성 |
+| 환불 버튼 | ❌ TODO-075 | 환불 API 계약·프론트 함수 미구현 |
+| 영수증 출력 | ❌ TODO-076 | 출력 책임·프론트 함수 미구현 |
 | 404 처리 | ✅ | `success: false, status: 404` envelope |
 
 ### 4) `DashboardPage.jsx` → `getDashboard()`
@@ -435,7 +438,7 @@ JSON 예시 (`getMonthlySales().data` — 일부):
 | 재료 모달 | ✅ `IngredientSelectModal` | Edit 패널에서 연결 |
 | 카테고리 탭 / 검색 | ⚠️ 일부 잔여 | `categoryName` · `getAdminMenus({ keyword })` 고도화 가능 |
 | 상세·편집 패널 | ✅ | `content[].detail` |
-| 저장/삭제 | ✅ stub toast | 실 API BLOCKED |
+| 저장/삭제 | ✅ `menusApi.createMenu/updateMenu/deleteMenu` | 실 API 연결 |
 
 ### 8) `SalesSummaryPage.jsx` → `getSalesSummary(period)` · **✅ 2026-07-23 연결**
 

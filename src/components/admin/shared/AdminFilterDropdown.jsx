@@ -41,7 +41,8 @@ export default function AdminFilterDropdown({
         aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
       >
-        {triggerLabel}⌄
+        <span className="admin-filter-dropdown__label">{triggerLabel}</span>
+        <span className="admin-filter-dropdown__chevron" aria-hidden="true" />
       </button>
       {open ? (
         <div className="admin-filter-dropdown__menu" role="listbox">
