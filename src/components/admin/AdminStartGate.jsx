@@ -23,7 +23,7 @@ export default function AdminStartGate({ onStart }) {
         <div className="admin-login-card__head">
           <img className="admin-login-card__brand" src={loginLogo} alt="ASAK" />
           <h1>ASAK Admin</h1>
-          <p className="admin-login-card__lead">선생님 태블릿에서 전체화면으로 운영을 시작합니다.</p>
+          {/* <p className="admin-login-card__lead">선생님 태블릿에서 전체화면으로 운영을 시작합니다.</p> */}
         </div>
 
         <button type="button" className="admin-login-card__submit" onClick={handleStart}>

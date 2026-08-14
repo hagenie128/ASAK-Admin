@@ -1,25 +1,45 @@
 /* ASAK Admin — 셸/캔버스 공통 (Kiosk `styles/kiosk/base.css`와 동일 역할) */
 
 /*
- * 정본 1920×1080을 고정하고 AdminLayout이 contain scale 한다.
- * fluid 100vw/100dvh는 Figma px이 그대로라 태블릿에서 UI가 비대해 보인다.
+ * 정본 1920×1080을 contain scale 한다.
+ * 본문은 1080 높이 비율을 유지하고, 사이드바만 뷰포트 높이(100dvh)를 채운다.
  */
 
 .admin-viewport {
+  --admin-scale: 1;
   width: 100vw;
   height: 100vh;
   height: 100dvh;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   overflow: hidden;
   background: var(--admin-bg);
 }
 
-.admin-scale-slot {
-  position: relative;
-  flex: 0 0 auto;
+.admin-shell {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: 100%;
+  min-height: 0;
   overflow: hidden;
+}
+
+.admin-sidebar-slot {
+  flex: 0 0 auto;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--admin-panel);
+}
+
+.admin-main-slot {
+  flex: 0 0 auto;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--admin-page-bg);
 }
 
 .admin-app {
@@ -37,36 +57,42 @@
 }
 
 .admin-sidebar {
-  align-self: stretch;
-  width: 100%;
-  height: 100%;
   min-height: 0;
-  max-height: none;
-  padding: 11px 20px 28px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
   background: var(--admin-panel);
   color: var(--admin-sidebar-text);
   overflow: hidden;
   box-sizing: border-box;
-  box-shadow:
-    0.5px 0.5px 0.5px rgba(200, 241, 104, 0.25),
-    -0.5px -0.5px 0.5px rgba(200, 241, 104, 0.25),
-    -2px -4px 4px rgba(200, 241, 104, 0.25),
-    2px 4px 4px rgba(200, 241, 104, 0.25);
+}
+
+.admin-sidebar--desktop,
+.admin-sidebar--tablet {
+  width: var(--admin-sidebar-width);
+  height: calc(100dvh / var(--admin-scale, 1));
+  padding: 11px 20px 28px;
+  gap: 28px;
+  transform: scale(var(--admin-scale, 1));
+  transform-origin: top left;
+}
+
+.admin-sidebar--tablet {
+  width: var(--admin-sidebar-compact-width);
 }
 
 .admin-main {
+  width: calc(var(--admin-canvas-w) - var(--admin-sidebar-width));
+  height: var(--admin-canvas-h);
   min-width: 0;
   min-height: 0;
-  height: 100%;
   padding: 32px 40px 40px;
   background: var(--admin-page-bg);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transform: scale(var(--admin-scale));
+  transform-origin: top left;
 }
 
 /* 페이지 루트만 스크롤. 스크롤바는 숨기고 터치/휠은 유지 */
