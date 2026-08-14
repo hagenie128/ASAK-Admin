@@ -1,10 +1,10 @@
 ﻿/*
  * 결제수단 행 (SCR-018)
- * mock: getPaymentMethods().data[] — methodId, name, description, isActive, isMaintenance, sortOrder
+ * mock: getPaymentMethods().data[] — methodId, name, description, iconUrl, isActive, isMaintenance, sortOrder
  */
 import arrowUpIcon from "../../assets/figma/icon-arrow-up.svg";
 import arrowDownIcon from "../../assets/figma/icon-arrow-down.svg";
-import { getPaymentMethodGlyph } from "../../constants/paymentMethodGlyphs.js";
+import { getPaymentMethodIconUrl } from "../../constants/paymentMethodGlyphs.js";
 
 export default function AdminPaymentMethodRow({
   method,
@@ -15,10 +15,12 @@ export default function AdminPaymentMethodRow({
   canMoveDown = false,
   disabled = false,
 }) {
+  const iconUrl = getPaymentMethodIconUrl(method.methodId, method.iconUrl);
+
   return (
     <article className="payment-method-row">
       <span className="payment-method-row__icon" aria-hidden="true">
-        {getPaymentMethodGlyph(method.methodId)}
+        {iconUrl ? <img src={iconUrl} alt="" /> : null}
       </span>
       <div className="payment-method-row__info">
         <strong>

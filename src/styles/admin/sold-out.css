@@ -171,6 +171,13 @@
   scrollbar-width: thin;
 }
 
+.sold-out-grid:has(> .admin-async-state) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-template-columns: none;
+}
+
 .sold-out-card {
   width: 134px;
   /* 이미지 88 + 이름 2줄(32) + 칩 + 패딩 — 긴 메뉴명도 잘리지 않게 */

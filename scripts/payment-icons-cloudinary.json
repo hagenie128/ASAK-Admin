@@ -1,0 +1,38 @@
+[
+  {
+    "cfg_id": 10828,
+    "code": "CARD",
+    "method_id_mock": "card",
+    "name": "카드 / 삼성페이 결제",
+    "description": "신용 · 체크카드",
+    "sort_order": 1,
+    "icon_url": "https://res.cloudinary.com/asak/image/upload/v1786675340/asak/payment/samsung-pay.svg"
+  },
+  {
+    "cfg_id": 10829,
+    "code": "KAKAO_PAY",
+    "method_id_mock": "kakao",
+    "name": "카카오페이 결제",
+    "description": "모바일 간편결제",
+    "sort_order": 2,
+    "icon_url": "https://res.cloudinary.com/asak/image/upload/v1786675342/asak/payment/kakaopay.svg"
+  },
+  {
+    "cfg_id": 10830,
+    "code": "NAVER_PAY",
+    "method_id_mock": "naver",
+    "name": "네이버페이 결제",
+    "description": "모바일 간편결제",
+    "sort_order": 3,
+    "icon_url": "https://res.cloudinary.com/asak/image/upload/v1786675344/asak/payment/naver-pay.svg"
+  },
+  {
+    "cfg_id": 10832,
+    "code": "TOSS_PAY",
+    "method_id_mock": "toss",
+    "name": "토스페이 결제",
+    "description": "모바일 간편결제",
+    "sort_order": 4,
+    "icon_url": "https://res.cloudinary.com/asak/image/upload/v1786675347/asak/payment/toss-pay.svg"
+  }
+]

@@ -34,17 +34,42 @@ export function usePaymentMethodDraft() {
   const [rows, setRows] = useState([]);
   const [baseline, setBaseline] = useState("");
   const [baselineRows, setBaselineRows] = useState([]);
-  const [status, setStatus] = useState("loading");
+  const [status, setStatus] = useState("loading"); // loading | ready | error
+  const [error, setError] = useState(null);
+  const [tick, setTick] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
 
-  useEffect(() => {
-    const envelope = getPaymentMethods();
-    const nextRows = [...(envelope.data ?? [])].sort((a, b) => a.sortOrder - b.sortOrder);
-    setRows(nextRows);
-    setBaselineRows(cloneRows(nextRows));
-    setBaseline(snapshot(nextRows));
-    setStatus("ready");
+  const refetch = useCallback(() => {
+    setTick((prev) => prev + 1);
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    setStatus("loading");
+    setError(null);
+    try {
+      const envelope = getPaymentMethods();
+      if (cancelled) return;
+      if (envelope?.success === false) {
+        throw new Error(envelope.message || "결제수단을 불러오지 못했습니다.");
+      }
+      const nextRows = [...(envelope.data ?? [])].sort((a, b) => a.sortOrder - b.sortOrder);
+      setRows(nextRows);
+      setBaselineRows(cloneRows(nextRows));
+      setBaseline(snapshot(nextRows));
+      setStatus("ready");
+    } catch (err) {
+      if (cancelled) return;
+      setRows([]);
+      setBaselineRows([]);
+      setBaseline("");
+      setError(err);
+      setStatus("error");
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, [tick]);
 
   const isDirty = useMemo(() => snapshot(rows) !== baseline, [rows, baseline]);
 
@@ -92,6 +117,7 @@ export function usePaymentMethodDraft() {
 
   return {
     status,
+    error,
     rows,
     activePreviewRows,
     isDirty,
@@ -100,5 +126,6 @@ export function usePaymentMethodDraft() {
     toggleMethod,
     moveMethod,
     save,
+    refetch,
   };
 }

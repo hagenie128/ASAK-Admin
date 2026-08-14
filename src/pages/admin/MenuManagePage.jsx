@@ -4,7 +4,6 @@ import { useSearchParams } from "react-router-dom";
 import MenuDetailPanel from "../../components/admin/menus/MenuDetailPanel.jsx";
 import MenuEditPanel from "../../components/admin/menus/MenuEditPanel.jsx";
 import MenuListPanel from "../../components/admin/menus/MenuListPanel.jsx";
-import AdminAsyncState from "../../components/admin/shared/AdminAsyncState.jsx";
 import AdminConfirmDialog from "../../components/admin/shared/AdminConfirmDialog.jsx";
 import AdminPagination from "../../components/admin/shared/AdminPagination.jsx";
 import AdminTopHeader from "../../components/admin/shared/AdminTopHeader.jsx";
@@ -156,6 +155,8 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
       />
       <div className="menu-management__workspace">
         <MenuListPanel
+          status={status}
+          onRetry={refetch}
           categories={categories}
           selectedCategoryId={selectedCategoryId}
           onCategoryIdChange={handleCategoryIdChange}

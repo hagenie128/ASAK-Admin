@@ -48,7 +48,9 @@ export function useSoldOutDraft() {
   // ② 드래프트 = 화면에 보이는 두 목록 (useState)
   const [available, setAvailable] = useState([]);
   const [soldOut, setSoldOut] = useState([]);
-  const [status, setStatus] = useState("loading"); // loading | ready
+  const [status, setStatus] = useState("loading"); // loading | ready | error
+  const [error, setError] = useState(null);
+  const [tick, setTick] = useState(0);
 
   // ③ 체크박스 = 드래프트와 별개. "지금 고른 것"만 잠깐 기억
   const [selectedAvailable, setSelectedAvailable] = useState(() => new Set());
@@ -56,18 +58,42 @@ export function useSoldOutDraft() {
 
   const [isSaving, setIsSaving] = useState(false);
 
-  // 처음 한 번: mock → 드래프트로 복사
-  useEffect(() => {
-    const envelope = getSoldOutCatalog();
-    const nextAvailable = envelope.data?.available ?? [];
-    const nextSoldOut = envelope.data?.soldOut ?? [];
-    setAvailable(nextAvailable);
-    setSoldOut(nextSoldOut);
-    setBaselineAvailable(cloneRows(nextAvailable));
-    setBaselineSoldOut(cloneRows(nextSoldOut));
-    setBaselineSoldOutKeys(nextSoldOut.map(soldOutRowKey));
-    setStatus("ready");
+  const refetch = useCallback(() => {
+    setTick((prev) => prev + 1);
   }, []);
+
+  // mock → 드래프트로 복사 (tick으로 재시도)
+  useEffect(() => {
+    let cancelled = false;
+    setStatus("loading");
+    setError(null);
+    try {
+      const envelope = getSoldOutCatalog();
+      if (cancelled) return;
+      if (envelope?.success === false) {
+        throw new Error(envelope.message || "품절 목록을 불러오지 못했습니다.");
+      }
+      const nextAvailable = envelope.data?.available ?? [];
+      const nextSoldOut = envelope.data?.soldOut ?? [];
+      setAvailable(nextAvailable);
+      setSoldOut(nextSoldOut);
+      setBaselineAvailable(cloneRows(nextAvailable));
+      setBaselineSoldOut(cloneRows(nextSoldOut));
+      setBaselineSoldOutKeys(nextSoldOut.map(soldOutRowKey));
+      setSelectedAvailable(new Set());
+      setSelectedSoldOut(new Set());
+      setStatus("ready");
+    } catch (err) {
+      if (cancelled) return;
+      setAvailable([]);
+      setSoldOut([]);
+      setError(err);
+      setStatus("error");
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, [tick]);
 
   // 저장 안 한 변경 건수 (현재 품절 목록 vs 마지막 저장 기준)
   const dirtyCount = useMemo(
@@ -175,6 +201,7 @@ export function useSoldOutDraft() {
 
   return {
     status,
+    error,
     available,
     soldOut,
     dirtyCount,
@@ -188,6 +215,7 @@ export function useSoldOutDraft() {
     moveToSoldOut,
     moveToAvailable,
     save,
+    refetch,
     canMoveToSoldOut: selectedAvailable.size > 0,
     canMoveToAvailable: selectedSoldOut.size > 0,
     canSave: dirtyCount > 0 && !isSaving,

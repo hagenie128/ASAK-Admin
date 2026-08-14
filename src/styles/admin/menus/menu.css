@@ -160,6 +160,22 @@
   overflow: visible;
 }
 
+.menu-management__grid:has(> .admin-async-state) {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-template-columns: none;
+}
+
+.menu-detail-panel > .admin-async-state {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+
 .menu-management__pagination {
   flex: 0 0 auto;
   justify-content: center;

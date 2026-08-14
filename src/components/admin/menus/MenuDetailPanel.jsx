@@ -1,6 +1,7 @@
 ﻿/* SCR-016 메뉴 상세 보기 (읽기 전용) — Figma Basic-Info 등 */
 import ricottaImage from "../../../assets/figma/soldout-ricotta.png";
 import { formatCurrency } from "../../../utils/currency.js";
+import AdminAsyncState from "../shared/AdminAsyncState.jsx";
 import AdminStatusBadge from "../shared/AdminStatusBadge.jsx";
 
 function tagClassName(code = "") {
@@ -38,14 +39,12 @@ export default function MenuDetailPanel({ menu, onEdit, onDelete }) {
   if (!menu) {
     return (
       <aside className="menu-detail-panel" aria-label="메뉴 상세">
-        <div className="menu-detail-panel__scroll">
-          <header className="menu-detail__header">
-            <div>
-              <h2>기본 정보</h2>
-              <p>왼쪽에서 메뉴 카드를 선택하면 상세가 여기에 표시됩니다.</p>
-            </div>
-          </header>
-        </div>
+        <AdminAsyncState
+          status="empty"
+          layout="section"
+          title="메뉴를 선택해 주세요"
+          description="왼쪽에서 메뉴 카드를 선택하면 상세가 여기에 표시됩니다."
+        />
       </aside>
     );
   }

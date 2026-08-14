@@ -18,7 +18,7 @@
  *   getMonthlySales    → sales.monthly.data            (§7)
  *     (+ ranking[month] · 2026-07-22)
  */
-import adminMock from "../../public/mocks/asak-admin-data.json";
+import adminMock from "./asak-admin-data.json";
 
 
 let liveOrders = clone(adminMock.liveOrders);

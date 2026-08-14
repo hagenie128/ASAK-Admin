@@ -5,6 +5,8 @@ import AdminAsyncState from "../shared/AdminAsyncState.jsx";
 import AdminSearchInput from "../shared/AdminSearchInput.jsx";
 
 export default function MenuListPanel({
+  status = "success",
+  onRetry,
   categories,
   selectedCategoryId,
   onCategoryIdChange,
@@ -64,15 +66,30 @@ export default function MenuListPanel({
         </div>
       </div>
       <div className="menu-management__grid">
-        {menus === null ? (
+        {status === "loading" || status === "idle" ? (
+          <AdminAsyncState
+            status="loading"
+            layout="section"
+            loadingVariant="card"
+            title="메뉴를 불러오는 중"
+          />
+        ) : status === "error" ? (
+          <AdminAsyncState
+            status="error"
+            layout="section"
+            title="메뉴를 불러오지 못했습니다"
+            description="잠시 후 다시 시도해 주세요."
+            onRetry={onRetry}
+          />
+        ) : status === "empty" || !menus?.length ? (
           <AdminAsyncState
             status="empty"
-            layout="inline"
+            layout="section"
             title="조건에 맞는 메뉴가 없습니다"
             description="카테고리·검색어를 바꿔 보세요."
           />
         ) : (
-          menus?.map((menu) => (
+          menus.map((menu) => (
             <article
               key={menu.menuId}
               className={`admin-menu-card${menu.menuId === selectedMenuId ? " is-selected" : ""}`}
@@ -96,7 +113,7 @@ export default function MenuListPanel({
           ))
         )}
       </div>
-      {pagination}
+      {status === "success" ? pagination : null}
     </div>
   );
 }

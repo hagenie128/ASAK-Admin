@@ -1,12 +1,17 @@
 ﻿/* SCR-015 / Login (Figma 134:12033) ---------------------------------------- */
 .admin-login-page {
   position: relative;
+  width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
   padding: 48px var(--admin-space-lg);
   display: grid;
   place-items: center;
   overflow: hidden;
   background: var(--admin-panel);
+  box-sizing: border-box;
 }
 
 /* decoration-group (134:12034) */
@@ -70,6 +75,14 @@
   line-height: 28px;
   font-weight: 700;
   color: var(--admin-text-primary);
+}
+
+.admin-login-card__lead {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--admin-text-secondary);
+  text-align: center;
 }
 
 .admin-login-card__form {

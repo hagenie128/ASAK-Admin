@@ -1,8 +1,15 @@
 /* Figma SCR-009 / Live Order / Detail Open (235:6361) — 상단바 + 오더카드 */
 .live-order-preview {
+  height: 100vh;
+  height: 100dvh;
   min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   background: var(--admin-bg);
   color: var(--admin-text);
+  box-sizing: border-box;
 }
 
 /* top-bar 235:6372 — Navbar(90) + content(pl 120 / pr 40 / py 16) */
@@ -78,11 +85,12 @@
 }
 
 .live-order-preview__content {
+  flex: 1 1 auto;
+  min-height: 0;
   display: grid;
   grid-template-columns: 32px minmax(0, 1fr) 32px;
-  align-items: start;
+  align-items: stretch;
   gap: 8px;
-  min-height: calc(100vh - 72px);
   padding: var(--admin-space-lg) var(--admin-space-xl);
   box-sizing: border-box;
 }
@@ -93,7 +101,17 @@
   gap: var(--admin-space-xl);
   align-items: flex-start;
   overflow-x: auto;
+  overflow-y: hidden;
   padding: 20px 4px;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+/* 로딩/빈/오류만 있을 때 보드 중앙에 배치 */
+.live-order-preview__board:has(> .admin-async-state) {
+  align-items: center;
+  justify-content: center;
 }
 
 .live-order-preview__arrow {

@@ -1,10 +1,10 @@
 /*
  * Figma Component 연결 후보: AdminLayout
  * 현재 코드 역할: Sidebar + Header + 본문(children) 셸.
- * Figma Navbar Model: Desktop(>1280) / Tablet(≤1280)
  *
- * 캔버스: Figma 1920×1080 고정 → 브라우저 창에 맞게 통째로 scale
- * (창이 작아도 시안 비율·글자 크기가 “작아진 1080”처럼 보임)
+ * 정본: docs/Figma 1920×1080 Desktop. 캔버스는 항상 Desktop Navbar(240).
+ * 창이 좁아도 contain scale만 하고, 뷰포트 너비로 Tablet rail로 바꾸지 않는다.
+ * (뷰포트 media query는 scale된 1920 레이아웃을 깨뜨림)
  *
  * 데이터 흐름:
  *   main.jsx → AdminApp → AdminLayout → children Page
@@ -13,7 +13,6 @@
 import { useEffect, useState } from "react";
 import AdminSidebar from "../components/admin/shared/AdminSidebar.jsx";
 
-const TABLET_MQ = "(max-width: 1280px)";
 const CANVAS_W = 1920;
 const CANVAS_H = 1080;
 
@@ -22,7 +21,9 @@ function useAdminCanvasScale() {
 
   useEffect(() => {
     const update = () => {
-      const next = Math.min(window.innerWidth / CANVAS_W, window.innerHeight / CANVAS_H);
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const next = Math.min(vw / CANVAS_W, vh / CANVAS_H);
       setScale(Number.isFinite(next) && next > 0 ? next : 1);
     };
     update();
@@ -35,17 +36,6 @@ function useAdminCanvasScale() {
 
 export default function AdminLayout({ children }) {
   const scale = useAdminCanvasScale();
-  const [sidebarModel, setSidebarModel] = useState(() =>
-    typeof window !== "undefined" && window.matchMedia(TABLET_MQ).matches ? "Tablet" : "Desktop",
-  );
-
-  useEffect(() => {
-    const mq = window.matchMedia(TABLET_MQ);
-    const sync = () => setSidebarModel(mq.matches ? "Tablet" : "Desktop");
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
 
   return (
     <div className="admin-viewport">
@@ -53,11 +43,8 @@ export default function AdminLayout({ children }) {
         className="admin-scale-slot"
         style={{ width: CANVAS_W * scale, height: CANVAS_H * scale }}
       >
-        <div
-          className={`admin-app${sidebarModel === "Tablet" ? " admin-app--tablet" : ""}`}
-          style={{ transform: `scale(${scale})` }}
-        >
-          <AdminSidebar model={sidebarModel} />
+        <div className="admin-app" style={{ transform: `scale(${scale})` }}>
+          <AdminSidebar model="Desktop" />
           <main className="admin-main">{children}</main>
         </div>
       </div>

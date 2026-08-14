@@ -8,7 +8,7 @@ import AdminConfirmDialog from "../../components/admin/shared/AdminConfirmDialog
 import AdminTopHeader from "../../components/admin/shared/AdminTopHeader.jsx";
 import AdminPaymentMethodRow from "../../components/admin/AdminPaymentMethodRow.jsx";
 import AdminSaveBar from "../../components/admin/shared/AdminSaveBar.jsx";
-import { getPaymentMethodGlyph } from "../../constants/paymentMethodGlyphs.js";
+import { getPaymentMethodIconUrl } from "../../constants/paymentMethodGlyphs.js";
 import { usePaymentMethodDraft } from "../../hooks/usePaymentMethodDraft.js";
 import { toast } from "../../utils/toast.js";
 
@@ -25,10 +25,12 @@ const POLICIES = [
 ];
 
 function PreviewRow({ method }) {
+  const iconUrl = getPaymentMethodIconUrl(method.methodId, method.iconUrl);
+
   return (
     <div className="payment-preview-row">
       <span className="payment-method-row__icon" aria-hidden="true">
-        {getPaymentMethodGlyph(method.methodId)}
+        {iconUrl ? <img src={iconUrl} alt="" /> : null}
       </span>
       <div className="payment-method-row__info">
         <strong>{method.name}</strong>
@@ -67,6 +69,25 @@ export default function PaymentMethodPage() {
           description="변경 사항은 키오스크에 즉시 반영됩니다"
         />
         <AdminAsyncState status="loading" layout="page" loadingVariant="card" />
+      </section>
+    );
+  }
+
+  if (draft.status === "error") {
+    return (
+      <section className="payment-settings">
+        <AdminTopHeader
+          crumb="Admin / 결제수단 설정"
+          title="결제수단 설정"
+          description="변경 사항은 키오스크에 즉시 반영됩니다"
+        />
+        <AdminAsyncState
+          status="error"
+          layout="page"
+          title="결제수단을 불러오지 못했습니다"
+          description={draft.error?.message || "잠시 후 다시 시도해 주세요."}
+          onRetry={draft.refetch}
+        />
       </section>
     );
   }

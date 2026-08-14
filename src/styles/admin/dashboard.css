@@ -14,7 +14,14 @@
   color: var(--admin-neutral-800);
   overflow-x: hidden;
   overflow-y: auto;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.admin-dashboard::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 .admin-dashboard h1,

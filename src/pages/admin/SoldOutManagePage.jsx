@@ -126,17 +126,26 @@ function AvailablePanel({
       </div>
 
       <div className="sold-out-grid">
-        {items.map((item) => {
-          const key = soldOutRowKey(item);
-          return (
-            <ItemCard
-              key={key}
-              item={item}
-              checked={selectedKeys.has(key)}
-              onToggle={() => onToggle(key)}
-            />
-          );
-        })}
+        {items.length === 0 ? (
+          <AdminAsyncState
+            status="empty"
+            layout="section"
+            title="표시할 항목이 없습니다"
+            description="유형·카테고리·검색어를 바꿔 보세요."
+          />
+        ) : (
+          items.map((item) => {
+            const key = soldOutRowKey(item);
+            return (
+              <ItemCard
+                key={key}
+                item={item}
+                checked={selectedKeys.has(key)}
+                onToggle={() => onToggle(key)}
+              />
+            );
+          })
+        )}
       </div>
 
       <AdminPagination
@@ -192,18 +201,27 @@ function SoldOutPanel({
       </div>
 
       <div className="sold-out-grid">
-        {items.map((item) => {
-          const key = soldOutRowKey(item);
-          return (
-            <ItemCard
-              key={key}
-              item={item}
-              soldOut
-              checked={selectedKeys.has(key)}
-              onToggle={() => onToggle(key)}
-            />
-          );
-        })}
+        {items.length === 0 ? (
+          <AdminAsyncState
+            status="empty"
+            layout="section"
+            title="품절 항목이 없습니다"
+            description="왼쪽에서 항목을 선택해 품절 목록으로 옮기세요."
+          />
+        ) : (
+          items.map((item) => {
+            const key = soldOutRowKey(item);
+            return (
+              <ItemCard
+                key={key}
+                item={item}
+                soldOut
+                checked={selectedKeys.has(key)}
+                onToggle={() => onToggle(key)}
+              />
+            );
+          })
+        )}
       </div>
 
       <AdminPagination
@@ -300,6 +318,25 @@ export default function SoldOutManagePage() {
           description="메뉴, 재료, 옵션의 판매 상태를 관리하세요."
         />
         <AdminAsyncState status="loading" layout="page" loadingVariant="card" />
+      </section>
+    );
+  }
+
+  if (draft.status === "error") {
+    return (
+      <section className="sold-out-management">
+        <AdminTopHeader
+          crumb="Admin / 품절 관리"
+          title="품절 관리"
+          description="메뉴, 재료, 옵션의 판매 상태를 관리하세요."
+        />
+        <AdminAsyncState
+          status="error"
+          layout="page"
+          title="품절 목록을 불러오지 못했습니다"
+          description={draft.error?.message || "잠시 후 다시 시도해 주세요."}
+          onRetry={draft.refetch}
+        />
       </section>
     );
   }

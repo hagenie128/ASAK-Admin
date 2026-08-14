@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import AdminStartGate from "../components/admin/AdminStartGate.jsx";
 import LiveOrderPage from "../pages/admin/LiveOrderPage.jsx";
 import LoginPage from "../pages/admin/LoginPage.jsx";
 import OrderManagePage from "../pages/admin/OrderManagePage.jsx";
@@ -56,6 +57,8 @@ export default function AdminApp() {
   const navigate = useNavigate();
   const { tick, refreshAuth } = useAuthTick();
   const loggedIn = useMemo(() => isAdminLoggedIn(), [tick, pathname]);
+  // 새로고침마다 시작 게이트 → 사용자 제스처로 전체화면
+  const [started, setStarted] = useState(false);
 
   if (pathname.startsWith("/ui-preview/")) {
     return (
@@ -63,6 +66,10 @@ export default function AdminApp() {
         <Route path="/ui-preview/:screen/:state" element={<UiStatePreviewPage />} />
       </Routes>
     );
+  }
+
+  if (!started) {
+    return <AdminStartGate onStart={() => setStarted(true)} />;
   }
 
   if (!loggedIn) {

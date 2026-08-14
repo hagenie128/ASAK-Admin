@@ -1,19 +1,45 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "node:path";
+import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: "autoUpdate",
+      manifest: {
+        name: "ASAK Admin",
+        short_name: "ASAK Admin",
+        description: "ASAK Admin Console",
+        start_url: "/",
+        scope: "/",
 
+        display: "fullscreen",
+        orientation: "landscape",
+
+        background_color: "#ffffff",
+        theme_color: "#ffffff",
+
+        icons: [
+          {
+            src: "/logo-S.svg",
+            sizes: "any",
+            type: "image/svg+xml",
+            purpose: "any",
+          },
+        ],
+      },
+    }),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
-
   server: {
+    host: "0.0.0.0",
     port: 5174,
-
     proxy: {
       "/api": {
         target: "http://localhost:8080",

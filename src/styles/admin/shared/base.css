@@ -1,8 +1,8 @@
 /* ASAK Admin — 셸/캔버스 공통 (Kiosk `styles/kiosk/base.css`와 동일 역할) */
 
 /*
- * Figma 1920×1080 캔버스를 고정하고, AdminLayout이 창 크기에 맞게 scale 한다.
- * 뷰포트만 채우면(100dvh) 시안 px이 그대로라 작은 창에서 UI가 커 보인다.
+ * 정본 1920×1080을 고정하고 AdminLayout이 contain scale 한다.
+ * fluid 100vw/100dvh는 Figma px이 그대로라 태블릿에서 UI가 비대해 보인다.
  */
 
 .admin-viewport {
@@ -37,16 +37,19 @@
 }
 
 .admin-sidebar {
+  align-self: stretch;
+  width: 100%;
   height: 100%;
   min-height: 0;
   max-height: none;
-  padding: 0 20px 28px;
+  padding: 11px 20px 28px;
   display: flex;
   flex-direction: column;
   gap: 28px;
   background: var(--admin-panel);
   color: var(--admin-sidebar-text);
   overflow: hidden;
+  box-sizing: border-box;
   box-shadow:
     0.5px 0.5px 0.5px rgba(200, 241, 104, 0.25),
     -0.5px -0.5px 0.5px rgba(200, 241, 104, 0.25),
@@ -58,20 +61,29 @@
   min-width: 0;
   min-height: 0;
   height: 100%;
-  padding: 40px;
+  padding: 32px 40px 40px;
   background: var(--admin-page-bg);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
-/* 페이지 루트: 메인 높이에 맞추고, 넘치면 페이지·내부 패널이 스크롤 */
+/* 페이지 루트만 스크롤. 스크롤바는 숨기고 터치/휠은 유지 */
 .admin-main > * {
   flex: 1 1 0;
   min-height: 0;
   width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.admin-main > *::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 /* Figma MainContent top-header 241:14215 — 전 관리자 페이지 공통 */

@@ -356,6 +356,7 @@ export default function LiveOrderBoard() {
           <div className="live-order-preview__board">
             <AdminAsyncState
               status={status}
+              layout="page"
               title={
                 status === "empty"
                   ? "진행 중 주문이 없습니다"

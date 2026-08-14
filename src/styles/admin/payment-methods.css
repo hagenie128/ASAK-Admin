@@ -1,16 +1,17 @@
-/* SCR-018 / Payment methods (Figma 134:11493) ------------------------------ */
-/* MainContent 240 + 패딩 32 = 좌측 272. 좌열 898 + 간격 16 + 우열 686 = 1600. */
+/* SCR-018 / Payment methods — docs Default.png / Figma 134:11493
+ * MainContent: 좌 898(목록+정책) + gap 16 + 우 686(미리보기) = 1600
+ * ※ 뷰포트 @media로 column 전환하지 말 것 — 1920 캔버스 scale 환경에서 레이아웃이 깨짐
+ */
 .payment-settings {
   width: 100%;
   height: 100%;
   min-height: 0;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   gap: var(--admin-space-lg);
   color: var(--admin-text-primary);
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .payment-settings h1,
@@ -23,26 +24,16 @@
   display: none;
 }
 
-.payment-settings__header h1 {
-  font-size: 22px;
-  line-height: 28px;
-  font-weight: 700;
-}
-
-.payment-settings__header p {
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 400;
-  color: var(--admin-text-secondary);
-}
-
 .payment-settings__body {
   width: 100%;
   max-width: 1600px;
-  margin-top: var(--admin-space-xl);
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
-  align-items: flex-start;
-  gap: var(--admin-space-md);
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 16px;
 }
 
 .payment-settings h2 {
@@ -52,10 +43,14 @@
   color: var(--admin-text-primary);
 }
 
+/* 좌열: 목록 + 정책 */
 .payment-settings__main {
   width: 898px;
-  flex: 1 1 898px;
+  flex: 0 0 898px;
   min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Admin/PaymentMethodRow (551:74314) — 898×88 */
@@ -75,6 +70,7 @@
   border: 1px solid var(--admin-border);
   border-radius: 12px;
   background: var(--admin-panel);
+  box-sizing: border-box;
 }
 
 .payment-method-row__icon {
@@ -86,8 +82,14 @@
   justify-content: center;
   border-radius: 8px;
   background: var(--admin-surface-disabled);
-  font-size: 18px;
-  line-height: 24px;
+  overflow: hidden;
+}
+
+.payment-method-row__icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .payment-method-row__info {
@@ -146,6 +148,7 @@
   border-radius: 14px;
   background: var(--admin-brand-secondary);
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .payment-toggle--off {
@@ -166,9 +169,9 @@
   pointer-events: none;
 }
 
-/* PoliciesSection (134:11563) */
+/* PoliciesSection — 목록 아래, 미리보기와 같은 행의 좌측에만 */
 .payment-settings__policies-title {
-  margin-top: var(--admin-space-xl);
+  margin-top: 28px;
   font-size: 16px;
   line-height: 24px;
   font-weight: 700;
@@ -177,8 +180,8 @@
 .payment-policy-row {
   margin-top: var(--admin-space-md);
   display: flex;
-  align-items: flex-start;
-  gap: var(--admin-space-md);
+  align-items: stretch;
+  gap: 16px;
 }
 
 .payment-policy-card {
@@ -192,6 +195,7 @@
   border: 1px solid var(--admin-border);
   border-radius: 12px;
   background: var(--admin-panel);
+  box-sizing: border-box;
 }
 
 .payment-policy-card__head {
@@ -215,6 +219,7 @@
   font-size: 14px;
   line-height: 20px;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .payment-policy-card p {
@@ -224,30 +229,45 @@
   color: var(--admin-text-secondary);
 }
 
-/* PaymentMethodPreview (134:11582) — 686 폭, 안쪽 638 행 4개 */
+/* 우열: 키오스크 미리보기 — 목록과 가로 배치 (아래로 내리지 않음) */
 .payment-settings__preview {
   width: 686px;
-  flex: 0 1 686px;
+  flex: 0 0 686px;
   min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .payment-settings__preview-head {
+  flex: 0 0 auto;
   min-height: 24px;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
   gap: var(--admin-space-md);
 }
 
+.payment-settings__preview-head h2 {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
 .payment-settings__preview-head p {
+  flex: 1 1 auto;
+  min-width: 0;
   font-size: 14px;
   line-height: 20px;
   font-weight: 400;
   color: var(--admin-text-secondary);
+  text-align: right;
 }
 
 .payment-preview-card {
+  flex: 1 1 auto;
+  min-height: 0;
   height: 591px;
+  max-height: 591px;
   margin-top: var(--admin-space-md);
   padding: 28px var(--admin-space-lg);
   display: flex;
@@ -256,6 +276,8 @@
   border: 1px solid var(--admin-border);
   border-radius: 12px;
   background: var(--admin-panel);
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .payment-preview-row {
@@ -267,17 +289,20 @@
   align-items: center;
   gap: var(--admin-space-md);
   border-radius: 12px;
+  box-sizing: border-box;
 }
 
 .payment-preview-row .payment-toggle {
   pointer-events: none;
 }
 
-/* Admin/PaymentSaveBar / dirty (638:20860) — 560×72, MainContent 가운데 정렬 */
+/* Save bar — MainContent 가운데 */
 .payment-settings__footer {
   width: 100%;
   max-width: 1600px;
-  margin-top: 70px;
+  flex: 0 0 auto;
+  margin-top: auto;
+  padding-top: var(--admin-space-md);
   display: flex;
   justify-content: center;
 }
@@ -290,6 +315,7 @@
   justify-content: space-between;
   border-radius: 12px;
   background: var(--admin-warning-bg);
+  box-sizing: border-box;
 }
 
 .payment-save-bar p {
@@ -309,39 +335,5 @@
   font-size: 14px;
   line-height: 20px;
   font-weight: 700;
+  cursor: pointer;
 }
-
-/* Figma는 1920 고정폭만 정의한다. 아래는 좁은 화면 보정이다. */
-@media (max-width: 1400px) {
-  .payment-settings__body {
-    flex-direction: column;
-  }
-  .payment-settings__main,
-  .payment-settings__preview {
-    width: 100%;
-    flex: 0 0 auto;
-  }
-  .payment-preview-card {
-    height: auto;
-  }
-}
-
-@media (max-width: 720px) {
-  .payment-policy-row {
-    flex-direction: column;
-  }
-  .payment-policy-card {
-    width: 100%;
-  }
-  .payment-settings__preview-head {
-    height: auto;
-    gap: 8px;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .payment-save-bar {
-    width: 100%;
-  }
-}
-
-

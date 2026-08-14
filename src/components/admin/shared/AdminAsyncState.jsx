@@ -37,36 +37,38 @@ export default function AdminAsyncState({
   if (tone === "loading" && loadingVariant !== "spinner") {
     return (
       <div
-        className={`admin-skeleton admin-skeleton--${loadingVariant}`}
+        className={`admin-async-state admin-async-state--loading admin-async-state--${layout} admin-async-state--skeleton`}
         role="status"
         aria-label={title ?? copy.title}
       >
-        {loadingVariant === "card" ? (
-          <>
-            <span className="admin-skeleton__block admin-skeleton__block--image" />
-            <span className="admin-skeleton__block" />
-            <span className="admin-skeleton__block" />
-            <span className="admin-skeleton__block admin-skeleton__block--short" />
-          </>
-        ) : null}
-        {loadingVariant === "table" ? (
-          <>
-            {[0, 1, 2, 3].map((row) => (
-              <span
-                key={row}
-                className={`admin-skeleton__row${row === 0 ? " is-header" : ""}`}
-              >
-                <span />
-                <span />
-                <span />
-                <span />
-              </span>
-            ))}
-          </>
-        ) : null}
-        {loadingVariant === "button" ? (
-          <span className="admin-skeleton__block admin-skeleton__block--button" />
-        ) : null}
+        <div className={`admin-skeleton admin-skeleton--${loadingVariant}`}>
+          {loadingVariant === "card" ? (
+            <>
+              <span className="admin-skeleton__block admin-skeleton__block--image" />
+              <span className="admin-skeleton__block" />
+              <span className="admin-skeleton__block" />
+              <span className="admin-skeleton__block admin-skeleton__block--short" />
+            </>
+          ) : null}
+          {loadingVariant === "table" ? (
+            <>
+              {[0, 1, 2, 3].map((row) => (
+                <span
+                  key={row}
+                  className={`admin-skeleton__row${row === 0 ? " is-header" : ""}`}
+                >
+                  <span />
+                  <span />
+                  <span />
+                  <span />
+                </span>
+              ))}
+            </>
+          ) : null}
+          {loadingVariant === "button" ? (
+            <span className="admin-skeleton__block admin-skeleton__block--button" />
+          ) : null}
+        </div>
       </div>
     );
   }

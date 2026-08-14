@@ -14,6 +14,7 @@
  * @property {string|number} methodId mock은 "card" 문자열, BE는 숫자 id일 수 있음
  * @property {string} name
  * @property {string} [description]
+ * @property {string} [iconUrl] Cloudinary 공개 URL (결제수단 로고)
  * @property {boolean} isActive
  * @property {boolean} [isMaintenance]
  * @property {number} sortOrder
