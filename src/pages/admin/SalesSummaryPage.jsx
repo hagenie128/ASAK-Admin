@@ -92,7 +92,7 @@ export default function SalesSummaryPage() {
   const dailyMax =
     dailyData?.to || dailyData?.rows?.at(-1)?.date || "2026-07-31";
 
-  if (status === "loading" || status === "idle") {
+  if ((status === "loading" || status === "idle") && !data) {
     return <AdminAsyncState status="loading" layout="page" />;
   }
   if (status === "error") {
@@ -131,6 +131,7 @@ export default function SalesSummaryPage() {
             value={customRange || summaryRange}
             minDate={dailyMin}
             maxDate={dailyMax}
+            availableDates={(dailyData?.rows ?? []).map((row) => row.date)}
             onChange={(range) => {
               setCustomRange(range);
               setCalendarOpen(false);

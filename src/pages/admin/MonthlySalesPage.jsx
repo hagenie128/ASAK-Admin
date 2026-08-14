@@ -144,6 +144,7 @@ export default function MonthlySalesPage() {
             value={`${year}-${String(month).padStart(2, "0")}-01`}
             minDate="2026-01-01"
             maxDate="2026-12-31"
+            availableMonths={(monthlyData?.rows ?? []).map((row) => row.month)}
             onChange={(ymd) => {
               const [y, m] = ymd.split("-").map(Number);
               setYear(y);

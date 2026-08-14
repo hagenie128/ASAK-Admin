@@ -129,13 +129,16 @@ function toIngredientCatalogItem(item) {
     role = "core";
   }
 
+  // BE CreateMenuIngredientRequest.unit 은 UNIT_TYPE 코드(예: G). 표시명(그램)을내면 등록이 실패한다.
+  const unitCode = normalizeUnitCode(item.unitCode || item.unit || item.unitName);
+
   return {
     ingredientId: item.id ?? item.ingredientId,
     name: item.name,
     category,
     role,
     quantity: item.quantity ?? item.servingG ?? 0,
-    unit: item.unitName || item.unit || "g",
+    unit: unitCode,
     servingG: item.servingG,
     kcal: item.kcal,
     carbG: item.carbG,
@@ -146,6 +149,36 @@ function toIngredientCatalogItem(item) {
     sodiumMg: item.sodiumMg,
     isSoldOut: !!(item.isSoldOut ?? item.soldOut),
   };
+}
+
+function normalizeUnitCode(raw) {
+  if (raw == null || String(raw).trim() === "") return "G";
+  const value = String(raw).trim();
+  const upper = value.toUpperCase();
+  if (upper === "G" || upper === "GRAM" || upper === "GRAMS" || value === "그램" || value === "g") {
+    return "G";
+  }
+  if (upper === "ML" || upper === "MILLILITER" || value === "밀리리터") {
+    return "ML";
+  }
+  if (/^[A-Z0-9_]+$/i.test(value)) return upper;
+  return "G";
+}
+
+function normalizeTags(tags = []) {
+  return tags
+    .map((tag) => {
+      if (typeof tag === "string") {
+        const matched = TAG_OPTIONS.find((option) => option.code === tag || option.name === tag);
+        return matched ? { code: matched.code, name: matched.name } : { code: tag, name: tag };
+      }
+      if (!tag || (tag.code == null && tag.name == null)) return null;
+      return {
+        code: tag.code ?? tag.name,
+        name: tag.name ?? tag.code,
+      };
+    })
+    .filter(Boolean);
 }
 
 function IngredientGroup({ title, tone, rows, onRemove }) {
@@ -226,13 +259,18 @@ export default function MenuEditPanel({
     setOptionGroups(nextOptionGroups);
     setNutrition(menu.nutrition ?? {});
     setAllergens(menu.allergens ?? []);
-    setTags(menu.tags ?? []);
+    setTags(normalizeTags(menu.tags ?? []));
     setTagPickerOpen(false);
     setOptionGroupPickerOpen(false);
     setPendingOptionGroup(null);
     setBaseline(
       JSON.stringify(
-        buildChangeSnapshot(next, menu.ingredients ?? [], nextOptionGroups, menu.tags ?? []),
+        buildChangeSnapshot(
+          next,
+          menu.ingredients ?? [],
+          nextOptionGroups,
+          normalizeTags(menu.tags ?? []),
+        ),
       ),
     );
   }, [isCreate, menu]);
@@ -437,17 +475,13 @@ export default function MenuEditPanel({
               <span>카테고리</span>
               <select
                 value={
-                  menu
-                    ? menu.categoryId
-                    : form.categoryId === "" || form.categoryId == null
-                      ? ""
-                      : String(form.categoryId)
+                  form.categoryId === "" || form.categoryId == null
+                    ? ""
+                    : String(form.categoryId)
                 }
                 onChange={(event) => updateField("categoryId", event.target.value)}
               >
-                <option value={menu ? menu.categoryId : ""}>
-                  {menu ? menu.categoryName : "카테고리 선택"}
-                </option>
+                <option value="">카테고리 선택</option>
                 {categoryOptions.map((category) => (
                   <option key={category.categoryId} value={String(category.categoryId)}>
                     {category.categoryName}

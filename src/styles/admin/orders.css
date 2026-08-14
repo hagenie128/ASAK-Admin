@@ -33,6 +33,35 @@
   font: inherit;
   font-size: 14px;
 }
+
+.order-management__filters .order-management__date-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 120px;
+  padding: 0 12px 0 14px;
+  cursor: pointer;
+}
+
+.order-management__filters .order-management__date-trigger.is-active {
+  color: var(--admin-text-primary);
+  border-color: var(--admin-brand-primary);
+}
+
+.order-management__filters .order-management__date-trigger > span:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.order-management__filters .admin-date-picker__panel {
+  right: auto;
+  left: 0;
+}
 .order-management__filters .order-management__keyword {
   width: 220px;
   color: var(--admin-text-primary);

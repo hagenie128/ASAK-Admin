@@ -12,9 +12,11 @@ export default defineConfig({
         name: "ASAK Admin",
         short_name: "ASAK Admin",
         description: "ASAK Admin Console",
+        id: "/asak-admin",
         start_url: "/",
         scope: "/",
 
+        display_override: ["fullscreen", "standalone"],
         display: "fullscreen",
         orientation: "landscape",
 
@@ -26,6 +28,7 @@ export default defineConfig({
             src: "/pwa-192x192.png",
             sizes: "192x192",
             type: "image/png",
+            purpose: "any maskable",
           },
           {
             src: "/pwa-512x512.png",

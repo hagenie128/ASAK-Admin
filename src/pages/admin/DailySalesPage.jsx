@@ -132,6 +132,7 @@ export default function DailySalesPage() {
             value={selectedDate}
             minDate={CALENDAR_MIN}
             maxDate={CALENDAR_MAX}
+            availableDates={rows.map((row) => row.date)}
             onChange={(ymd) => {
               setSelectedDate(ymd);
               setCalendarOpen(false);

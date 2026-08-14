@@ -23,6 +23,22 @@ const ORDERS_PAGINATION = ADMIN_PAGINATION.orders;
 const CALENDAR_MIN = "2026-01-01";
 const CALENDAR_MAX = "2026-12-31";
 
+function toYmd(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function defaultOrderDate() {
+  const today = toYmd(new Date());
+  if (today < CALENDAR_MIN) return CALENDAR_MIN;
+  if (today > CALENDAR_MAX) return CALENDAR_MAX;
+  return today;
+}
+
+const DEFAULT_ORDER_DATE = defaultOrderDate();
+
 const ORDER_STATUS_OPTIONS = [
   { value: "", label: "주문 상태 전체" },
   ...Object.entries(ORDER_STATUS_LABEL).map(([value, label]) => ({ value, label })),
@@ -45,11 +61,18 @@ export default function OrderManagePage() {
     orderStatus: "",
     paymentStatus: "",
     orderType: "",
-    dateFrom: "",
-    dateTo: "",
+    dateFrom: DEFAULT_ORDER_DATE,
+    dateTo: DEFAULT_ORDER_DATE,
     keyword: "",
   });
-  const [appliedFilters, setAppliedFilters] = useState(draftFilters);
+  const [appliedFilters, setAppliedFilters] = useState(() => ({
+    orderStatus: "",
+    paymentStatus: "",
+    orderType: "",
+    dateFrom: DEFAULT_ORDER_DATE,
+    dateTo: DEFAULT_ORDER_DATE,
+    keyword: "",
+  }));
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState(null);
 
@@ -59,8 +82,7 @@ export default function OrderManagePage() {
   });
 
   const dateButtonLabel = useMemo(() => {
-    if (!appliedFilters.dateFrom && !draftFilters.dateFrom) return "날짜 선택";
-    const from = draftFilters.dateFrom || appliedFilters.dateFrom;
+    const from = draftFilters.dateFrom || appliedFilters.dateFrom || DEFAULT_ORDER_DATE;
     const to = draftFilters.dateTo || appliedFilters.dateTo || from;
     if (from === to) return from.replaceAll("-", ".");
     return `${from.replaceAll("-", ".")} ~ ${to.replaceAll("-", ".")}`;
@@ -169,6 +191,7 @@ export default function OrderManagePage() {
         />
         <AdminDatePicker
           mode="range"
+          monthsVisible={1}
           open={calendarOpen}
           value={{ from: draftFilters.dateFrom, to: draftFilters.dateTo }}
           minDate={CALENDAR_MIN}
@@ -176,8 +199,14 @@ export default function OrderManagePage() {
           onChange={handleDateChange}
           onClose={() => setCalendarOpen(false)}
         >
-          <button type="button" onClick={() => setCalendarOpen((v) => !v)}>
-            {dateButtonLabel}
+          <button
+            type="button"
+            className={`order-management__date-trigger${calendarOpen || draftFilters.dateFrom ? " is-active" : ""}`}
+            aria-expanded={calendarOpen}
+            onClick={() => setCalendarOpen((v) => !v)}
+          >
+            <span>{dateButtonLabel}</span>
+            <span className="admin-filter-dropdown__chevron" aria-hidden="true" />
           </button>
         </AdminDatePicker>
         <AdminSearchInput

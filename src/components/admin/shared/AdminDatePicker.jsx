@@ -5,7 +5,7 @@
  *
  * Figma: single 162:15939 구조 · range 3218:16401 배열·색
  */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
 const RANGE_PRESETS = [
@@ -88,6 +88,27 @@ function clampRange(from, to, min, max) {
   return { from: nextFrom, to: nextTo };
 }
 
+/** min/max 안에 있는 기준일. 실제 오늘이 데이터 범위 밖이면 가장 가까운 허용일로 맞춘다. */
+function resolveAnchorDate(min, max) {
+  const today = new Date();
+  const todayYmd = toYmd(today);
+  if (max && isAfter(todayYmd, toYmd(max))) return new Date(max.getTime());
+  if (min && isBefore(todayYmd, toYmd(min))) return new Date(min.getTime());
+  return today;
+}
+
+function detectRangePreset(from, to, min, max) {
+  if (!from || !to) return "custom";
+  const anchor = resolveAnchorDate(min, max);
+  const todayYmd = toYmd(anchor);
+  const week = clampRange(toYmd(startOfWeek(anchor)), toYmd(endOfWeek(anchor)), min, max);
+  const month = clampRange(toYmd(startOfMonth(anchor)), toYmd(endOfMonth(anchor)), min, max);
+  if (from === todayYmd && to === todayYmd) return "today";
+  if (from === week.from && to === week.to) return "week";
+  if (from === month.from && to === month.to) return "month";
+  return "custom";
+}
+
 export default function AdminDatePicker({
   mode = "single",
   value = null,
@@ -98,6 +119,12 @@ export default function AdminDatePicker({
   open = false,
   children,
   className = "",
+  /** range 모드에서 보이는 달 수. 주문 목록만 1, 나머지는 기본 2. */
+  monthsVisible = 2,
+  /** 데이터가 있는 YYYY-MM-DD 목록. 없으면 해당 날짜 글자를 옅게 표시한다. */
+  availableDates = null,
+  /** 데이터가 있는 YYYY-MM 목록(월 선택용). */
+  availableMonths = null,
 }) {
   const rootRef = useRef(null);
   const initial =
@@ -111,20 +138,37 @@ export default function AdminDatePicker({
   const [draftTo, setDraftTo] = useState(mode === "range" ? value?.to ?? null : null);
   const [activePreset, setActivePreset] = useState("custom");
 
+  const availableDateSet = useMemo(() => {
+    if (!availableDates?.length) return null;
+    return new Set(availableDates);
+  }, [availableDates]);
+
+  const availableMonthSet = useMemo(() => {
+    if (!availableMonths?.length) return null;
+    return new Set(availableMonths);
+  }, [availableMonths]);
+
   useEffect(() => {
     if (!open) return;
+    const boundMin = parseYmd(minDate);
+    const boundMax = parseYmd(maxDate);
     if (mode === "single") {
-      setDraftSingle(value || null);
-      const d = parseYmd(value) || new Date();
+      const next = value || toYmd(resolveAnchorDate(boundMin, boundMax));
+      setDraftSingle(next);
+      const d = parseYmd(next) || new Date();
       setViewMonth(startOfMonth(d));
     } else {
-      setDraftFrom(value?.from ?? null);
-      setDraftTo(value?.to ?? null);
-      setActivePreset("custom");
-      const d = parseYmd(value?.from) || parseYmd(value?.to) || new Date();
+      const anchor = resolveAnchorDate(boundMin, boundMax);
+      const today = toYmd(anchor);
+      const nextFrom = value?.from || today;
+      const nextTo = value?.to || value?.from || today;
+      setDraftFrom(nextFrom);
+      setDraftTo(nextTo);
+      setActivePreset(detectRangePreset(nextFrom, nextTo, boundMin, boundMax));
+      const d = parseYmd(nextFrom) || anchor;
       setViewMonth(startOfMonth(d));
     }
-  }, [open, mode, value]);
+  }, [open, mode, value, minDate, maxDate]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -147,8 +191,9 @@ export default function AdminDatePicker({
   const min = parseYmd(minDate);
   const max = parseYmd(maxDate);
   const todayYmd = toYmd(new Date());
+  const dualMonths = mode === "range" && monthsVisible >= 2;
   const rightMonth = addMonths(viewMonth, 1);
-  const months = mode === "range" ? [viewMonth, rightMonth] : [viewMonth];
+  const months = dualMonths ? [viewMonth, rightMonth] : [viewMonth];
 
   function isDisabled(date) {
     const ymd = toYmd(date);
@@ -182,24 +227,24 @@ export default function AdminDatePicker({
     setActivePreset(presetId);
     if (presetId === "custom") return;
 
-    const today = new Date();
+    const anchor = resolveAnchorDate(min, max);
     let from;
     let to;
     if (presetId === "today") {
-      from = today;
-      to = today;
+      from = anchor;
+      to = anchor;
     } else if (presetId === "week") {
-      from = startOfWeek(today);
-      to = endOfWeek(today);
+      from = startOfWeek(anchor);
+      to = endOfWeek(anchor);
     } else {
-      from = startOfMonth(today);
-      to = endOfMonth(today);
+      from = startOfMonth(anchor);
+      to = endOfMonth(anchor);
     }
 
     const next = clampRange(toYmd(from), toYmd(to), min, max);
     setDraftFrom(next.from);
     setDraftTo(next.to);
-    setViewMonth(startOfMonth(parseYmd(next.from) || today));
+    setViewMonth(startOfMonth(parseYmd(next.from) || anchor));
   }
 
   function handleApply() {
@@ -215,6 +260,16 @@ export default function AdminDatePicker({
     onClose?.();
   }
 
+  function hasDayData(date) {
+    const ymd = toYmd(date);
+    if (availableDateSet) return availableDateSet.has(ymd);
+    if (availableMonthSet) {
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+      return availableMonthSet.has(key);
+    }
+    return true;
+  }
+
   function dayClass(date, monthDate) {
     const ymd = toYmd(date);
     const weekday = date.getDay();
@@ -223,6 +278,7 @@ export default function AdminDatePicker({
     if (ymd === todayYmd) classes.push("is-today");
     if (weekday === 0) classes.push("is-sun");
     if (weekday === 6) classes.push("is-sat");
+    if (!hasDayData(date)) classes.push("is-no-data");
     if (mode === "single" && ymd === draftSingle) classes.push("is-selected");
     if (mode === "range" && draftFrom) {
       const rangeEnd = draftTo;
@@ -247,19 +303,27 @@ export default function AdminDatePicker({
       ? formatDot(draftSingle)
       : `${formatDot(draftFrom)} ~ ${formatDot(draftTo || draftFrom)}`;
 
-  function renderMonth(monthDate, key) {
+  function renderMonth(monthDate, key, { showPrev = true, showNext = true } = {}) {
     return (
       <div className="admin-date-picker__month" key={key}>
         <div className="admin-date-picker__nav">
-          <button type="button" aria-label="이전 달" onClick={() => setViewMonth((m) => addMonths(m, -1))}>
-            ‹
-          </button>
+          {showPrev ? (
+            <button type="button" aria-label="이전 달" onClick={() => setViewMonth((m) => addMonths(m, -1))}>
+              ‹
+            </button>
+          ) : (
+            <span className="admin-date-picker__nav-spacer" aria-hidden="true" />
+          )}
           <strong>
             {monthDate.getFullYear()}년 {monthDate.getMonth() + 1}월
           </strong>
-          <button type="button" aria-label="다음 달" onClick={() => setViewMonth((m) => addMonths(m, 1))}>
-            ›
-          </button>
+          {showNext ? (
+            <button type="button" aria-label="다음 달" onClick={() => setViewMonth((m) => addMonths(m, 1))}>
+              ›
+            </button>
+          ) : (
+            <span className="admin-date-picker__nav-spacer" aria-hidden="true" />
+          )}
         </div>
         <div className="admin-date-picker__weekdays">
           {WEEKDAYS.map((label, index) => (
@@ -291,12 +355,18 @@ export default function AdminDatePicker({
     );
   }
 
+  const panelModeClass = mode === "range"
+    ? dualMonths
+      ? "is-range"
+      : "is-range is-range-single-month"
+    : "is-single";
+
   return (
     <div className={`admin-date-picker ${className}`.trim()} ref={rootRef}>
       {children}
       {open ? (
         <div
-          className={`admin-date-picker__panel${mode === "range" ? " is-range" : " is-single"}`}
+          className={`admin-date-picker__panel ${panelModeClass}`}
           role="dialog"
           aria-label="날짜 선택"
         >
@@ -317,8 +387,13 @@ export default function AdminDatePicker({
             </div>
           ) : null}
 
-          <div className={`admin-date-picker__months${mode === "range" ? " is-dual" : ""}`}>
-            {months.map((monthDate, index) => renderMonth(monthDate, index === 0 ? "left" : "right"))}
+          <div className={`admin-date-picker__months${dualMonths ? " is-dual" : ""}`}>
+            {months.map((monthDate, index) =>
+              renderMonth(monthDate, index === 0 ? "left" : "right", {
+                showPrev: !dualMonths || index === 0,
+                showNext: !dualMonths || index === months.length - 1,
+              }),
+            )}
           </div>
 
           <div className="admin-date-picker__footer">

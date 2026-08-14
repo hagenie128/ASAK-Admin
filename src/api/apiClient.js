@@ -37,5 +37,14 @@ export function unwrapResponse(response) {
 // 성공 응답은 각 화면에 body.data만 전달
 apiClient.interceptors.response.use(
   (response) => unwrapResponse(response),
-  (error) => Promise.reject(error),
+  (error) => {
+    const body = error?.response?.data;
+    if (body?.message) {
+      const normalized = new Error(body.message);
+      normalized.code = body.code;
+      normalized.status = body.status ?? error.response?.status;
+      return Promise.reject(normalized);
+    }
+    return Promise.reject(error);
+  },
 );
