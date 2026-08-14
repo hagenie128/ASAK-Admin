@@ -46,7 +46,12 @@ export default function AdminLayout({ children }) {
           <AdminSidebar model="Desktop" />
         </div>
         <div className="admin-main-slot" style={{ width: MAIN_W * scale }}>
-          <main className="admin-main">{children}</main>
+          <div
+            className="admin-main-frame"
+            style={{ width: MAIN_W * scale, height: CANVAS_H * scale }}
+          >
+            <main className="admin-main">{children}</main>
+          </div>
         </div>
       </div>
     </div>
