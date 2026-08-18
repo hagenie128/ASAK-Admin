@@ -6,6 +6,7 @@ export const ORDER_TYPE = {
 };
 
 export const ORDER_STATUS = {
+  READY: "READY",
   RECEIVED: "RECEIVED",
   PREPARING: "PREPARING",
   COMPLETED: "COMPLETED",
@@ -29,6 +30,7 @@ export const ORDER_TYPE_LABEL = {
 };
 
 export const ORDER_STATUS_LABEL = {
+  [ORDER_STATUS.READY]: "준비대기",
   [ORDER_STATUS.RECEIVED]: "접수",
   [ORDER_STATUS.PREPARING]: "조리중",
   [ORDER_STATUS.COMPLETED]: "완료",

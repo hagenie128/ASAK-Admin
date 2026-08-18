@@ -131,9 +131,11 @@ function OrderCard({ order, now, onAction, actionPending = false }) {
     ORDER_CARD_HORIZONTAL_PADDING;
   const liveOrderNo = String(order.orderNo ?? "").slice(-4);
   const actionByStatus = {
+    READY: { label: "대기중", nextStatus: "PREPARING", disabled: true },
     RECEIVED: { label: "준비 시작", nextStatus: "PREPARING" },
     PREPARING: { label: "완료 처리", nextStatus: "COMPLETED" },
   };
+  const actionConfig = actionByStatus[order.orderStatus];
 
   useLayoutEffect(() => {
     const card = cardRef.current;
@@ -205,10 +207,13 @@ function OrderCard({ order, now, onAction, actionPending = false }) {
           <button
             className={order.orderStatus === "RECEIVED" ? "RECEIVED" : ""}
             type="button"
-            disabled={actionPending}
-            onClick={() => onAction(order.orderId, actionByStatus[order.orderStatus].nextStatus)}
+            disabled={actionPending || !actionConfig || actionConfig.disabled}
+            onClick={() => {
+              if (!actionConfig || actionConfig.disabled) return;
+              onAction(order.orderId, actionConfig.nextStatus);
+            }}
           >
-            {actionByStatus[order.orderStatus].label}
+            {actionConfig?.label ?? "상태 확인"}
           </button>
         </div>
       </footer>
