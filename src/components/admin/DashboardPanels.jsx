@@ -3,6 +3,7 @@ import { formatCurrency } from "../../utils/currency.js";
 import { ORDER_TYPE_LABEL, ORDER_STATUS_LABEL } from "../../constants/orderLabels.js";
 
 const STATUS_CLASS = {
+  READY: "waiting",
   RECEIVED: "waiting",
   PREPARING: "preparing",
   COMPLETED: "complete",

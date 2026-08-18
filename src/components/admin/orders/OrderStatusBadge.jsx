@@ -4,6 +4,7 @@
 import { ORDER_STATUS_LABEL, PAYMENT_STATUS_LABEL } from "../../../constants/orderLabels.js";
 
 const ORDER_TONE = {
+  READY: "received",
   RECEIVED: "received",
   PREPARING: "preparing",
   COMPLETED: "complete",
