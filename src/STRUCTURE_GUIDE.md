@@ -34,7 +34,7 @@ Page → Hook → api/*Api.js 또는 mocks/adminMockRepository.js
 | --- | --- |
 | `auth/adminSession.js` ← `AdminApp` / `LoginPage` / `AdminSidebar` | `hooks/useAdminAuth.js` + `store/adminSessionStore.js` |
 
-`apiClient`는 아직 Authorization·401 처리 없음 (`TODO-066`).
+`apiClient`는 아직 Authorization·401 처리 없음 (`TODO-033`).
 
 ## Page = 조합
 
@@ -59,7 +59,7 @@ Page → Hook → api/*Api.js 또는 mocks/adminMockRepository.js
 | `/sales` · `/sales/monthly` · `/sales/daily` | 매출 3화면 | mock `useSalesQuery` |
 | `/ui-preview/...` | `pages/dev/UiStatePreviewPage` | 정적 |
 
-실행 경로 = **kebab-case**. 정본 camel(`/soldOut` 등)과의 정렬은 `TODO-069`.
+실행 경로 = **kebab-case**. 정본 camel(`/soldOut` 등)과의 정렬은 `TODO-036`.
 
 ## 폴더
 

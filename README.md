@@ -95,7 +95,7 @@ npm run dev
 | `/sales/daily` | `DailySalesPage` | 일별·시간대별 매출 |
 | `/ui-preview/...` | `UiStatePreviewPage` | 개발용 UI 상태 미리보기 |
 
-`/orders/live`는 `/`로 리다이렉트됩니다. 정본 camelCase(`/soldOut`, `/paymentMethods`)와의 정렬은 `TODO-069`로 남아 있습니다.
+`/orders/live`는 `/`로 리다이렉트됩니다. 정본 camelCase(`/soldOut`, `/paymentMethods`)와의 정렬은 `TODO-036`로 남아 있습니다.
 
 ---
 
@@ -119,8 +119,8 @@ npm run dev
 | 결제수단 (`usePaymentMethodDraft`) | API-015 / 016 | `mocks/adminMockRepository` | 🟡 mock (`paymentMethodsApi` 미구현) |
 | 매출 요약·월별·일별 (`useSalesQuery`) | API-017 / 018 / 019 | `mocks/adminMockRepository` | 🟡 mock (`salesApi` 미구현) |
 | 대시보드 (`useDashboard`) | API-020 | `mocks/adminMockRepository` | 🟡 mock (`adminApi.getDashboard` 미구현) |
-| 로그인 | — (TODO-060) | `auth/adminSession.js` | 🟡 localStorage (JWT 미연동) |
-| 주문 환불·영수증 출력 | — (TODO-071~076) | — | ⛔ 백엔드 계약·프론트 연결 모두 미완료 |
+| 로그인 | — (TODO-027) | `auth/adminSession.js` | 🟡 localStorage (JWT 미연동) |
+| 주문 환불·영수증 출력 | — (TODO-038~043) | — | ⛔ 백엔드 계약·프론트 연결 모두 미완료 |
 
 API 번호 정본은 [`../ASAK-back/IMPLEMENTATION_PLAN.md`](../ASAK-back/IMPLEMENTATION_PLAN.md) §4입니다. mock 화면은 백엔드에 대응 Controller가 아직 비어 있는 기능이며, mock JSON 필드 사전은 [`public/mocks/README.md`](public/mocks/README.md)에 있습니다.
 
@@ -143,7 +143,7 @@ API 번호 정본은 [`../ASAK-back/IMPLEMENTATION_PLAN.md`](../ASAK-back/IMPLEM
 
 `constants/api.js`에는 품절·결제수단·매출·대시보드 경로 상수도 선언되어 있지만, **상수 선언은 endpoint 존재 증거가 아닙니다.** 해당 경로는 백엔드 Controller가 비어 있어 아직 호출하지 않습니다.
 
-> ⚠️ 결제수단 경로는 백엔드가 camelCase(`/api/admin/paymentMethods`)이고 Product Bible은 kebab-case(`/api/admin/payment-methods`)로 적혀 있습니다. API-015/016을 연결하기 전에 정본 경로를 하나로 확정해야 합니다. (`TODO-044`)
+> ⚠️ 결제수단 경로는 백엔드가 camelCase(`/api/admin/paymentMethods`)이고 Product Bible은 kebab-case(`/api/admin/payment-methods`)로 적혀 있습니다. API-015/016을 연결하기 전에 정본 경로를 하나로 확정해야 합니다. (`TODO-011`)
 
 ### 인증 현재 상태
 
@@ -151,7 +151,7 @@ API 번호 정본은 [`../ASAK-back/IMPLEMENTATION_PLAN.md`](../ASAK-back/IMPLEM
 | --- | --- |
 | `auth/adminSession.js` ← `AdminApp` / `LoginPage` / `AdminSidebar` | `hooks/useAdminAuth.js` + `store/adminSessionStore.js` |
 
-`apiClient`에는 아직 Authorization 헤더와 401 처리가 없습니다. (`TODO-066`)
+`apiClient`에는 아직 Authorization 헤더와 401 처리가 없습니다. (`TODO-033`)
 
 ---
 

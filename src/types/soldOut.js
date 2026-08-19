@@ -1,7 +1,7 @@
 /**
  * Admin 품절 화면 데이터 형태.
  * 현재 기준: mock `asak-admin-data.json` / useSoldOutDraft
- * BE는 TODO-040~041 상태다. PATCH changes의 targetType/targetId/isSoldOut 및 부분 실패 응답을 확정한 뒤 맞춘다.
+ * BE는 TODO-007~008 상태다. PATCH changes의 targetType/targetId/isSoldOut 및 부분 실패 응답을 확정한 뒤 맞춘다.
  * UI의 draft 상태와 서버 저장 결과를 구분해, 실패 시 이 타입의 baseline 데이터로 롤백할 수 있어야 한다.
  *
  * 사용 예:

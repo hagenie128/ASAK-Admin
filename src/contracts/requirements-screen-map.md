@@ -13,7 +13,7 @@
 ## 라우트
 
 - **실행 정본 (AdminApp):** kebab — `/`, `/orders`, `/sold-out`, `/payment-methods`, `/sales`, …
-- 정본 camel (`/soldOut`, `/paymentMethods`)과의 정렬: `TODO-069`
+- 정본 camel (`/soldOut`, `/paymentMethods`)과의 정렬: `TODO-036`
 - 데이터 소스 표: [STRUCTURE_GUIDE.md](../STRUCTURE_GUIDE.md)
 
 ## 정본 계약과의 관계

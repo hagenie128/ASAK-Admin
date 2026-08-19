@@ -127,7 +127,7 @@ export default function MenuManagePage({ initialMode = "view" } = {}) {
     if (!selectedMenu) return;
     setDeleteConfirmOpen(true);
   }
-  // TODO-033: 메뉴 삭제 후 선택 상태 정리.
+  // TODO-004: 메뉴 삭제 후 선택 상태 정리.
   // 삭제 API 호출과 성공/실패 toast는 연결됨. 목록 refetch가 성공한 뒤 삭제 대상이 선택돼 있으면
   // 현재 페이지의 다음 메뉴, 없으면 이전 메뉴, 모두 없으면 null을 선택한다. 실패 시 기존 선택을 유지한다.
   async function handleDeleteConfirm() {

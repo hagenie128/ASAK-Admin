@@ -387,8 +387,8 @@ JSON 예시 (`getMonthlySales().data` — 일부):
 |-----------|------|-----------|
 | 주문 기본정보 | ✅ 실API 연결 | `data.orderNo`, `orderType`, `createdAt`, `totalAmount` |
 | 품목 목록 | ✅ | `data.items[]` → `menuName`, `quantity`, `unitPrice`, `optionItems[]`, `excludedIngredients[]` |
-| 환불 버튼 | ❌ TODO-075 | 환불 API 계약·프론트 함수 미구현 |
-| 영수증 출력 | ❌ TODO-076 | 출력 책임·프론트 함수 미구현 |
+| 환불 버튼 | ❌ TODO-042 | 환불 API 계약·프론트 함수 미구현 |
+| 영수증 출력 | ❌ TODO-043 | 출력 책임·프론트 함수 미구현 |
 | 404 처리 | ✅ | `success: false, status: 404` envelope |
 
 ### 4) `DashboardPage.jsx` → `getDashboard()`

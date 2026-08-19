@@ -25,7 +25,7 @@
 
 실연동: 주문(API-007/008/021/022/024), 메뉴(API-011/012/013/023) + 카테고리·재료·삭제 보조 endpoint.
 mock: 품절(API-009/010), 결제수단(API-015/016), 매출(API-017/018/019), 대시보드(API-020).
-미연결: 환불·영수증(TODO-071~076), 로그인 JWT(TODO-060).
+미연결: 환불·영수증(TODO-038~043), 로그인 JWT(TODO-027).
 
 PWA manifest는 `vite.config.js` (`display: fullscreen`, `orientation: landscape`). 설치 절차는 [Android PWA 전체화면](../../ASAK/docs/operations/setup/android-pwa-fullscreen.md).
 

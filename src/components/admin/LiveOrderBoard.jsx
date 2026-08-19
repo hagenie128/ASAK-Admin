@@ -345,7 +345,7 @@ export default function LiveOrderBoard() {
         </div>
       </header>
       <main className="live-order-preview__content">
-        {/* TODO-059: livePage를 제거하고 useRef 보드 + scrollBy 가로 스크롤로 전환한다.
+        {/* TODO-026: livePage를 제거하고 useRef 보드 + scrollBy 가로 스크롤로 전환한다.
             GET /api/admin/orders/live의 createdAt ASC 순서는 유지하며 orders 전체를 렌더하고,
             empty·loading·error와 좌우 버튼 disabled 조건을 함께 수동 QA한다. */}
         <button

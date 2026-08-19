@@ -11,7 +11,7 @@ import { ordersApi } from "../api/ordersApi.js";
 export function useOrdersQuery({ pageSize = ADMIN_PAGINATION.orders.pageSize, filters = {} } = {}) {
   // status: loading | success | empty | error
   // Empty = API 성공 + 0건 / Error = 요청 실패(throw). 둘을 섞지 않는다.
-  // TODO-012 검증(2026-08-07): empty/error 분리·필터 쿼리 매핑·Error 재시도(onRetry→refetch) 확인.
+  // TODO-002 검증(2026-08-07): empty/error 분리·필터 쿼리 매핑·Error 재시도(onRetry→refetch) 확인.
   const [status, setStatus] = useState("loading");
   const [empty, setEmpty] = useState(false);
   const [error, setError] = useState(null);

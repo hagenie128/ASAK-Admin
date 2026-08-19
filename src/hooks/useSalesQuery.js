@@ -1,6 +1,6 @@
 // Page → mode / period 로 getter 고르기
 // return { status, data, error, refetch } — data 는 envelope.data
-// TODO-055: TODO-052~054 완료 후 mock getter를 salesApi.getSummary/getMonthly/getDaily로 교체한다.
+// TODO-022: TODO-019~021 완료 후 mock getter를 salesApi.getSummary/getMonthly/getDaily로 교체한다.
 // mode별 startDate/endDate·year·date query를 그대로 전달하고, 빠른 기간 변경 시 이전 응답이 화면을 덮지 않게 처리한다.
 
 import { useEffect, useState } from "react";

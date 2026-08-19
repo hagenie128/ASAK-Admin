@@ -1,11 +1,11 @@
 ﻿/*
  * SCR-016 Detail Add/Edit — Figma 134:12400 menu-edit-operational
  * 메뉴 관리 우측 패널: 신규·수정 공용 편집 카드
- * TODO-038: 재료 목록 서버 검색·페이지 처리.
+ * TODO-005: 재료 목록 서버 검색·페이지 처리.
  * 현재는 모달을 열 때 getIngredients()로 목록 전체를 받고, 화면에서만 키워드 필터링한다.
  * 남은 작업: backend 검색/페이지 계약이 확정되면 keyword/page/size와 PageResult 응답을 합의하고,
  * 요청 취소·마지막 응답만 반영하는 규칙까지 포함해 모달 페이지 이동을 연결한다.
- * TODO-039: 재료 추가·저장 수동 QA.
+ * TODO-006: 재료 추가·저장 수동 QA.
  * 추가, 중복 방지, core/base/plain 분류, 저장 후 상세·키오스크 반영을 브라우저와 API 응답으로 확인한다.
  */
 import { useEffect, useMemo, useState } from "react";
