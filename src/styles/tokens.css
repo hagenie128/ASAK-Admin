@@ -110,6 +110,8 @@
   /* Live order action states */
   --admin-action-received: #e5ff52;
   --admin-action-received-shadow: #e1ff39;
+  --admin-action-ready: #f0f0f0;
+  --admin-action-ready-shadow: #d0d0d0;
 
   /* Elevation */
   --admin-shadow-topbar: 0 4px 5px rgba(204, 204, 204, 0.4);

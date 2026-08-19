@@ -205,7 +205,15 @@ function OrderCard({ order, now, onAction, actionPending = false }) {
             취소
           </button>
           <button
-            className={order.orderStatus === "RECEIVED" ? "RECEIVED" : ""}
+            className={
+              order.orderStatus === "RECEIVED"
+                ? "RECEIVED"
+                : order.orderStatus === "PREPARING"
+                  ? "PREPARING"
+                  : order.orderStatus === "READY"
+                    ? "READY"
+                    : ""
+            }
             type="button"
             disabled={actionPending || !actionConfig || actionConfig.disabled}
             onClick={() => {
