@@ -5,11 +5,11 @@
  */
 import loginLogo from "../../assets/svg/logo-F.svg";
 import loginBg from "../../assets/figma/login-bg.png";
-import { requestAppFullscreen } from "../../utils/fullscreen.js";
+// import { requestAppFullscreen } from "../../utils/fullscreen.js";
 
 export default function AdminStartGate({ onStart }) {
   async function handleStart() {
-    await requestAppFullscreen();
+    // await requestAppFullscreen(); // 발표 전까지 시작하기 버튼의 전체화면 전환을 비활성화한다.
     onStart?.();
   }
 
