@@ -60,6 +60,7 @@
 /**
  * @typedef {Object} SalesHourlyPoint
  * @property {number} hour
+ * @property {number} [minute] 슬롯 시작 분: 0 또는 30
  * @property {number} orderCount
  * @property {number} totalAmount
  * @property {number} avgAmount

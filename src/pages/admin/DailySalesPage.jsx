@@ -4,6 +4,7 @@ import AdminAsyncState from "../../components/admin/shared/AdminAsyncState.jsx";
 import AdminTopHeader from "../../components/admin/shared/AdminTopHeader.jsx";
 import AdminDatePicker from "../../components/admin/shared/AdminDatePicker.jsx";
 import SalesShareCard from "../../components/admin/SalesShareCard.jsx";
+import { useDailySalesTimeSlots } from "../../hooks/useDailySalesTimeSlots.js";
 import { useSalesQuery } from "../../hooks/useSalesQuery.js";
 import { formatCurrency } from "../../utils/currency.js";
 import {
@@ -25,11 +26,32 @@ function formatDelta(delta) {
   return { text: "0%", dir: "" };
 }
 
+function toTimeSlot(row) {
+  return {
+    hour: row.salesHour ?? row.hour,
+    minute: row.salesMinute ?? row.minute ?? 0,
+    orderCount: row.orderCount ?? 0,
+    totalAmount: row.netSalesAmount ?? row.totalAmount ?? 0,
+    avgAmount: row.averageOrderAmount ?? row.avgAmount ?? 0,
+  };
+}
+
+function formatTimeRange({ hour, minute }, intervalMinutes) {
+  const startMinutes = hour * 60 + minute;
+  const endMinutes = startMinutes + intervalMinutes;
+  const endHour = Math.floor(endMinutes / 60) % 24;
+  const endMinute = endMinutes % 60;
+  return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}~${String(
+    endHour,
+  ).padStart(2, "0")}:${String(endMinute).padStart(2, "0")}`;
+}
+
 export default function DailySalesPage() {
   const { data, status, error, refetch } = useSalesQuery({ mode: "daily" });
   const rows = data?.rows ?? [];
   const [selectedDate, setSelectedDate] = useState(null);
   const [calendarOpen, setCalendarOpen] = useState(false);
+  const [intervalMinutes, setIntervalMinutes] = useState(60);
 
   useEffect(() => {
     if (!rows.length) return;
@@ -47,7 +69,14 @@ export default function DailySalesPage() {
   const prevDate = selectedDate ? shiftYmd(selectedDate, -1) : null;
   const prevRow = prevDate ? rows.find((row) => row.date === prevDate) ?? null : null;
 
-  const hourly = (selectedDate && data?.hourly?.[selectedDate]) || [];
+  const mockHourly = (selectedDate && data?.hourly?.[selectedDate]) || [];
+  const {
+    data: timeSlotData,
+    status: timeSlotStatus,
+    error: timeSlotError,
+    refetch: refetchTimeSlots,
+  } = useDailySalesTimeSlots({ date: selectedDate, intervalMinutes });
+  const hourly = (timeSlotStatus === "success" ? timeSlotData : mockHourly).map(toTimeSlot);
   const ranking = ((selectedDate && data?.ranking?.[selectedDate]) || []).slice(0, 5);
   const breakdown = (selectedDate && data?.breakdown?.[selectedDate]) || {
     paymentShare: [],
@@ -60,9 +89,12 @@ export default function DailySalesPage() {
   const peakIndex = findMaxIndex(hourlyAmounts);
   const peakHour = peakIndex >= 0 ? hourly[peakIndex] : null;
 
-  const tickHours = hourly
-    .map((h) => h.hour)
-    .filter((hour, index, arr) => index === 0 || index === arr.length - 1 || hour % 2 === 0);
+  const tickSlots = hourly.filter(
+    (slot, index, items) =>
+      index === 0 ||
+      index === items.length - 1 ||
+      (slot.minute === 0 && slot.hour % 2 === 0),
+  );
 
   const salesDelta = formatDelta(
     calcDeltaPercent(selectedRow?.totalAmount, prevRow?.totalAmount)
@@ -151,6 +183,16 @@ export default function DailySalesPage() {
             ›
           </button>
         </div>
+        <label className="sales-daily__interval">
+          <span>시간 단위</span>
+          <select
+            value={intervalMinutes}
+            onChange={(event) => setIntervalMinutes(Number(event.target.value))}
+          >
+            <option value={30}>30분</option>
+            <option value={60}>1시간</option>
+          </select>
+        </label>
       </AdminTopHeader>
 
       {!hasDayData ? (
@@ -186,7 +228,7 @@ export default function DailySalesPage() {
           <span>피크 시간대</span>
           <strong>
             {peakHour
-              ? `${String(peakHour.hour).padStart(2, "0")}:00~${String(peakHour.hour + 1).padStart(2, "0")}:00`
+              ? formatTimeRange(peakHour, intervalMinutes)
               : "-"}
           </strong>
           <p className="is-peak">
@@ -202,15 +244,17 @@ export default function DailySalesPage() {
             <div className="sales-chart__bars">
               {hourlyBars.map((height, index) => (
                 <i
-                  key={`h-${hourly[index].hour}`}
+                  key={`h-${hourly[index].hour}-${hourly[index].minute}`}
                   className={index === peakIndex ? "is-peak" : ""}
                   style={{ height: `${height}px` }}
                 />
               ))}
             </div>
             <div className="sales-chart__ticks">
-              {tickHours.map((hour) => (
-                <span key={hour}>{hour}시</span>
+              {tickSlots.map((slot) => (
+                <span key={`${slot.hour}-${slot.minute}`}>
+                  {String(slot.hour).padStart(2, "0")}:{String(slot.minute).padStart(2, "0")}
+                </span>
               ))}
             </div>
           </div>
@@ -218,7 +262,7 @@ export default function DailySalesPage() {
             <b>{formatCurrency(peakHour?.totalAmount)}</b>
             <span>
               피크 시간{" "}
-              {peakHour ? `${String(peakHour.hour).padStart(2, "0")}:00` : "-"}
+              {peakHour ? formatTimeRange(peakHour, intervalMinutes) : "-"}
             </span>
           </p>
         </section>
@@ -282,11 +326,8 @@ export default function DailySalesPage() {
             </div>
           ) : (
             hourly.map((row) => (
-              <div className="sales-table__row" key={row.hour}>
-                <span>
-                  {String(row.hour).padStart(2, "0")}:00~
-                  {String(row.hour + 1).padStart(2, "0")}:00
-                </span>
+              <div className="sales-table__row" key={`${row.hour}-${row.minute}`}>
+                <span>{formatTimeRange(row, intervalMinutes)}</span>
                 <span>{row.orderCount}건</span>
                 <span>{formatCurrency(row.totalAmount)}</span>
                 <span>{formatCurrency(row.avgAmount)}</span>
@@ -294,6 +335,13 @@ export default function DailySalesPage() {
             ))
           )}
         </div>
+        {timeSlotStatus === "loading" ? <p>시간대 매출을 불러오는 중입니다.</p> : null}
+        {timeSlotStatus === "error" ? (
+          <p>
+            시간대 매출을 불러오지 못했습니다. {timeSlotError?.message}
+            <button type="button" onClick={refetchTimeSlots}>다시 시도</button>
+          </p>
+        ) : null}
       </section>
     </section>
   );

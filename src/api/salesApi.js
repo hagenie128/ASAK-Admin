@@ -4,7 +4,16 @@
  * BE 구현 순서: TODO-015~017 Controller → TODO-018 Service/Mapper/XML → TODO-019~021 이 파일 → TODO-022 훅.
  * TODO-019~021 전까지 메서드 추가·호출 금지. API 상수는 경로 표기용이며 구현 완료 증거가 아니다.
  */
+import { apiClient } from "./apiClient.js";
+import { API_ENDPOINTS } from "../constants/api.js";
+
 export const salesApi = {
+  getDailyTimeSlots({ date, intervalMinutes }) {
+    return apiClient.get(API_ENDPOINTS.salesDaily, {
+      params: { date, intervalMinutes },
+    });
+  },
+
   // TODO-019: getSummary({ startDate, endDate }) → GET /api/admin/sales/summary
   // TODO-020: getMonthly({ year }) → GET /api/admin/sales/monthly
   // TODO-021: getDaily({ date }) → GET /api/admin/sales/daily
