@@ -28,4 +28,5 @@ export const API_ENDPOINTS = Object.freeze({
   salesSummary: `${API_BASE_PATH}/sales/summary`,
   salesMonthly: `${API_BASE_PATH}/sales/monthly`,
   salesDaily: `${API_BASE_PATH}/sales/daily`,
+  salesDailyTimeSlots: `${API_BASE_PATH}/sales/daily/time-slots`,
 });
