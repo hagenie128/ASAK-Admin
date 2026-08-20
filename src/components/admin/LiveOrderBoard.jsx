@@ -13,10 +13,10 @@ import chipBagIcon from "../../assets/figma/icon-order-side.svg";
 import { formatCurrency } from "../../utils/currency.js";
 import { formatDate, formatTime } from "../../utils/date.js";
 import { toast } from "../../utils/toast.js";
+import { createOrderCompletedMessage, speak } from "../../utils/ttsMessages.js";
 import AdminAsyncState from "./shared/AdminAsyncState.jsx";
 import AdminConfirmDialog from "./shared/AdminConfirmDialog.jsx";
 import AdminSidebar from "./shared/AdminSidebar.jsx";
-import { createOrderCompletedMessage, speak } from "../../utils/ttsMessages.js";
 
 function optionIcon(tone) {
   if (tone === "exclude") return excludeIcon;

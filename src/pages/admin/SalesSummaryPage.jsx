@@ -59,10 +59,7 @@ export default function SalesSummaryPage() {
   });
   const { data: dailyData, status: dailyStatus } = useSalesQuery({ mode: "daily" });
 
-  const summaryRange = useMemo(
-    () => parseSummaryDateRange(data?.dateRange),
-    [data?.dateRange],
-  );
+  const summaryRange = useMemo(() => parseSummaryDateRange(data?.dateRange), [data?.dateRange]);
 
   const handleActivePeriod = (period) => {
     if (period === activePeriod && !customRange) return;
@@ -74,9 +71,7 @@ export default function SalesSummaryPage() {
   const peakIndex = findMaxIndex(chartBars);
   const peakAmount = peakIndex >= 0 ? chartBars[peakIndex] : null;
   const peakTick =
-    peakIndex >= 0 && CHART_HOURS[peakIndex] != null
-      ? `${CHART_HOURS[peakIndex]}시`
-      : "-";
+    peakIndex >= 0 && CHART_HOURS[peakIndex] != null ? `${CHART_HOURS[peakIndex]}시` : "-";
 
   const dailyRows = filterDailyRows(dailyData?.rows, {
     period: activePeriod,
@@ -89,8 +84,7 @@ export default function SalesSummaryPage() {
     : data?.dateRange || data?.label || "-";
 
   const dailyMin = dailyData?.from || dailyData?.rows?.[0]?.date || "2026-07-01";
-  const dailyMax =
-    dailyData?.to || dailyData?.rows?.at(-1)?.date || "2026-07-31";
+  const dailyMax = dailyData?.to || dailyData?.rows?.at(-1)?.date || "2026-07-31";
 
   if ((status === "loading" || status === "idle") && !data) {
     return <AdminAsyncState status="loading" layout="page" />;
@@ -251,9 +245,9 @@ export default function SalesSummaryPage() {
             {(data?.ranking ?? []).map((row) => (
               <div className="sales-ranking__row" key={row.rank}>
                 <span className="sales-ranking__rank">{row.rank}</span>
-                <span className="sales-ranking__name">{row.name}</span>
-                <span className="sales-ranking__count">{row.count}건</span>
-                <b className="sales-ranking__amount">{formatCurrency(row.amount)}</b>
+                <span className="sales-ranking__name">{row.menuName}</span>
+                <span className="sales-ranking__count">{row.orderCount}건</span>
+                <b className="sales-ranking__amount">{formatCurrency(row.salesAmount)}</b>
               </div>
             ))}
           </div>
