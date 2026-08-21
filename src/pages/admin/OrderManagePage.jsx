@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
+import { ordersApi } from "../../api/ordersApi.js";
+import OrderDetailPanel from "../../components/admin/orders/OrderDetailPanel.jsx";
+import OrderTable from "../../components/admin/orders/OrderTable.jsx";
 import AdminConfirmDialog from "../../components/admin/shared/AdminConfirmDialog.jsx";
 import AdminDatePicker from "../../components/admin/shared/AdminDatePicker.jsx";
 import AdminFilterDropdown from "../../components/admin/shared/AdminFilterDropdown.jsx";
 import AdminPagination from "../../components/admin/shared/AdminPagination.jsx";
 import AdminSearchInput from "../../components/admin/shared/AdminSearchInput.jsx";
 import AdminTopHeader from "../../components/admin/shared/AdminTopHeader.jsx";
-import OrderDetailPanel from "../../components/admin/orders/OrderDetailPanel.jsx";
-import OrderTable from "../../components/admin/orders/OrderTable.jsx";
 import {
   ORDER_STATUS_LABEL,
   ORDER_TYPE_LABEL,
@@ -14,7 +15,6 @@ import {
 } from "../../constants/orderLabels.js";
 import { ADMIN_PAGINATION } from "../../constants/pagination.js";
 import { useOrdersQuery } from "../../hooks/useOrdersQuery.js";
-import { ordersApi } from "../../api/ordersApi.js";
 import { toast } from "../../utils/toast.js";
 
 const ORDERS_PAGINATION = ADMIN_PAGINATION.orders;
@@ -89,7 +89,7 @@ export default function OrderManagePage() {
   }, [appliedFilters, draftFilters]);
 
   const handleOrderDetail = async (orderId) => {
-    const result = await ordersApi.getOrder(orderId);
+    const result = await ordersApi.orderDetail(orderId);
     console.log("handleOrderDetail result:", result);
     if (result?.success === false) {
       toast.error(result.message);
