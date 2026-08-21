@@ -33,7 +33,7 @@ const IMAGE_BY_KEY = {
 };
 
 function ItemCard({ item, checked, onToggle, soldOut = false }) {
-  const image = IMAGE_BY_KEY[item.imageKey] ?? chickenImage;
+  const image = item.imageUrl || IMAGE_BY_KEY[item.imageKey] || tomatoImage;
 
   return (
     <article

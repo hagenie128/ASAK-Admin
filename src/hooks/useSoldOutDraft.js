@@ -11,12 +11,7 @@
 //   dirtyCount          → 저장 전에 바뀐 건수 (처음 불러온 때와 비교)
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-// TODO-010: 품절 4/4 — draft 훅/화면 저장 연결과 검증.
-// 1) TODO-009 후 초기 load를 mock getSoldOutCatalog -> soldOutApi.listSoldOutCatalog 로 교체한다.
-// 2) save()를 mock saveSoldOutCatalog -> soldOutApi.patchSoldOut 로 교체한다.
-// 3) 실패 시 baseline 롤백, 성공 시 서버 반환값으로 baseline 갱신 규칙은 그대로 유지한다.
-// 4) 메뉴/재료 혼합 변경, 부분 실패, 다른 관리자의 동시 변경(409)에도 dirtyCount를 수동 QA한다.
-import { getSoldOutCatalog, saveSoldOutCatalog } from "../mocks/adminMockRepository.js";
+import { soldOutApi } from "../api/soldOutApi.js";
 
 /** mock row 고유 키 — targetType + targetId */
 export function soldOutRowKey(item) {
@@ -37,6 +32,18 @@ function countDirty(savedSoldOutKeys, currentSoldOutRows) {
     if (!current.has(key)) count += 1;
   }
   return count;
+}
+
+function toChanges(baselineRows, currentRows) {
+  const baseline = new Set(baselineRows.map(soldOutRowKey));
+  const current = new Set(currentRows.map(soldOutRowKey));
+  const byKey = new Map([...baselineRows, ...currentRows].map((row) => [soldOutRowKey(row), row]));
+  return [...new Set([...baseline, ...current])]
+    .filter((key) => baseline.has(key) !== current.has(key))
+    .map((key) => {
+      const row = byKey.get(key);
+      return { targetType: row.targetType, targetId: row.targetId, isSoldOut: current.has(key) };
+    });
 }
 
 export function useSoldOutDraft() {
@@ -62,34 +69,33 @@ export function useSoldOutDraft() {
     setTick((prev) => prev + 1);
   }, []);
 
-  // mock → 드래프트로 복사 (tick으로 재시도)
+  // 서버 카탈로그 → 드래프트로 복사 (tick으로 재시도)
   useEffect(() => {
     let cancelled = false;
     setStatus("loading");
     setError(null);
-    try {
-      const envelope = getSoldOutCatalog();
-      if (cancelled) return;
-      if (envelope?.success === false) {
-        throw new Error(envelope.message || "품절 목록을 불러오지 못했습니다.");
-      }
-      const nextAvailable = envelope.data?.available ?? [];
-      const nextSoldOut = envelope.data?.soldOut ?? [];
-      setAvailable(nextAvailable);
-      setSoldOut(nextSoldOut);
-      setBaselineAvailable(cloneRows(nextAvailable));
-      setBaselineSoldOut(cloneRows(nextSoldOut));
-      setBaselineSoldOutKeys(nextSoldOut.map(soldOutRowKey));
-      setSelectedAvailable(new Set());
-      setSelectedSoldOut(new Set());
-      setStatus("ready");
-    } catch (err) {
-      if (cancelled) return;
-      setAvailable([]);
-      setSoldOut([]);
-      setError(err);
-      setStatus("error");
-    }
+    soldOutApi
+      .listSoldOutCatalog()
+      .then((catalog) => {
+        if (cancelled) return;
+        const nextAvailable = catalog?.available ?? [];
+        const nextSoldOut = catalog?.soldOut ?? [];
+        setAvailable(nextAvailable);
+        setSoldOut(nextSoldOut);
+        setBaselineAvailable(cloneRows(nextAvailable));
+        setBaselineSoldOut(cloneRows(nextSoldOut));
+        setBaselineSoldOutKeys(nextSoldOut.map(soldOutRowKey));
+        setSelectedAvailable(new Set());
+        setSelectedSoldOut(new Set());
+        setStatus("ready");
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        setAvailable([]);
+        setSoldOut([]);
+        setError(err);
+        setStatus("error");
+      });
     return () => {
       cancelled = true;
     };
@@ -173,7 +179,7 @@ export function useSoldOutDraft() {
     setSelectedSoldOut(new Set());
   }, [soldOut, selectedSoldOut]);
 
-  // 저장: 드래프트 → mock (실서비스면 PATCH API)
+  // 저장: 드래프트의 품절 상태만 PATCH로 전송한다.
   const save = useCallback(async () => {
     if (dirtyCount === 0) {
       return { success: true, message: "변경사항이 없습니다." };
@@ -181,23 +187,27 @@ export function useSoldOutDraft() {
 
     setIsSaving(true);
     try {
-      const result = saveSoldOutCatalog({ available, soldOut });
-      if (result.success) {
-        setBaselineAvailable(cloneRows(available));
-        setBaselineSoldOut(cloneRows(soldOut));
-        setBaselineSoldOutKeys(soldOut.map(soldOutRowKey));
-      } else {
-        // 저장 실패: 마지막 성공 로드/저장 스냅샷으로 롤백 (asak_mock_fail_save=1)
-        setAvailable(cloneRows(baselineAvailable));
-        setSoldOut(cloneRows(baselineSoldOut));
-        setSelectedAvailable(new Set());
-        setSelectedSoldOut(new Set());
-      }
-      return result;
+      const catalog = await soldOutApi.patchSoldOut(toChanges(baselineSoldOut, soldOut));
+      const nextAvailable = catalog?.available ?? [];
+      const nextSoldOut = catalog?.soldOut ?? [];
+      setAvailable(nextAvailable);
+      setSoldOut(nextSoldOut);
+      setBaselineAvailable(cloneRows(nextAvailable));
+      setBaselineSoldOut(cloneRows(nextSoldOut));
+      setBaselineSoldOutKeys(nextSoldOut.map(soldOutRowKey));
+      setSelectedAvailable(new Set());
+      setSelectedSoldOut(new Set());
+      return { success: true, message: "저장되었습니다." };
+    } catch (error) {
+      setAvailable(cloneRows(baselineAvailable));
+      setSoldOut(cloneRows(baselineSoldOut));
+      setSelectedAvailable(new Set());
+      setSelectedSoldOut(new Set());
+      return { success: false, message: error.message };
     } finally {
       setIsSaving(false);
     }
-  }, [available, soldOut, dirtyCount, baselineAvailable, baselineSoldOut]);
+  }, [soldOut, dirtyCount, baselineAvailable, baselineSoldOut]);
 
   return {
     status,
