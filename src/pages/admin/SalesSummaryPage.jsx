@@ -10,33 +10,11 @@ import { PERIODS } from "../../constants/orderLabels.js";
 import { formatCurrency } from "../../utils/currency.js";
 import { formatMd, findMaxIndex } from "../../utils/salesDisplay.js";
 
-const CHART_HOURS = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
-const CHART_TICKS = ["10시", "12시", "14시", "16시", "18시", "20시", "21시"];
-
 function formatRangeLabel(from, to) {
   if (!from) return "-";
   const a = from.replaceAll("-", ".");
   const b = (to || from).replaceAll("-", ".");
   return a === b ? a : `${a} ~ ${b}`;
-}
-
-function filterDailyRows(rows, { period, customRange, summaryRange }) {
-  const list = rows ?? [];
-  if (customRange?.from) {
-    const from = customRange.from;
-    const to = customRange.to || customRange.from;
-    return list.filter((row) => row.date >= from && row.date <= to).reverse();
-  }
-
-  if (period === "today") {
-    const day = summaryRange?.to || summaryRange?.from || list.at(-1)?.date;
-    return list.filter((row) => row.date === day).reverse();
-  }
-  if (period === "week") {
-    return list.slice(-7).reverse();
-  }
-  // month: 최근 최대 8일 미리보기
-  return list.slice(-8).reverse();
 }
 
 function parseSummaryDateRange(label) {
@@ -55,9 +33,10 @@ export default function SalesSummaryPage() {
 
   const { data, status, error, refetch } = useSalesQuery({
     mode: "summary",
-    period: activePeriod,
+    period: customRange ? null : activePeriod,
+    startDate: customRange?.from,
+    endDate: customRange?.to,
   });
-  const { data: dailyData, status: dailyStatus } = useSalesQuery({ mode: "daily" });
 
   const summaryRange = useMemo(() => parseSummaryDateRange(data?.dateRange), [data?.dateRange]);
 
@@ -67,24 +46,17 @@ export default function SalesSummaryPage() {
     setCustomRange(null);
   };
 
-  const chartBars = data?.chartBars ?? [];
-  const peakIndex = findMaxIndex(chartBars);
-  const peakAmount = peakIndex >= 0 ? chartBars[peakIndex] : null;
-  const peakTick =
-    peakIndex >= 0 && CHART_HOURS[peakIndex] != null ? `${CHART_HOURS[peakIndex]}시` : "-";
-
-  const dailyRows = filterDailyRows(dailyData?.rows, {
-    period: activePeriod,
-    customRange,
-    summaryRange,
-  });
+  const chartPoints = data?.chartPoints ?? [];
+  const peakIndex = findMaxIndex(chartPoints.map((point) => point.value));
+  const peakPoint = peakIndex >= 0 ? chartPoints[peakIndex] : null;
+  const dailyRows = [...(data?.dailySales ?? [])].reverse();
 
   const rangeLabel = customRange
     ? formatRangeLabel(customRange.from, customRange.to)
     : data?.dateRange || data?.label || "-";
 
-  const dailyMin = dailyData?.from || dailyData?.rows?.[0]?.date || "2026-07-01";
-  const dailyMax = dailyData?.to || dailyData?.rows?.at(-1)?.date || "2026-07-31";
+  const dailyMin = summaryRange?.from;
+  const dailyMax = summaryRange?.to;
 
   if ((status === "loading" || status === "idle") && !data) {
     return <AdminAsyncState status="loading" layout="page" />;
@@ -125,7 +97,7 @@ export default function SalesSummaryPage() {
             value={customRange || summaryRange}
             minDate={dailyMin}
             maxDate={dailyMax}
-            availableDates={(dailyData?.rows ?? []).map((row) => row.date)}
+            availableDates={(data?.dailySales ?? []).map((row) => row.date)}
             onChange={(range) => {
               setCustomRange(range);
               setCalendarOpen(false);
@@ -163,26 +135,26 @@ export default function SalesSummaryPage() {
 
       <div className="sales-summary__middle">
         <section className="sales-chart">
-          <h2>시간대별 매출</h2>
+          <h2>{data?.chartTitle ?? "매출 추이"}</h2>
           <div className="sales-chart__body">
             <div className="sales-chart__bars">
-              {chartBars.map((height, index) => (
+              {chartPoints.map((point, index) => (
                 <i
-                  key={`bar-${index}`}
+                  key={`bar-${point.label}-${index}`}
                   className={index === peakIndex ? "is-peak" : ""}
-                  style={{ height: `${height}px` }}
+                  style={{ height: `${point.barHeight}px` }}
                 />
               ))}
             </div>
             <div className="sales-chart__ticks">
-              {CHART_TICKS.map((tick) => (
-                <span key={tick}>{tick}</span>
+              {chartPoints.map((point, index) => (
+                <span key={`${point.label}-${index}`}>{point.label}</span>
               ))}
             </div>
           </div>
           <p className="sales-chart__peak">
-            <b>{peakAmount != null ? peakAmount : "-"}</b>
-            <span>피크 시간 {peakTick}</span>
+            <b>{peakPoint ? formatCurrency(peakPoint.value) : "-"}</b>
+            <span>피크 {peakPoint?.label ?? "-"}</span>
           </p>
         </section>
 
@@ -218,11 +190,7 @@ export default function SalesSummaryPage() {
               <span>순매출</span>
               <span>객단가</span>
             </div>
-            {dailyStatus === "loading" || dailyStatus === "idle" ? (
-              <div className="sales-table__row">
-                <span>불러오는 중…</span>
-              </div>
-            ) : dailyRows.length === 0 ? (
+            {dailyRows.length === 0 ? (
               <div className="sales-table__row">
                 <span>해당 기간 데이터 없음</span>
               </div>
