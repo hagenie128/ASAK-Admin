@@ -196,7 +196,7 @@ export default function DailySalesPage() {
       </AdminTopHeader>
 
       {!hasDayData ? (
-        <p className="sales-daily__empty-hint">선택한 날짜의 mock 데이터가 없습니다. (현재 상세는 2026년 7월)</p>
+        <p className="sales-daily__empty-hint">선택한 날짜에 매출 데이터가 없습니다.</p>
       ) : null}
 
       <div className="sales-daily__kpis">

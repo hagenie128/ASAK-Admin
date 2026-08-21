@@ -49,6 +49,39 @@
   flex: 0 0 auto;
 }
 
+/* SCR-021 시간대 집계 단위 선택: 30분 또는 1시간 */
+.sales-daily__interval {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  color: var(--admin-text-secondary);
+  font-size: 13px;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.sales-daily__interval select {
+  min-width: 84px;
+  min-height: 36px;
+  padding: 7px 28px 7px 12px;
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  background-color: var(--admin-panel);
+  color: var(--admin-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.sales-daily__interval select:hover {
+  border-color: var(--admin-text-secondary);
+}
+
+.sales-daily__interval select:focus-visible {
+  outline: 2px solid var(--admin-brand-primary);
+  outline-offset: 2px;
+}
+
 .sales-daily__empty-hint {
   margin: 0;
   padding: 10px 14px;
