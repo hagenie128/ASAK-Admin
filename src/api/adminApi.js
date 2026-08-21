@@ -5,7 +5,7 @@
 import { apiClient } from "./apiClient.js";
 import { API_ENDPOINTS } from "../constants/api.js";
 
-// TODO-024 (구현 완료): dashboard는 이 모듈의 단일 GET 호출로 제한하고 실패 표시는 hook이 처리한다.
+// dashboard는 이 모듈의 단일 GET 호출로 제한하고 실패 표시는 hook이 처리한다.
 // QA: 응답 DTO와 widget 값, 4xx/5xx 오류 전달을 실제 서버에서 확인한다.
 export const adminApi = {
   getDashboard() {
