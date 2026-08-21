@@ -1,7 +1,7 @@
 /**
  * Admin 매출 화면 데이터 형태.
- * 현재 기준: mock `sales.*` / useSalesQuery
- * BE sales API는 Bruno 계약만 있고 Controller 미완 — 연동 시 필드명 재확인.
+ * TODO-015~022 구현 기준: salesApi / useSalesQuery와 매출 API 응답을 사용한다.
+ * summary 객체, monthly 객체, daily 객체, time-slots 배열은 서로 다른 응답이므로 adapter에서 구분한다.
  *
  * 사용 예:
  *   /** @typedef {import('../types/sales.js').SalesSummary} SalesSummary *\/

@@ -1,6 +1,10 @@
 ﻿/* Figma Admin/DetailPanel (150:5418) — 주문 상세 우측 패널 */
 import emptyBoxOpen from "../../../assets/figma/empty-box-open.svg";
-import { ORDER_STATUS, PAYMENT_METHOD_LABEL, PAYMENT_STATUS } from "../../../constants/orderLabels.js";
+import {
+  ORDER_STATUS,
+  PAYMENT_METHOD_LABEL,
+  PAYMENT_STATUS,
+} from "../../../constants/orderLabels.js";
 import { formatCurrency } from "../../../utils/currency.js";
 import { formatDateTime } from "../../../utils/date.js";
 
@@ -44,7 +48,10 @@ export default function OrderDetailPanel({ selectedOrder, onClose, onRefund, onP
     hasOrder && !isCancelledView && selectedOrder?.paymentStatus === PAYMENT_STATUS.APPROVED;
 
   const canPrintReceipt =
-    hasOrder && (selectedOrder?.paymentStatus === PAYMENT_STATUS.APPROVED || isCancelledView);
+    hasOrder &&
+    (selectedOrder?.paymentStatus === PAYMENT_STATUS.APPROVED ||
+      selectedOrder?.paymentStatus === PAYMENT_STATUS.REFUNDED) &&
+    selectedOrder?.orderStatus !== ORDER_STATUS.READY;
 
   if (!hasOrder) {
     return (
@@ -78,6 +85,12 @@ export default function OrderDetailPanel({ selectedOrder, onClose, onRefund, onP
             <dt>주문일시</dt>
             <dd>{formatDateTime(selectedOrder.createdAt)}</dd>
           </div>
+          {isCancelledView ? (
+            <div>
+              <dt>취소/환불일시</dt>
+              <dd>{formatDateTime(selectedOrder.cancelledAt ?? selectedOrder.refundedAt)}</dd>
+            </div>
+          ) : null}
           <div>
             <dt>결제수단</dt>
             <dd>
@@ -114,7 +127,9 @@ export default function OrderDetailPanel({ selectedOrder, onClose, onRefund, onP
                                 ? ` × ${getPositiveQuantity(option.quantity)}`
                                 : ""}
                             </span>
-                            <b>{formatItemPrice(getOptionLineAmount(item, option), isCancelledView)}</b>
+                            <b>
+                              {formatItemPrice(getOptionLineAmount(item, option), isCancelledView)}
+                            </b>
                           </li>
                         ))}
                       </ul>
@@ -126,7 +141,9 @@ export default function OrderDetailPanel({ selectedOrder, onClose, onRefund, onP
                   <section className="order-detail-panel__detail-group">
                     <h3>제외</h3>
                     {item.excludedIngredients?.length > 0 ? (
-                      <p>{item.excludedIngredients.map((ingredient) => ingredient.name).join(", ")}</p>
+                      <p>
+                        {item.excludedIngredients.map((ingredient) => ingredient.name).join(", ")}
+                      </p>
                     ) : (
                       <p>없음</p>
                     )}
@@ -148,7 +165,6 @@ export default function OrderDetailPanel({ selectedOrder, onClose, onRefund, onP
           <h3>요청사항</h3>
           <p>{selectedOrder.requestNote || "요청사항 없음"}</p>
         </section>
-
       </div>
 
       <footer className="order-detail-panel__footer">
@@ -186,7 +202,7 @@ export default function OrderDetailPanel({ selectedOrder, onClose, onRefund, onP
                   ? "order-detail-panel__btn--print-outline"
                   : "order-detail-panel__btn--print"
               }`}
-              onClick={() => onPrintReceipt(selectedOrder.orderId)}
+              onClick={() => onPrintReceipt(selectedOrder)}
             >
               영수증 출력
             </button>

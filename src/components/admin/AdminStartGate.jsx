@@ -3,13 +3,13 @@
  * Fullscreen API는 사용자 제스처가 필요하므로, 세션이 남아 로그인 화면을
  * 건너뛰어도 여기서 한 번 터치하게 한다.
  */
-import loginLogo from "../../assets/svg/logo-F.svg";
 import loginBg from "../../assets/figma/login-bg.png";
-// import { requestAppFullscreen } from "../../utils/fullscreen.js";
+import loginLogo from "../../assets/svg/logo-F.svg";
+import { requestAppFullscreen } from "../../utils/fullscreen.js";
 
 export default function AdminStartGate({ onStart }) {
   async function handleStart() {
-    // await requestAppFullscreen(); // 발표 전까지 시작하기 버튼의 전체화면 전환을 비활성화한다.
+    await requestAppFullscreen(); // 발표 전까지 시작하기 버튼의 전체화면 전환을 비활성화한다.
     onStart?.();
   }
 

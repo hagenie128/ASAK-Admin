@@ -265,12 +265,20 @@
   cursor: not-allowed;
 }
 
-/* Toast — white card + tone icon (not dark bar) */
-.admin-toast {
+/* Toast container — 동시에 여러 개 뜰 수 있어서 fixed는 컨테이너에만, 토스트는 안에서 쌓인다 */
+.admin-toast-container {
   position: fixed;
   right: 24px;
   bottom: 12px;
   z-index: 60;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+  pointer-events: none;
+}
+/* Toast — white card + tone icon (not dark bar) */
+.admin-toast {
+  pointer-events: auto;
   width: min(300px, calc(100vw - 48px));
   min-height: 80px;
   padding: 14px var(--admin-space-md);

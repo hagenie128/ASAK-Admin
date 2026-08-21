@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
+import { ordersApi } from "../../api/ordersApi.js";
+import OrderDetailPanel from "../../components/admin/orders/OrderDetailPanel.jsx";
+import OrderTable from "../../components/admin/orders/OrderTable.jsx";
 import AdminConfirmDialog from "../../components/admin/shared/AdminConfirmDialog.jsx";
 import AdminDatePicker from "../../components/admin/shared/AdminDatePicker.jsx";
 import AdminFilterDropdown from "../../components/admin/shared/AdminFilterDropdown.jsx";
 import AdminPagination from "../../components/admin/shared/AdminPagination.jsx";
 import AdminSearchInput from "../../components/admin/shared/AdminSearchInput.jsx";
 import AdminTopHeader from "../../components/admin/shared/AdminTopHeader.jsx";
-import OrderDetailPanel from "../../components/admin/orders/OrderDetailPanel.jsx";
-import OrderTable from "../../components/admin/orders/OrderTable.jsx";
 import {
   ORDER_STATUS_LABEL,
   ORDER_TYPE_LABEL,
@@ -14,7 +15,7 @@ import {
 } from "../../constants/orderLabels.js";
 import { ADMIN_PAGINATION } from "../../constants/pagination.js";
 import { useOrdersQuery } from "../../hooks/useOrdersQuery.js";
-import { ordersApi } from "../../api/ordersApi.js";
+import { usePrintReceiptQuery } from "../../hooks/usePrintReceiptQuery.js";
 import { toast } from "../../utils/toast.js";
 
 const ORDERS_PAGINATION = ADMIN_PAGINATION.orders;
@@ -81,6 +82,11 @@ export default function OrderManagePage() {
     filters: appliedFilters,
   });
 
+  // Hook은 컴포넌트 최상위에서 한 번만 호출해야 하므로(Rules of Hooks) 여기서 가져온다.
+  // printReceipt(order)를 부를 때마다 자기 진행 상태를 담은 토스트를 스스로 관리하므로,
+  // 이 Page는 진행 중 상태를 따로 들고 있지 않는다 — 여러 건을 연달아 출력해도 각자 독립.
+  const { printReceipt } = usePrintReceiptQuery();
+
   const dateButtonLabel = useMemo(() => {
     const from = draftFilters.dateFrom || appliedFilters.dateFrom || DEFAULT_ORDER_DATE;
     const to = draftFilters.dateTo || appliedFilters.dateTo || from;
@@ -137,25 +143,23 @@ export default function OrderManagePage() {
   //   });
   // }
 
-  // TODO-043: backend 출력 계약과 frontend TODO-041 완료 후 ordersApi.printReceipt + ConfirmDialog를 연결한다.
-  // 출력 취소·실패·재시도 시 주문 상태를 바꾸지 않고, 브라우저 인쇄라면 API 호출 없이 별도 흐름으로 분리한다.
-  // function handlePrintReceipt(orderId) {
-  //   setConfirmDialog({
-  //     title: "영수증을 출력하시겠습니까?",
-  //     description: "선택한 주문의 영수증을 출력합니다.",
-  //     confirmLabel: "출력",
-  //     tone: "warning",
-  //     onConfirm: () => {
-  //       const result = printAdminOrderReceipt(orderId);
-  //       if (!result.success) {
-  //         toast.error(result.message);
-  //         return;
-  //       }
-  //       toast.success("영수증 출력이 완료되었습니다.");
-  //       setSelectedOrder(result.data);
-  //     },
-  //   });
-  // }
+  // TODO-043: OrderDetailPanel의 "영수증 출력" 버튼(onPrintReceipt(selectedOrder))에서
+  // 전체 주문 객체를 그대로 받는다. buildReceiptText가 옵션·제외재료·요청사항까지 필요로 하므로
+  // orderId만으로는 부족해서 OrderDetailPanel이 이미 들고 있는 selectedOrder를 통째로 넘겨받는다.
+  function handlePrintReceipt(order) {
+    setConfirmDialog({
+      title: "영수증을 출력하시겠습니까?",
+      description: "선택한 주문의 영수증을 출력합니다.",
+      confirmLabel: "출력",
+      tone: "warning",
+      onConfirm: () => {
+        // 이 확인창은 여기서 바로 닫힌다 ("정말 출력할지" 묻는 용도). 실제 요청 중/완료/실패
+        // 진행 상태는 화면을 막지 않는 토스트로 보여준다 — 그래야 이 확인창을 닫은 뒤에도
+        // 다른 주문을 계속 조회·출력하는 등 다른 동작을 같이 할 수 있다.
+        printReceipt(order, { onCompleted: refetch });
+      },
+    });
+  }
 
   function handleConfirm() {
     const action = confirmDialog?.onConfirm;
@@ -244,7 +248,7 @@ export default function OrderManagePage() {
           selectedOrder={selectedOrder}
           onClose={() => setSelectedOrder(null)}
           // onRefund={handleRefund}
-          // onPrintReceipt={handlePrintReceipt}
+          onPrintReceipt={handlePrintReceipt}
         />
       </div>
       <AdminConfirmDialog

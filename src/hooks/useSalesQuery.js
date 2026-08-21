@@ -11,6 +11,8 @@ import {
 } from "../adapters/salesAdapter.js";
 import { salesApi } from "../api/salesApi.js";
 
+// TODO-022 (구현 완료): mode별 API 결과를 adapter로 바꾸고 useEffect cleanup으로 오래된 응답의 state 반영을 막는다.
+// QA: 기간을 빠르게 바꿀 때 loading/error/empty가 각 화면에서 올바르게 보이는지 브라우저에서 확인한다.
 /**
  * @param {object} [options]
  * @param {"summary"|"monthly"|"daily"} [options.mode]
