@@ -89,7 +89,7 @@ export default function OrderManagePage() {
   }, [appliedFilters, draftFilters]);
 
   const handleOrderDetail = async (orderId) => {
-    const result = await ordersApi.getOrder(orderId);
+    const result = await ordersApi.orderDetail(orderId);
     console.log("handleOrderDetail result:", result);
     if (result?.success === false) {
       toast.error(result.message);

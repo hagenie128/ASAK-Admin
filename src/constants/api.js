@@ -1,12 +1,12 @@
 /**
  * Client-facing Admin API contract: `/api/admin` paths and camelCase JSON.
- * 현재 호출 구현: orders/menus. 선언만 된 경로: TODO-007~037의 백엔드·프런트 순서가 완료된 뒤 사용한다.
+ * 현재 호출 구현: orders/menus/dashboard/soldOut/sales. 결제수단·인증·환불 경로는 아직 정본 계약 확정 또는 호출 구현이 필요하다.
  * 특히 paymentMethods는 현재 Controller camelCase와 Product Bible kebab-case 표기가 달라 호출 전에 정본을 확정한다.
  */
 export const API_BASE_PATH = "/api/admin";
 
 export const API_ENDPOINTS = Object.freeze({
-  // Auth/dashboard: backend TODO-023/027~030 → frontend TODO-024/025/031~035 순서.
+  // TODO-023~025 구현 완료: dashboard는 백엔드 집계 → adminApi → useDashboard 순서로 연결된다.
   login: `${API_BASE_PATH}/login`,
   dashboard: `${API_BASE_PATH}/dashboard`,
 
@@ -21,8 +21,9 @@ export const API_ENDPOINTS = Object.freeze({
   menuCategories: `${API_BASE_PATH}/menus/categories`,
   menuIngredients: `${API_BASE_PATH}/menus/ingredients`,
 
-  // Sold out: TODO-007 → 008 → 009 → 010. Payment methods: TODO-011 → 012 → 013 → 014.
-  // Sales: TODO-015~018 → 019~022. 아래 경로 상수는 호출 구현이나 endpoint 존재 증거가 아니다.
+  // TODO-007~010 구현 완료: soldOut은 GET 카탈로그와 PATCH changes[]를 사용한다. 옵션 항목도 API에는 포함되지만 현 화면 탭은 숨긴다.
+  // TODO-015~022 구현 완료: summary/monthly/daily/time-slots는 각 응답 shape에 맞는 별도 호출이다.
+  // TODO-011~014: paymentMethods는 Controller camelCase와 Product Bible kebab-case 표기 정본을 확정한 뒤 연결한다.
   paymentMethods: `${API_BASE_PATH}/paymentMethods`,
   soldOut: `${API_BASE_PATH}/soldOut`,
   salesSummary: `${API_BASE_PATH}/sales/summary`,

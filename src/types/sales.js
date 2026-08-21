@@ -1,6 +1,6 @@
 /**
  * Admin 매출 화면 데이터 형태.
- * 현재 기준: mock `sales.*` / useSalesQuery
+ * TODO-015~022 구현 기준: salesApi / useSalesQuery와 매출 API 응답을 사용한다.
  * BE sales API는 Bruno 계약만 있고 Controller 미완 — 연동 시 필드명 재확인.
  *
  * 사용 예:

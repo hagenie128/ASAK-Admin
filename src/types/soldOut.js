@@ -1,8 +1,8 @@
 /**
  * Admin 품절 화면 데이터 형태.
- * 현재 기준: mock `asak-admin-data.json` / useSoldOutDraft
- * BE는 TODO-007~008 상태다. PATCH changes의 targetType/targetId/isSoldOut 및 부분 실패 응답을 확정한 뒤 맞춘다.
- * UI의 draft 상태와 서버 저장 결과를 구분해, 실패 시 이 타입의 baseline 데이터로 롤백할 수 있어야 한다.
+ * TODO-007~010 구현 기준: GET /api/admin/soldOut 카탈로그와 useSoldOutDraft를 사용한다.
+ * PATCH changes는 targetType/targetId/isSoldOut로 전송하며, UI draft와 서버 baseline을 분리해 실패 시 baseline으로 복원한다.
+ * API는 MENU/INGREDIENT/OPTION_ITEM을 반환하지만 현재 화면은 MENU/INGREDIENT 탭만 노출한다.
  *
  * 사용 예:
  *   /** @typedef {import('../types/soldOut.js').SoldOutRow} SoldOutRow *\/

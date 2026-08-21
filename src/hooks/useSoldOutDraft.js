@@ -1,8 +1,8 @@
 // 품절 화면(SCR-011) draft Hook — WBS2-038
 //
 // [드래프트란?]
-//   mock(장부)에서 읽어온 목록을 화면에서 연필로 고친 "임시 사본".
-//   → / ← 로 옮겨도 저장 버튼 전까지 mock 은 안 바뀜.
+//   GET 카탈로그에서 읽은 목록을 화면에서 고치는 "임시 사본".
+//   → / ← 로 옮겨도 저장 버튼 전까지 서버 baseline은 바뀌지 않는다.
 //
 // [이 훅이 들고 있는 것]
 //   available, soldOut  → 드래프트 (왼쪽/오른쪽 패널에 보이는 목록)
@@ -13,7 +13,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { soldOutApi } from "../api/soldOutApi.js";
 
-/** mock row 고유 키 — targetType + targetId */
+// TODO-010 (구현 완료): 서버 카탈로그를 baseline으로 두고 변경분만 PATCH하며 실패 시 baseline으로 복원한다.
+// QA: loading/empty/error/dirty/saveConfirm, 빠른 재시도, 화면 이탈 후 재진입을 브라우저에서 확인한다.
+
+/** DB 카탈로그 행의 고유 키 — targetType + targetId */
 export function soldOutRowKey(item) {
   return `${item.targetType}-${item.targetId}`;
 }
