@@ -20,7 +20,6 @@ import { toast } from "../../utils/toast.js";
 const TABS = [
   { label: "메뉴", targetType: "MENU" },
   { label: "재료", targetType: "INGREDIENT" },
-  { label: "옵션 선택지", targetType: "OPTION" },
 ];
 const SOLD_OUT_PAGINATION = ADMIN_PAGINATION.soldOut;
 
@@ -315,7 +314,7 @@ export default function SoldOutManagePage() {
         <AdminTopHeader
           crumb="Admin / 품절 관리"
           title="품절 관리"
-          description="메뉴, 재료, 옵션의 판매 상태를 관리하세요."
+          description="메뉴와 재료의 판매 상태를 관리하세요."
         />
         <AdminAsyncState status="loading" layout="page" loadingVariant="card" />
       </section>
@@ -328,7 +327,7 @@ export default function SoldOutManagePage() {
         <AdminTopHeader
           crumb="Admin / 품절 관리"
           title="품절 관리"
-          description="메뉴, 재료, 옵션의 판매 상태를 관리하세요."
+          description="메뉴와 재료의 판매 상태를 관리하세요."
         />
         <AdminAsyncState
           status="error"
@@ -346,7 +345,7 @@ export default function SoldOutManagePage() {
       <AdminTopHeader
         crumb="Admin / 품절 관리"
         title="품절 관리"
-        description="메뉴, 재료, 옵션의 판매 상태를 관리하세요."
+        description="메뉴와 재료의 판매 상태를 관리하세요."
       />
       <div className="sold-out-management__workspace">
         <AvailablePanel

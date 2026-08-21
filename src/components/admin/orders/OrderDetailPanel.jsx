@@ -80,7 +80,11 @@ export default function OrderDetailPanel({ selectedOrder, onClose, onRefund, onP
           </div>
           <div>
             <dt>결제수단</dt>
-            <dd>{PAYMENT_METHOD_LABEL[selectedOrder.paymentMethod] || "-"}</dd>
+            <dd>
+              {PAYMENT_METHOD_LABEL[selectedOrder.paymentMethod] ??
+                selectedOrder.paymentMethod ??
+                "-"}
+            </dd>
           </div>
         </dl>
 

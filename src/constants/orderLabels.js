@@ -50,10 +50,10 @@ export const PAYMENT_STATUS_LABEL = {
 
 // mock에 paymentMethod가 null이거나 영문 코드일 수 있음
 export const PAYMENT_METHOD_LABEL = {
-  CARD: "카드",
+  CARD: "카드 / 삼성페이 결제",
   CASH: "현금",
-  KAKAO_PAY: "카카오페이",
-  NAVER_PAY: "네이버페이",
+  KAKAO_PAY: "카카오페이 결제",
+  NAVER_PAY: "네이버페이 결제",
 };
 
 export const PERIODS = {
