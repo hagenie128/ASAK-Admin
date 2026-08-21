@@ -44,3 +44,35 @@ export function toSalesSummaryViewModel(data = {}) {
     chartPoints: chart.points,
   };
 }
+
+function toRankingRows(rankingByPeriod = {}) {
+  return Object.fromEntries(
+    Object.entries(rankingByPeriod).map(([periodKey, rows]) => [
+      periodKey,
+      (rows ?? []).map((row) => ({
+        ...row,
+        name: row.menuName,
+        count: row.orderCount,
+        amount: row.salesAmount,
+      })),
+    ]),
+  );
+}
+
+export function toMonthlySalesViewModel(data = {}) {
+  return {
+    year: data.year,
+    rows: data.rows ?? [],
+    ranking: toRankingRows(data.ranking),
+  };
+}
+
+export function toDailySalesViewModel(data = {}) {
+  return {
+    from: data.from ?? null,
+    to: data.to ?? null,
+    rows: data.rows ?? [],
+    ranking: toRankingRows(data.ranking),
+    breakdown: data.breakdown ?? {},
+  };
+}

@@ -1,12 +1,15 @@
 // Page → mode / period 로 getter 고르기
 // return { status, data, error, refetch } — data 는 envelope.data
-// Summary는 실 API를 사용한다. Monthly·Daily는 TODO-020~022 완료 전까지 mock getter를 유지한다.
+// Summary·Monthly·Daily는 실 API를 사용한다.
 // mode별 startDate/endDate·year·date query를 그대로 전달하고, 빠른 기간 변경 시 이전 응답이 화면을 덮지 않게 처리한다.
 
 import { useCallback, useEffect, useState } from "react";
-import { toSalesSummaryViewModel } from "../adapters/salesAdapter.js";
+import {
+  toDailySalesViewModel,
+  toMonthlySalesViewModel,
+  toSalesSummaryViewModel,
+} from "../adapters/salesAdapter.js";
 import { salesApi } from "../api/salesApi.js";
-import { getDailySales, getMonthlySales } from "../mocks/adminMockRepository";
 
 /**
  * @param {object} [options]
@@ -14,8 +17,19 @@ import { getDailySales, getMonthlySales } from "../mocks/adminMockRepository";
  * @param {"today"|"week"|"month"|null} [options.period] summary 전용
  * @param {string} [options.startDate] summary 직접 조회 시작일(ISO)
  * @param {string} [options.endDate] summary 직접 조회 종료일(ISO)
+ * @param {number} [options.year] monthly 조회 연도
+ * @param {string} [options.from] daily 조회 시작일(ISO)
+ * @param {string} [options.to] daily 조회 종료일(ISO)
  */
-export function useSalesQuery({ mode = "summary", period = "month", startDate, endDate } = {}) {
+export function useSalesQuery({
+  mode = "summary",
+  period = "month",
+  startDate,
+  endDate,
+  year,
+  from,
+  to,
+} = {}) {
   const [status, setStatus] = useState("idle");
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -50,30 +64,31 @@ export function useSalesQuery({ mode = "summary", period = "month", startDate, e
       };
     }
 
-    try {
-      let envelope;
-      switch (mode) {
-        case "monthly":
-          envelope = getMonthlySales();
-          break;
-        case "daily":
-          envelope = getDailySales();
-          break;
-        default:
-          throw new Error("Invalid mode");
-      }
-      setData(envelope.data);
-      setStatus("success");
-    } catch (err) {
-      setError(err);
-      setData(null);
-      setStatus("error");
-    }
+    const request =
+      mode === "monthly"
+        ? salesApi.getMonthly({ year })
+        : mode === "daily"
+          ? salesApi.getDaily({ from, to })
+          : Promise.reject(new Error("Invalid mode"));
+    const toViewModel = mode === "monthly" ? toMonthlySalesViewModel : toDailySalesViewModel;
+
+    request
+      .then((response) => {
+        if (cancelled) return;
+        setData(toViewModel(response));
+        setStatus("success");
+      })
+      .catch((requestError) => {
+        if (cancelled) return;
+        setError(requestError);
+        setData(null);
+        setStatus("error");
+      });
 
     return () => {
       cancelled = true;
     };
-  }, [mode, period, startDate, endDate, requestVersion]);
+  }, [mode, period, startDate, endDate, year, from, to, requestVersion]);
 
   return {
     status,

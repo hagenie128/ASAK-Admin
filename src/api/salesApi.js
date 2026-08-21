@@ -12,13 +12,19 @@ export const salesApi = {
     });
   },
 
+  getMonthly({ year }) {
+    return apiClient.get(API_ENDPOINTS.salesMonthly, { params: { year } });
+  },
+
+  getDaily({ from, to } = {}) {
+    return apiClient.get(API_ENDPOINTS.salesDaily, { params: { from, to } });
+  },
+
   getDailyTimeSlots({ date, intervalMinutes }) {
     return apiClient.get(API_ENDPOINTS.salesDailyTimeSlots, {
       params: { date, intervalMinutes },
     });
   },
 
-  // TODO-020: getMonthly({ year }) → GET /api/admin/sales/monthly
-  // TODO-021: getDaily({ date }) → GET /api/admin/sales/daily
-  // 각 메서드는 API_ENDPOINTS를 사용하고, 날짜 query·빈 데이터·서버 오류를 mock과 같은 반환 계약으로 검증한다.
+  // 모든 매출 메서드는 API_ENDPOINTS를 사용하며, 날짜 query·빈 데이터·서버 오류는 화면 훅에서 처리한다.
 };

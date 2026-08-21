@@ -22,6 +22,9 @@ export default function MonthlySalesPage() {
   const [year, setYear] = useState(MOCK_YEAR);
   const [month, setMonth] = useState(MOCK_MONTH);
   const [calendarOpen, setCalendarOpen] = useState(false);
+  const monthKey = toYearMonthKey(year, month);
+  const dailyFrom = `${monthKey}-01`;
+  const dailyTo = `${monthKey}-${String(new Date(year, month, 0).getDate()).padStart(2, "0")}`;
 
   const {
     data: monthlyData,
@@ -30,10 +33,14 @@ export default function MonthlySalesPage() {
     refetch,
   } = useSalesQuery({
     mode: "monthly",
+    year,
   });
-  const { data: dailyData, status: dailyStatus } = useSalesQuery({ mode: "daily" });
+  const { data: dailyData, status: dailyStatus } = useSalesQuery({
+    mode: "daily",
+    from: dailyFrom,
+    to: dailyTo,
+  });
 
-  const monthKey = toYearMonthKey(year, month);
   const baseYear = monthlyData?.year ?? MOCK_YEAR;
   const label = formatMonthlyNavLabel(year, month, baseYear);
 
