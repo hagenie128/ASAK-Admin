@@ -15,7 +15,7 @@ import {
 import { useDashboard } from "../../hooks/useDashboard.js";
 
 export default function DashboardPage() {
-  const { data, status } = useDashboard();
+  const { data, status, refetch } = useDashboard();
 
   if (status === "error") {
     return (
@@ -29,7 +29,7 @@ export default function DashboardPage() {
           status="error"
           layout="page"
           title="대시보드를 불러오지 못했습니다"
-          onRetry={() => window.location.reload()}
+          onRetry={refetch}
         />
       </section>
     );
